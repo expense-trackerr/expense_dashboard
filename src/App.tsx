@@ -1,11 +1,13 @@
 import firebase from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { ListOfTodos } from "./components/ListOfTodos";
 
 function App() {
   const [auth, setAuth] = useState(
-    false || window.localStorage.getItem("auth") === "true"
+    window.localStorage.getItem("auth") === "true"
   );
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     const auth = getAuth();
@@ -13,6 +15,9 @@ function App() {
       if (user) {
         setAuth(true);
         window.localStorage.setItem("auth", "true");
+        user.getIdToken().then((token) => {
+          setToken(token);
+        });
       }
     });
   }, []);
@@ -31,7 +36,7 @@ function App() {
   return (
     <>
       {auth ? (
-        <h1>Expense Tracker</h1>
+        <ListOfTodos token={token} />
       ) : (
         <button onClick={loginWithFirebase}>Login with Google</button>
       )}
