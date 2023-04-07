@@ -1,7 +1,10 @@
-import React, { useEffect } from "react";
 import axios from "axios";
+import { getAuth, signOut } from "firebase/auth";
+import { useEffect, useState } from "react";
 
 export function ListOfTodos({ token }: { token: string }) {
+  const [data, setData] = useState([]);
+
   useEffect(() => {
     if (token) fetchData();
   }, [token]);
@@ -12,8 +15,27 @@ export function ListOfTodos({ token }: { token: string }) {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("result:", result.data);
+    setData(result.data.todos);
   };
 
-  return <h1>This is a secured page</h1>;
+  const handleLogout = () => {
+    localStorage.clear();
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      alert("Signed Out. Refresh the page to login again");
+    });
+  };
+
+  return (
+    <>
+      <button onClick={handleLogout}>Logout</button>
+      <h1>This is a secured page.</h1>
+      <h3>Here is the data</h3>
+      {data.map((item: any) => (
+        <div key={item.id}>
+          <h4>{item.title}</h4>
+        </div>
+      ))}
+    </>
+  );
 }

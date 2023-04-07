@@ -1,4 +1,3 @@
-import firebase from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { ListOfTodos } from "./components/ListOfTodos";
