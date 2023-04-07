@@ -1,6 +1,7 @@
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { ListOfTodos } from "./components/ListOfTodos";
+import Signup from "./components/Signup";
 
 function App() {
   const [auth, setAuth] = useState(
@@ -40,7 +41,10 @@ function App() {
       {auth ? (
         <ListOfTodos token={token} />
       ) : (
-        <button onClick={loginWithFirebase}>Login with Google</button>
+        <>
+          <Signup />
+          <button onClick={loginWithFirebase}>Login with Google</button>
+        </>
       )}
     </>
   );

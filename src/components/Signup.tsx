@@ -6,6 +6,8 @@ import {
   Card,
   CardContent,
   Typography,
+  Box,
+  Container,
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,6 +31,18 @@ const useStyles = makeStyles((theme) => ({
   submitButton: {
     marginTop: theme.spacing(2),
   },
+  box: {
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  container: {
+    maxWidth: "xs",
+  },
+  paper: {
+    padding: theme.spacing(2),
+  },
 }));
 
 export default function Signup() {
@@ -43,47 +57,51 @@ export default function Signup() {
   };
 
   return (
-    <Card className={classes.root}>
-      <CardContent>
-        <Typography className={classes.title} variant="h4">
-          Sign Up
-        </Typography>
-        <form onSubmit={handleSubmit} className={classes.form}>
-          <TextField
-            className={classes.textField}
-            type="email"
-            label="Email"
-            inputRef={emailRef}
-            required
-          />
-          <TextField
-            className={classes.textField}
-            type="password"
-            label="Password"
-            inputRef={passwordRef}
-            required
-          />
-          <TextField
-            className={classes.textField}
-            type="password"
-            label="Confirm Password"
-            inputRef={passwordConfirmRef}
-            required
-          />
-          <Button
-            className={classes.submitButton}
-            variant="contained"
-            color="primary"
-            type="submit"
-          >
-            Sign Up
-          </Button>
-          <br></br>
-          <Typography align="center" variant="subtitle1" gutterBottom>
-            Already have an account? Log In
-          </Typography>
-        </form>
-      </CardContent>
-    </Card>
+    <Box className={classes.box}>
+      <Container className={classes.container}>
+        <Card className={classes.root}>
+          <CardContent>
+            <Typography className={classes.title} variant="h4">
+              Sign Up
+            </Typography>
+            <form onSubmit={handleSubmit} className={classes.form}>
+              <TextField
+                className={classes.textField}
+                type="email"
+                label="Email"
+                inputRef={emailRef}
+                required
+              />
+              <TextField
+                className={classes.textField}
+                type="password"
+                label="Password"
+                inputRef={passwordRef}
+                required
+              />
+              <TextField
+                className={classes.textField}
+                type="password"
+                label="Confirm Password"
+                inputRef={passwordConfirmRef}
+                required
+              />
+              <Button
+                className={classes.submitButton}
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                Sign Up
+              </Button>
+              <br></br>
+              <Typography align="center" variant="subtitle1" gutterBottom>
+                Already have an account? Log In
+              </Typography>
+            </form>
+          </CardContent>
+        </Card>
+      </Container>
+    </Box>
   );
 }
