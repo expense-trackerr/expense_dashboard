@@ -13,7 +13,7 @@ import {
 import { Icon } from "@iconify/react";
 import googleIcon from "@iconify-icons/fa-brands/google";
 import appleIcon from "@iconify-icons/fa-brands/apple";
-import { loginWithFirebase, loginWithFirebaseO } from "./firebase";
+import { loginWithFirebase } from "./firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,7 +114,7 @@ export default function Signup() {
                 </Typography>
                 <Divider />
               </Box>
-              <Button
+              {/* <Button
                 className={classes.submitButton}
                 variant="contained"
                 type="submit"
@@ -122,7 +122,7 @@ export default function Signup() {
                 startIcon={<Icon icon={appleIcon} />}
               >
                 Log in with Apple
-              </Button>
+              </Button> */}
               <Button
                 className={classes.submitButton}
                 variant="contained"

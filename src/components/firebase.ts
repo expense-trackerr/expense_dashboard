@@ -7,8 +7,3 @@ export const loginWithFirebase = () => {
 };
 
 
-export const loginWithFirebaseO = () => {
-    const auth = getAuth();
-    const provider = new OAuthProvider('apple.com');
-    return signInWithPopup(auth, provider);
-  };
