@@ -1,11 +1,10 @@
-import firebase from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { ListOfTodos } from "./components/ListOfTodos";
 
 function App() {
   const [auth, setAuth] = useState(
-    window.localStorage.getItem("auth") === "true"
+    window.localStorage.getItem("auth") === "true" || false
   );
   const [token, setToken] = useState("");
 
@@ -18,6 +17,9 @@ function App() {
         user.getIdToken().then((token) => {
           setToken(token);
         });
+      } else {
+        setAuth(false);
+        window.localStorage.setItem("auth", "false");
       }
     });
   }, []);
