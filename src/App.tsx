@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { ListOfTodos } from "./components/ListOfTodos";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
+import { loginWithFirebase } from "./components/firebase";
 
 function App() {
   const [auth, setAuth] = useState(
@@ -26,17 +27,6 @@ function App() {
     });
   }, []);
 
-  const loginWithFirebase = () => {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider).then((userCred) => {
-      if (userCred) {
-        setAuth(true);
-        window.localStorage.setItem("auth", "true");
-      }
-    });
-  };
-
   return (
     <>
       {auth ? (
@@ -44,7 +34,6 @@ function App() {
       ) : (
         <>
           <Login />
-          <button onClick={loginWithFirebase}>Login with Google</button>
         </>
       )}
     </>

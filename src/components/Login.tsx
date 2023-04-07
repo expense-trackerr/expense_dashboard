@@ -10,10 +10,10 @@ import {
   Container,
   Divider,
 } from "@material-ui/core";
-import { Apple } from "@material-ui/icons";
 import { Icon } from "@iconify/react";
 import googleIcon from "@iconify-icons/fa-brands/google";
 import appleIcon from "@iconify-icons/fa-brands/apple";
+import { loginWithFirebase } from "./firebase";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -125,7 +125,7 @@ export default function Signup() {
               <Button
                 className={classes.submitButton}
                 variant="contained"
-                type="submit"
+                onClick={loginWithFirebase}
                 startIcon={<Icon icon={googleIcon} />}
               >
                 Log in with Google
