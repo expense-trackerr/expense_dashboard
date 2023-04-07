@@ -15,5 +15,5 @@ export function ListOfTodos({ token }: { token: string }) {
     console.log("result:", result.data);
   };
 
-  return <h1>ListOfTodos</h1>;
+  return <h1>This is a secured page</h1>;
 }
