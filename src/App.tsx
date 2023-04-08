@@ -6,8 +6,7 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { ListOfTodos } from "./components/ListOfTodos";
-import Signup from "./components/Signup";
-import Login from "./components/Login";
+import { Login } from "./components/Login";
 import { loginWithFirebase } from "./components/firebase";
 
 function App() {
@@ -57,7 +56,7 @@ function App() {
       {isAuthenticated ? (
         <ListOfTodos token={token} />
       ) : (
-        <button onClick={loginWithGoogle}>Login with Google</button>
+        <Login loginWithGoogle={loginWithGoogle} />
       )}
     </>
   );

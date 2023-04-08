@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Signup() {
+export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
   const classes = useStyles();
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -114,19 +114,10 @@ export default function Signup() {
                 </Typography>
                 <Divider />
               </Box>
-              {/* <Button
-                className={classes.submitButton}
-                variant="contained"
-                type="submit"
-                onClick={loginWithFirebaseO}
-                startIcon={<Icon icon={appleIcon} />}
-              >
-                Log in with Apple
-              </Button> */}
               <Button
                 className={classes.submitButton}
                 variant="contained"
-                onClick={loginWithFirebase}
+                onClick={loginWithGoogle}
                 startIcon={<Icon icon={googleIcon} />}
               >
                 Log in with Google
