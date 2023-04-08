@@ -21,9 +21,7 @@ export function ListOfTodos({ token }: { token: string }) {
   const handleLogout = () => {
     localStorage.clear();
     const auth = getAuth();
-    signOut(auth).then(() => {
-      alert("Signed Out. Refresh the page to login again");
-    });
+    signOut(auth).then();
   };
 
   return (
