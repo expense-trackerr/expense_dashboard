@@ -8,24 +8,25 @@ import {
   Container,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+  Stack,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     maxWidth: 400,
     margin: "0 auto",
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(2),
+    marginTop: 24,
+    padding: 16,
   },
   title: {
     textAlign: "center",
-    marginBottom: theme.spacing(2),
+    marginBottom: 16,
   },
   submitButton: {
-    marginTop: theme.spacing(2),
+    marginTop: 16,
   },
   box: {
     minHeight: "100vh",
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "xs",
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: 16,
   },
 }));
 
@@ -77,57 +78,59 @@ export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
       <Container className={classes.container}>
         <Card className={classes.root}>
           <CardContent>
-            <Typography className={classes.title} variant="h4">
-              Log In
-            </Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                label="Email"
-                type="email"
-                value={email}
-                error={!!emailError}
-                helperText={emailError}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={validateEmail}
-                fullWidth
-                margin="normal"
-              />
-              <TextField
-                label="Password"
-                type="password"
-                value={password}
-                error={!!passwordError}
-                helperText={passwordError}
-                onChange={(e) => setPassword(e.target.value)}
-                onBlur={validatePassword}
-                fullWidth
-                margin="normal"
-              />
+            <Stack spacing={2} direction="column" alignItems="center">
+              <Typography className={classes.title} variant="h4">
+                Log In
+              </Typography>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label="Email"
+                  type="email"
+                  value={email}
+                  error={!!emailError}
+                  helperText={emailError}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={validateEmail}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Password"
+                  type="password"
+                  value={password}
+                  error={!!passwordError}
+                  helperText={passwordError}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onBlur={validatePassword}
+                  fullWidth
+                  margin="normal"
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.submitButton}
+                  fullWidth
+                  disabled={
+                    !email || !password || !!emailError || !!passwordError
+                  }
+                >
+                  Login
+                </Button>
+              </form>
               <Button
-                type="submit"
-                variant="contained"
-                color="primary"
                 className={classes.submitButton}
+                variant="contained"
+                onClick={loginWithGoogle}
+                startIcon={<Icon icon={googleIcon} />}
                 fullWidth
-                disabled={
-                  !email || !password || !!emailError || !!passwordError
-                }
               >
-                Login
+                Log in with Google
               </Button>
-            </form>
-            <Button
-              className={classes.submitButton}
-              variant="contained"
-              onClick={loginWithGoogle}
-              startIcon={<Icon icon={googleIcon} />}
-              fullWidth
-            >
-              Log in with Google
-            </Button>
-            <Link to="/forgot-password" style={{ textDecoration: "none" }}>
-              Forgot Password?
-            </Link>
+              <Link to="/forgot-password" style={{ textDecoration: "none" }}>
+                Forgot Password?
+              </Link>
+            </Stack>
           </CardContent>
         </Card>
       </Container>
