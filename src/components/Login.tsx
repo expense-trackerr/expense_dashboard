@@ -10,7 +10,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,7 +48,7 @@ export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateEmail() && validatePassword()) {
@@ -124,6 +125,9 @@ export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
             >
               Log in with Google
             </Button>
+            <Link to="/forgot-password" style={{ textDecoration: "none" }}>
+              Forgot Password?
+            </Link>
           </CardContent>
         </Card>
       </Container>
