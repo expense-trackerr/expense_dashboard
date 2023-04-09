@@ -1,19 +1,16 @@
-import React, { useRef } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import googleIcon from "@iconify-icons/fa-brands/google";
+import { Icon } from "@iconify/react";
 import {
-  TextField,
+  Box,
   Button,
   Card,
   CardContent,
-  Typography,
-  Box,
   Container,
-  Divider,
+  TextField,
+  Typography,
 } from "@material-ui/core";
-import { Icon } from "@iconify/react";
-import googleIcon from "@iconify-icons/fa-brands/google";
-import appleIcon from "@iconify-icons/fa-brands/apple";
-import { loginWithFirebase } from "./firebase";
+import { makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,13 +21,6 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     textAlign: "center",
-    marginBottom: theme.spacing(2),
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  textField: {
     marginBottom: theme.spacing(2),
   },
   submitButton: {
@@ -48,31 +38,37 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
   },
-  divider: {
-    display: "flex",
-    alignItems: "center",
-    textAlign: "center",
-    "&::before, &::after": {
-      content: "''",
-      flex: 1,
-      borderBottom: "1px solid #ccc",
-    },
-    "&::before": {
-      marginRight: "0.5em",
-    },
-    "&::after": {
-      marginLeft: "0.5em",
-    },
-  },
 }));
 
 export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
   const classes = useStyles();
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (validateEmail() && validatePassword()) {
+      // Handle form submission
+      console.log("Submitted");
+    }
+  };
+
+  const validateEmail = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const valid = emailRegex.test(email);
+
+    setEmailError(valid ? "" : "Invalid email address");
+    return valid;
+  };
+
+  const validatePassword = () => {
+    const valid = password.length >= 8;
+
+    setPasswordError(valid ? "" : "Password must be at least 8 characters");
+    return valid;
   };
 
   return (
@@ -83,46 +79,51 @@ export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
             <Typography className={classes.title} variant="h4">
               Log In
             </Typography>
-            <form onSubmit={handleSubmit} className={classes.form}>
+            <form onSubmit={handleSubmit}>
               <TextField
-                className={classes.textField}
-                type="email"
                 label="Email"
-                inputRef={emailRef}
-                required
+                type="email"
+                value={email}
+                error={!!emailError}
+                helperText={emailError}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={validateEmail}
+                fullWidth
+                margin="normal"
               />
               <TextField
-                className={classes.textField}
-                type="password"
                 label="Password"
-                inputRef={passwordRef}
-                required
+                type="password"
+                value={password}
+                error={!!passwordError}
+                helperText={passwordError}
+                onChange={(e) => setPassword(e.target.value)}
+                onBlur={validatePassword}
+                fullWidth
+                margin="normal"
               />
               <Button
-                className={classes.submitButton}
+                type="submit"
                 variant="contained"
                 color="primary"
-                type="submit"
-              >
-                Log in
-              </Button>
-              <br></br>
-              <Box mt={2} mb={2} className={classes.divider}>
-                <Divider />
-                <Typography variant="subtitle1" color="textSecondary">
-                  Or
-                </Typography>
-                <Divider />
-              </Box>
-              <Button
                 className={classes.submitButton}
-                variant="contained"
-                onClick={loginWithGoogle}
-                startIcon={<Icon icon={googleIcon} />}
+                fullWidth
+                disabled={
+                  !email || !password || !!emailError || !!passwordError
+                }
               >
-                Log in with Google
+                Login
               </Button>
             </form>
+            <Button
+              className={classes.submitButton}
+              variant="contained"
+              onClick={loginWithGoogle}
+              startIcon={<Icon icon={googleIcon} />}
+              fullWidth
+            >
+              Log in with Google
+            </Button>
           </CardContent>
         </Card>
       </Container>
