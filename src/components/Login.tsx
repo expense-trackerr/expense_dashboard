@@ -42,7 +42,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
+export function Login({
+  loginWithGoogle,
+  login,
+}: {
+  loginWithGoogle: () => void;
+  login: (email: string, password: string) => void;
+}) {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,6 +61,7 @@ export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
     if (validateEmail() && validatePassword()) {
       // Handle form submission
       console.log("Submitted");
+      login(email, password);
     }
   };
 
