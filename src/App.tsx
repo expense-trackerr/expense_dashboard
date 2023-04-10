@@ -4,6 +4,7 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { ListOfTodos } from "./components/ListOfTodos";
@@ -51,6 +52,15 @@ function App() {
     }
   };
 
+  const loginWithFirebase = async (email: string, password: string) => {
+    const auth = getAuth();
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error("Login Error: ", error);
+    }
+  };
+
   const resetPassword = async (email: string) => {
     const auth = getAuth();
     try {
@@ -65,7 +75,7 @@ function App() {
       {isAuthenticated ? (
         <ListOfTodos token={token} />
       ) : (
-        <Login loginWithGoogle={loginWithGoogle} />
+        <Login loginWithGoogle={loginWithGoogle} login={loginWithFirebase} />
       )}
     </>
   );
