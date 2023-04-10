@@ -3,6 +3,7 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { ListOfTodos } from "./components/ListOfTodos";
@@ -47,6 +48,15 @@ function App() {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.error("Signup Error: ", error);
+    }
+  };
+
+  const resetPassword = async (email: string) => {
+    const auth = getAuth();
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      console.error("Reset Password Error: ", error);
     }
   };
 

@@ -1,40 +1,32 @@
-import React, { useRef } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import googleIcon from "@iconify-icons/fa-brands/google";
+import { Icon } from "@iconify/react";
 import {
-  TextField,
+  Box,
   Button,
   Card,
   CardContent,
-  Typography,
-  Box,
   Container,
-  Divider,
-} from "@material-ui/core";
-import { Icon } from "@iconify/react";
-import googleIcon from "@iconify-icons/fa-brands/google";
-import appleIcon from "@iconify-icons/fa-brands/apple";
-import { loginWithFirebase } from "./firebase";
+  TextField,
+  Typography,
+  Stack,
+} from "@mui/material";
+import { makeStyles } from "@mui/styles";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     maxWidth: 400,
     margin: "0 auto",
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(2),
+    marginTop: 24,
+    padding: 16,
   },
   title: {
     textAlign: "center",
-    marginBottom: theme.spacing(2),
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  textField: {
-    marginBottom: theme.spacing(2),
+    marginBottom: 16,
   },
   submitButton: {
-    marginTop: theme.spacing(2),
+    marginTop: 16,
   },
   box: {
     minHeight: "100vh",
@@ -46,33 +38,39 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "xs",
   },
   paper: {
-    padding: theme.spacing(2),
-  },
-  divider: {
-    display: "flex",
-    alignItems: "center",
-    textAlign: "center",
-    "&::before, &::after": {
-      content: "''",
-      flex: 1,
-      borderBottom: "1px solid #ccc",
-    },
-    "&::before": {
-      marginRight: "0.5em",
-    },
-    "&::after": {
-      marginLeft: "0.5em",
-    },
+    padding: 16,
   },
 }));
 
 export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
   const classes = useStyles();
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (validateEmail() && validatePassword()) {
+      // Handle form submission
+      console.log("Submitted");
+    }
+  };
+
+  const validateEmail = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const valid = emailRegex.test(email);
+
+    setEmailError(valid ? "" : "Invalid email address");
+    return valid;
+  };
+
+  const validatePassword = () => {
+    const valid = password.length >= 8;
+
+    setPasswordError(valid ? "" : "Password must be at least 8 characters");
+    return valid;
   };
 
   return (
@@ -80,49 +78,59 @@ export function Login({ loginWithGoogle }: { loginWithGoogle: () => void }) {
       <Container className={classes.container}>
         <Card className={classes.root}>
           <CardContent>
-            <Typography className={classes.title} variant="h4">
-              Log In
-            </Typography>
-            <form onSubmit={handleSubmit} className={classes.form}>
-              <TextField
-                className={classes.textField}
-                type="email"
-                label="Email"
-                inputRef={emailRef}
-                required
-              />
-              <TextField
-                className={classes.textField}
-                type="password"
-                label="Password"
-                inputRef={passwordRef}
-                required
-              />
-              <Button
-                className={classes.submitButton}
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Log in
-              </Button>
-              <br></br>
-              <Box mt={2} mb={2} className={classes.divider}>
-                <Divider />
-                <Typography variant="subtitle1" color="textSecondary">
-                  Or
-                </Typography>
-                <Divider />
-              </Box>
+            <Stack spacing={2} direction="column" alignItems="center">
+              <Typography className={classes.title} variant="h4">
+                Log In
+              </Typography>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label="Email"
+                  type="email"
+                  value={email}
+                  error={!!emailError}
+                  helperText={emailError}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={validateEmail}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  label="Password"
+                  type="password"
+                  value={password}
+                  error={!!passwordError}
+                  helperText={passwordError}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onBlur={validatePassword}
+                  fullWidth
+                  margin="normal"
+                />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.submitButton}
+                  fullWidth
+                  disabled={
+                    !email || !password || !!emailError || !!passwordError
+                  }
+                >
+                  Login
+                </Button>
+              </form>
               <Button
                 className={classes.submitButton}
                 variant="contained"
                 onClick={loginWithGoogle}
                 startIcon={<Icon icon={googleIcon} />}
+                fullWidth
               >
                 Log in with Google
               </Button>
-            </form>
+              <Link to="/forgot-password" style={{ textDecoration: "none" }}>
+                Forgot Password?
+              </Link>
+            </Stack>
           </CardContent>
         </Card>
       </Container>
