@@ -7,7 +7,6 @@ import {
 import { useEffect, useState } from "react";
 import { ListOfTodos } from "./components/ListOfTodos";
 import { Login } from "./components/Login";
-import { loginWithFirebase } from "./components/firebase";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
