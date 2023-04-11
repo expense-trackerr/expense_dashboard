@@ -13,6 +13,7 @@ import {
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -42,26 +43,32 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export function Login({
-  loginWithGoogle,
-  login,
-}: {
-  loginWithGoogle: () => void;
-  login: (email: string, password: string) => void;
-}) {
+export function Login() {
   const classes = useStyles();
+  const { login, loginWithGoogle } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateEmail() && validatePassword()) {
-      // Handle form submission
-      console.log("Submitted");
-      login(email, password);
+      try {
+        await login(email, password);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      await loginWithGoogle();
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -128,7 +135,7 @@ export function Login({
               <Button
                 className={classes.submitButton}
                 variant="contained"
-                onClick={loginWithGoogle}
+                onClick={handleLoginWithGoogle}
                 startIcon={<Icon icon={googleIcon} />}
                 fullWidth
               >
