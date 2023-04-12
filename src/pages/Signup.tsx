@@ -58,6 +58,14 @@ export function Signup() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [passwordConfirmError, setPasswordConfirmError] = useState("");
 
+  const isSignUpDisabled =
+    !email ||
+    !password ||
+    !passwordConfirm ||
+    !!emailError ||
+    !!passwordError ||
+    !!passwordConfirmError;
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -92,6 +100,29 @@ export function Signup() {
     return valid;
   };
 
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+    if (emailError) {
+      setEmailError("");
+    }
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+    if (passwordError) {
+      setPasswordError("");
+    }
+  };
+
+  const handlePasswordConfirmChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordConfirm(event.target.value);
+    if (passwordConfirmError) {
+      setPasswordConfirmError("");
+    }
+  };
+
   return (
     <Box className={classes.box}>
       <Container className={classes.container}>
@@ -108,10 +139,7 @@ export function Signup() {
                 value={email}
                 error={!!emailError}
                 helperText={emailError}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  validateEmail();
-                }}
+                onChange={handleEmailChange}
                 onBlur={validateEmail}
                 required
               />
@@ -122,12 +150,7 @@ export function Signup() {
                 value={password}
                 error={!!passwordError}
                 helperText={passwordError}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  validatePassword();
-                }}
-                onKeyDown={validatePassword}
-                onKeyUp={validatePassword}
+                onChange={handlePasswordChange}
                 onBlur={validatePassword}
                 required
               />
@@ -138,12 +161,7 @@ export function Signup() {
                 value={passwordConfirm}
                 error={!!passwordConfirmError}
                 helperText={passwordConfirmError}
-                onChange={(e) => {
-                  setPasswordConfirm(e.target.value);
-                  validatePasswordConfirm();
-                }}
-                onKeyDown={validatePasswordConfirm}
-                onKeyUp={validatePasswordConfirm}
+                onChange={handlePasswordConfirmChange}
                 onBlur={validatePasswordConfirm}
                 required
               />
@@ -152,14 +170,7 @@ export function Signup() {
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={
-                  !email ||
-                  !password ||
-                  !passwordConfirm ||
-                  !!emailError ||
-                  !!passwordError ||
-                  !!passwordConfirmError
-                }
+                disabled={isSignUpDisabled}
               >
                 Sign Up
               </Button>

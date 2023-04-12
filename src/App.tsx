@@ -1,11 +1,17 @@
-//import { Login } from "./components/Login";
-import { Signup } from "./components/Signup";
+import { ListOfTodos } from "./components/ListOfTodos";
+import { Login } from "./pages/Login";
 import { AuthProvider } from "./contexts/AuthContext";
+import { Routes, Route } from "react-router-dom";
+import { Signup } from "./pages/Signup";
 
 function App() {
   return (
     <AuthProvider>
-      <Signup />
+      <Routes>
+        <Route path="/" element={<ListOfTodos />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
     </AuthProvider>
   );
 }
