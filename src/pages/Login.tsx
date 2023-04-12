@@ -14,6 +14,7 @@ import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { useField } from "../utils/custom-hooks";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -48,20 +49,34 @@ export function Login() {
   const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const emailValidator = (email: string) =>
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+
+  const passwordValidator = (password: string) => password.length >= 8;
+
+  const {
+    value: emailValue,
+    error: emailError,
+    handleChange: handleEmailChange,
+    validate: validateEmail,
+  } = useField("", emailValidator, "Please enter a valid email address");
+
+  const {
+    value: passwordValue,
+    error: passwordError,
+    handleChange: handlePasswordChange,
+    validate: validatePassword,
+  } = useField("", passwordValidator, "Password must be at least 8 characters");
 
   const isLoginDisabled =
-    !email || !password || !!emailError || !!passwordError;
+    !emailValue || !passwordValue || !!emailError || !!passwordError;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (validateEmail() && validatePassword()) {
       try {
-        await login(email, password);
+        await login(emailValue, passwordValue);
         navigate("/");
       } catch (error) {
         console.log(error);
@@ -75,35 +90,6 @@ export function Login() {
       navigate("/");
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const validateEmail = () => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const valid = emailRegex.test(email);
-
-    setEmailError(valid ? "" : "Invalid email address");
-    return valid;
-  };
-
-  const validatePassword = () => {
-    const valid = password.length >= 8;
-
-    setPasswordError(valid ? "" : "Password must be at least 8 characters");
-    return valid;
-  };
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-    if (emailError) {
-      setEmailError("");
-    }
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-    if (passwordError) {
-      setPasswordError("");
     }
   };
 
@@ -121,7 +107,7 @@ export function Login() {
                   <TextField
                     label="Email"
                     type="email"
-                    value={email}
+                    value={emailValue}
                     error={!!emailError}
                     helperText={emailError}
                     onChange={handleEmailChange}
@@ -132,7 +118,7 @@ export function Login() {
                   <TextField
                     label="Password"
                     type="password"
-                    value={password}
+                    value={passwordValue}
                     error={!!passwordError}
                     helperText={passwordError}
                     onChange={handlePasswordChange}
