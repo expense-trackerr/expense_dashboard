@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { makeStyles } from "@mui/styles";
 import {
   TextField,
@@ -10,28 +10,28 @@ import {
   Container,
 } from "@mui/material";
 
-import { useAuth } from "../contexts/AuthContext";
+//import { useAuth } from "../contexts/AuthContext.js"
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 400,
     margin: "0 auto",
-    marginTop: 24,
-    padding: 16,
+    marginTop: theme.spacing(4),
+    padding: theme.spacing(2),
   },
   title: {
     textAlign: "center",
-    marginBottom: 16,
+    marginBottom: theme.spacing(2),
   },
   form: {
     display: "flex",
     flexDirection: "column",
   },
   textField: {
-    marginBottom: 16,
+    marginBottom: theme.spacing(2),
   },
   submitButton: {
-    marginTop: 16,
+    marginTop: theme.spacing(2),
   },
   box: {
     minHeight: "100vh",
@@ -43,51 +43,19 @@ const useStyles = makeStyles(() => ({
     maxWidth: "xs",
   },
   paper: {
-    padding: 16,
+    padding: theme.spacing(2),
   },
 }));
 
 export function Signup() {
   const classes = useStyles();
-  const { signup } = useAuth();
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const passwordConfirmRef = useRef<HTMLInputElement>(null);
 
-  const [email, setEmail] = useState("");
-  const [passwords, setPasswords] = useState({
-    password: "",
-    confirmPassword: "",
-  });
-  const [emailError, setEmailError] = useState("");
-  const [passwordsError, setPasswordsError] = useState("");
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (validateEmail() && validatePasswords()) {
-      try {
-        await signup(email, passwords.password);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  const validateEmail = () => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const valid = emailRegex.test(email);
-
-    setEmailError(valid ? "" : "Invalid email address");
-    return valid;
-  };
-
-  const validatePasswords = () => {
-    const valid =
-      passwords.password.length >= 8 &&
-      passwords.password === passwords.confirmPassword;
-
-    setPasswordsError(
-      valid ? "" : "Passwords do not match or password is too short"
-    );
-    return valid;
+    // handle form submission logic
   };
 
   return (
@@ -102,41 +70,22 @@ export function Signup() {
               <TextField
                 className={classes.textField}
                 type="email"
-                label="email"
-                value={email}
-                error={!!emailError}
-                helperText={emailError}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={validateEmail}
+                label="Email"
+                inputRef={emailRef}
                 required
               />
               <TextField
                 className={classes.textField}
                 type="password"
                 label="Password"
-                value={passwords.password}
-                error={!!passwordsError}
-                helperText={passwordsError}
-                onChange={(e) =>
-                  setPasswords({ ...passwords, password: e.target.value })
-                }
-                onBlur={validatePasswords}
+                inputRef={passwordRef}
                 required
               />
               <TextField
                 className={classes.textField}
                 type="password"
                 label="Confirm Password"
-                value={passwords.confirmPassword}
-                error={!!passwordsError}
-                helperText={passwordsError}
-                onChange={(e) =>
-                  setPasswords({
-                    ...passwords,
-                    confirmPassword: e.target.value,
-                  })
-                }
-                onBlur={validatePasswords}
+                inputRef={passwordConfirmRef}
                 required
               />
               <Button
@@ -144,12 +93,6 @@ export function Signup() {
                 variant="contained"
                 color="primary"
                 type="submit"
-                disabled={
-                  !email ||
-                  !passwords.password ||
-                  !!emailError ||
-                  !!passwordsError
-                }
               >
                 Sign Up
               </Button>
