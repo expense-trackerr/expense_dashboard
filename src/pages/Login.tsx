@@ -53,6 +53,9 @@ export function Login() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
+  const isLoginDisabled =
+    !email || !password || !!emailError || !!passwordError;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -90,6 +93,20 @@ export function Login() {
     return valid;
   };
 
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+    if (emailError) {
+      setEmailError("");
+    }
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+    if (passwordError) {
+      setPasswordError("");
+    }
+  };
+
   return (
     <React.Fragment>
       <Box className={classes.box}>
@@ -107,7 +124,7 @@ export function Login() {
                     value={email}
                     error={!!emailError}
                     helperText={emailError}
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={handleEmailChange}
                     onBlur={validateEmail}
                     fullWidth
                     margin="normal"
@@ -118,7 +135,7 @@ export function Login() {
                     value={password}
                     error={!!passwordError}
                     helperText={passwordError}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handlePasswordChange}
                     onBlur={validatePassword}
                     fullWidth
                     margin="normal"
@@ -129,9 +146,7 @@ export function Login() {
                     color="primary"
                     className={classes.submitButton}
                     fullWidth
-                    disabled={
-                      !email || !password || !!emailError || !!passwordError
-                    }
+                    disabled={isLoginDisabled}
                   >
                     Login
                   </Button>
