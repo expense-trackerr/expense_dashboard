@@ -12,26 +12,26 @@ import {
 
 //import { useAuth } from "../contexts/AuthContext.js"
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     maxWidth: 400,
     margin: "0 auto",
-    marginTop: theme.spacing(4),
-    padding: theme.spacing(2),
+    marginTop: "32px",
+    padding: "16px",
   },
   title: {
     textAlign: "center",
-    marginBottom: theme.spacing(2),
+    marginBottom: "16px",
   },
   form: {
     display: "flex",
     flexDirection: "column",
   },
   textField: {
-    marginBottom: theme.spacing(2),
+    marginBottom: "16px",
   },
   submitButton: {
-    marginTop: theme.spacing(2),
+    marginTop: "16px",
   },
   box: {
     minHeight: "100vh",
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "xs",
   },
   paper: {
-    padding: theme.spacing(2),
+    padding: "16px",
   },
 }));
 

@@ -1,9 +1,13 @@
 import axios from "axios";
 import { getAuth, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
-export function ListOfTodos({ token }: { token: string }) {
+export function ListOfTodos() {
   const [data, setData] = useState([]);
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (token) fetchData();
@@ -22,6 +26,7 @@ export function ListOfTodos({ token }: { token: string }) {
     localStorage.clear();
     const auth = getAuth();
     signOut(auth).then();
+    navigate("/login");
   };
 
   return (
