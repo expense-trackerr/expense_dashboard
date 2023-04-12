@@ -103,7 +103,10 @@ export function Login() {
                   value={email}
                   error={!!emailError}
                   helperText={emailError}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    validateEmail();
+                  }}
                   onBlur={validateEmail}
                   fullWidth
                   margin="normal"
@@ -114,7 +117,12 @@ export function Login() {
                   value={password}
                   error={!!passwordError}
                   helperText={passwordError}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    validatePassword();
+                  }}
+                  onKeyDown={validatePassword}
+                  onKeyUp={validatePassword}
                   onBlur={validatePassword}
                   fullWidth
                   margin="normal"
