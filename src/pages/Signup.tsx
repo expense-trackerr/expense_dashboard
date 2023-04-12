@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@mui/styles";
 import {
   TextField,
@@ -10,28 +10,28 @@ import {
   Container,
 } from "@mui/material";
 
-//import { useAuth } from "../contexts/AuthContext.js"
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles(() => ({
   root: {
     maxWidth: 400,
     margin: "0 auto",
-    marginTop: "32px",
-    padding: "16px",
+    marginTop: 24,
+    padding: 16,
   },
   title: {
     textAlign: "center",
-    marginBottom: "16px",
+    marginBottom: 16,
   },
   form: {
     display: "flex",
     flexDirection: "column",
   },
   textField: {
-    marginBottom: "16px",
+    marginBottom: 16,
   },
   submitButton: {
-    marginTop: "16px",
+    marginTop: 16,
   },
   box: {
     minHeight: "100vh",
@@ -43,19 +43,84 @@ const useStyles = makeStyles(() => ({
     maxWidth: "xs",
   },
   paper: {
-    padding: "16px",
+    padding: 16,
   },
 }));
 
 export function Signup() {
   const classes = useStyles();
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-  const passwordConfirmRef = useRef<HTMLInputElement>(null);
+  const { signup } = useAuth();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [passwordConfirmError, setPasswordConfirmError] = useState("");
+
+  const isSignUpDisabled =
+    !email ||
+    !password ||
+    !passwordConfirm ||
+    !!emailError ||
+    !!passwordError ||
+    !!passwordConfirmError;
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // handle form submission logic
+
+    if (validateEmail() && validatePassword() && validatePasswordConfirm()) {
+      try {
+        await signup(email, password);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const validateEmail = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const valid = emailRegex.test(email);
+
+    setEmailError(valid ? "" : "Invalid email address");
+    return valid;
+  };
+
+  const validatePassword = () => {
+    const valid = password.length >= 8;
+
+    setPasswordError(valid ? "" : "Password must be at least 8 characters");
+    return valid;
+  };
+
+  const validatePasswordConfirm = () => {
+    const valid = password === passwordConfirm;
+
+    setPasswordConfirmError(valid ? "" : "Passwords do not match");
+    return valid;
+  };
+
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+    if (emailError) {
+      setEmailError("");
+    }
+  };
+
+  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+    if (passwordError) {
+      setPasswordError("");
+    }
+  };
+
+  const handlePasswordConfirmChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordConfirm(event.target.value);
+    if (passwordConfirmError) {
+      setPasswordConfirmError("");
+    }
   };
 
   return (
@@ -70,22 +135,34 @@ export function Signup() {
               <TextField
                 className={classes.textField}
                 type="email"
-                label="Email"
-                inputRef={emailRef}
+                label="email"
+                value={email}
+                error={!!emailError}
+                helperText={emailError}
+                onChange={handleEmailChange}
+                onBlur={validateEmail}
                 required
               />
               <TextField
                 className={classes.textField}
                 type="password"
                 label="Password"
-                inputRef={passwordRef}
+                value={password}
+                error={!!passwordError}
+                helperText={passwordError}
+                onChange={handlePasswordChange}
+                onBlur={validatePassword}
                 required
               />
               <TextField
                 className={classes.textField}
                 type="password"
                 label="Confirm Password"
-                inputRef={passwordConfirmRef}
+                value={passwordConfirm}
+                error={!!passwordConfirmError}
+                helperText={passwordConfirmError}
+                onChange={handlePasswordConfirmChange}
+                onBlur={validatePasswordConfirm}
                 required
               />
               <Button
@@ -93,6 +170,7 @@ export function Signup() {
                 variant="contained"
                 color="primary"
                 type="submit"
+                disabled={isSignUpDisabled}
               >
                 Sign Up
               </Button>
