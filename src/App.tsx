@@ -1,11 +1,11 @@
-import { ListOfTodos } from "./components/ListOfTodos";
-import { Login } from "./components/Login";
+//import { Login } from "./components/Login";
+import { Signup } from "./components/Signup";
 import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
     <AuthProvider>
-      <Login />
+      <Signup />
     </AuthProvider>
   );
 }
