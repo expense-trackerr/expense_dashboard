@@ -53,18 +53,17 @@ export function Signup() {
 
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-  const [passwords, setPasswords] = useState({
-    password: "",
-    confirmPassword: "",
-  });
-  const [passwordsError, setPasswordsError] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [passwordConfirmError, setPasswordConfirmError] = useState("");
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (validateEmail() && validatePasswords()) {
+    if (validateEmail() && validatePassword() && validatePasswordConfirm()) {
       try {
-        await signup(email, passwords.password);
+        await signup(email, password);
       } catch (error) {
         console.log(error);
       }
@@ -79,14 +78,17 @@ export function Signup() {
     return valid;
   };
 
-  const validatePasswords = () => {
-    const valid =
-      passwords.password.length >= 8 &&
-      passwords.password === passwords.confirmPassword;
+  const validatePassword = () => {
+    const valid = password.length >= 8;
 
-    setPasswordsError(
-      valid ? "" : "Passwords do not match or password is too short"
-    );
+    setPasswordError(valid ? "" : "Password must be at least 8 characters");
+    return valid;
+  };
+
+  const validatePasswordConfirm = () => {
+    const valid = password === passwordConfirm;
+
+    setPasswordConfirmError(valid ? "" : "Passwords do not match");
     return valid;
   };
 
@@ -106,7 +108,10 @@ export function Signup() {
                 value={email}
                 error={!!emailError}
                 helperText={emailError}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  validateEmail();
+                }}
                 onBlur={validateEmail}
                 required
               />
@@ -114,29 +119,32 @@ export function Signup() {
                 className={classes.textField}
                 type="password"
                 label="Password"
-                value={passwords.password}
-                error={!!passwordsError}
-                helperText={passwordsError}
-                onChange={(e) =>
-                  setPasswords({ ...passwords, password: e.target.value })
-                }
-                onBlur={validatePasswords}
+                value={password}
+                error={!!passwordError}
+                helperText={passwordError}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  validatePassword();
+                }}
+                onKeyDown={validatePassword}
+                onKeyUp={validatePassword}
+                onBlur={validatePassword}
                 required
               />
               <TextField
                 className={classes.textField}
                 type="password"
                 label="Confirm Password"
-                value={passwords.confirmPassword}
-                error={!!passwordsError}
-                helperText={passwordsError}
-                onChange={(e) =>
-                  setPasswords({
-                    ...passwords,
-                    confirmPassword: e.target.value,
-                  })
-                }
-                onBlur={validatePasswords}
+                value={passwordConfirm}
+                error={!!passwordConfirmError}
+                helperText={passwordConfirmError}
+                onChange={(e) => {
+                  setPasswordConfirm(e.target.value);
+                  validatePasswordConfirm();
+                }}
+                onKeyDown={validatePasswordConfirm}
+                onKeyUp={validatePasswordConfirm}
+                onBlur={validatePasswordConfirm}
                 required
               />
               <Button
@@ -146,9 +154,11 @@ export function Signup() {
                 type="submit"
                 disabled={
                   !email ||
-                  !passwords.password ||
+                  !password ||
+                  !passwordConfirm ||
                   !!emailError ||
-                  !!passwordsError
+                  !!passwordError ||
+                  !!passwordConfirmError
                 }
               >
                 Sign Up
