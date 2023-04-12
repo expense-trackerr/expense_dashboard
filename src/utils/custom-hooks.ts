@@ -23,15 +23,10 @@ export const useField = <T>(
     }
   };
 
-  const handleBlur = () => {
-    validate();
-  };
-
   return {
     value,
     error,
     handleChange,
-    handleBlur,
     validate,
   };
 };
