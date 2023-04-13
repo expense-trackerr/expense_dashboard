@@ -13,8 +13,8 @@ import {
 import { makeStyles } from "@mui/styles";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
-import { useField } from "../utils/custom-hooks";
+import { useAuth } from "../../contexts/AuthContext";
+import { useField } from "../../utils/custom-hooks";
 
 const useStyles = makeStyles(() => ({
   root: {
