@@ -3,7 +3,7 @@ import { Login } from "./pages/auth-pages/Login";
 import { AuthProvider } from "./contexts/AuthContext";
 import { Routes, Route } from "react-router-dom";
 import { Signup } from "./pages/auth-pages/Signup";
-import { PrivateRoute } from "./pages/routes/PrivateRoute";
+import { PrivateAuthRoute, PrivateRoute } from "./pages/routes/PrivateRoute";
 
 function App() {
   return (
@@ -17,8 +17,22 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/login"
+          element={
+            <PrivateAuthRoute>
+              <Login />
+            </PrivateAuthRoute>
+          }
+        />
+        <Route
+          path="/signup"
+          element={
+            <PrivateAuthRoute>
+              <Signup />
+            </PrivateAuthRoute>
+          }
+        />
       </Routes>
     </AuthProvider>
   );
