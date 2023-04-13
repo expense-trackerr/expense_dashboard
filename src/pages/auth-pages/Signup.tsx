@@ -9,8 +9,7 @@ import {
   Box,
   Container,
 } from "@mui/material";
-
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 const useStyles = makeStyles(() => ({
   root: {
