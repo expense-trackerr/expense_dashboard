@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import {
   getAuth,
   GoogleAuthProvider,
@@ -82,14 +82,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsubscribe;
   }, []);
 
-  const value = {
-    currentUser,
-    token,
-    login,
-    loginWithGoogle,
-    signup,
-    logout,
-  };
+  const value = useMemo(
+    () => ({
+      currentUser,
+      token,
+      login,
+      loginWithGoogle,
+      signup,
+      logout,
+    }),
+    [currentUser, token, login, loginWithGoogle, signup, logout]
+  );
 
   return (
     <AuthContext.Provider value={value}>
