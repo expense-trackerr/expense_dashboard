@@ -73,6 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (user) {
         setCurrentUser(user);
         user.getIdToken().then((token) => {
+          window.localStorage.setItem("token", token);
           setToken(token);
         });
       }
