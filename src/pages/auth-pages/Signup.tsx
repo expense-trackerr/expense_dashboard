@@ -10,6 +10,7 @@ import {
   Container,
 } from "@mui/material";
 import { useAuth } from "../../contexts/AuthContext";
+import { useField } from "../../utils/custom-hooks";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -50,16 +51,38 @@ export function Signup() {
   const classes = useStyles();
   const { signup } = useAuth();
 
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [passwordConfirmError, setPasswordConfirmError] = useState("");
+  const emailValidator = (email: string) =>
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+
+  const passwordValidator = (password: string) => password.length >= 8;
+
+  const passwordConfirmValidator = (password: string) =>
+    password === passwordValue;
+
+  const {
+    value: emailValue,
+    error: emailError,
+    handleChange: handleEmailChange,
+    validate: validateEmail,
+  } = useField("", emailValidator, "Please enter a valid email address");
+
+  const {
+    value: passwordValue,
+    error: passwordError,
+    handleChange: handlePasswordChange,
+    validate: validatePassword,
+  } = useField("", passwordValidator, "Password must be at least 8 characters");
+
+  const {
+    value: passwordConfirm,
+    error: passwordConfirmError,
+    handleChange: handlePasswordConfirmChange,
+    validate: validatePasswordConfirm,
+  } = useField("", passwordConfirmValidator, "Passwords must match");
 
   const isSignUpDisabled =
-    !email ||
-    !password ||
+    !emailValue ||
+    !passwordValue ||
     !passwordConfirm ||
     !!emailError ||
     !!passwordError ||
@@ -70,55 +93,10 @@ export function Signup() {
 
     if (validateEmail() && validatePassword() && validatePasswordConfirm()) {
       try {
-        await signup(email, password);
+        await signup(emailValue, passwordValue);
       } catch (error) {
         console.log(error);
       }
-    }
-  };
-
-  const validateEmail = () => {
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    const valid = emailRegex.test(email);
-
-    setEmailError(valid ? "" : "Invalid email address");
-    return valid;
-  };
-
-  const validatePassword = () => {
-    const valid = password.length >= 8;
-
-    setPasswordError(valid ? "" : "Password must be at least 8 characters");
-    return valid;
-  };
-
-  const validatePasswordConfirm = () => {
-    const valid = password === passwordConfirm;
-
-    setPasswordConfirmError(valid ? "" : "Passwords do not match");
-    return valid;
-  };
-
-  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-    if (emailError) {
-      setEmailError("");
-    }
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-    if (passwordError) {
-      setPasswordError("");
-    }
-  };
-
-  const handlePasswordConfirmChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPasswordConfirm(event.target.value);
-    if (passwordConfirmError) {
-      setPasswordConfirmError("");
     }
   };
 
@@ -135,22 +113,26 @@ export function Signup() {
                 className={classes.textField}
                 type="email"
                 label="email"
-                value={email}
+                value={emailValue}
                 error={!!emailError}
                 helperText={emailError}
                 onChange={handleEmailChange}
                 onBlur={validateEmail}
+                fullWidth
+                margin="normal"
                 required
               />
               <TextField
                 className={classes.textField}
                 type="password"
                 label="Password"
-                value={password}
+                value={passwordValue}
                 error={!!passwordError}
                 helperText={passwordError}
                 onChange={handlePasswordChange}
                 onBlur={validatePassword}
+                fullWidth
+                margin="normal"
                 required
               />
               <TextField
@@ -162,6 +144,8 @@ export function Signup() {
                 helperText={passwordConfirmError}
                 onChange={handlePasswordConfirmChange}
                 onBlur={validatePasswordConfirm}
+                fullWidth
+                margin="normal"
                 required
               />
               <Button
@@ -169,6 +153,7 @@ export function Signup() {
                 variant="contained"
                 color="primary"
                 type="submit"
+                fullWidth
                 disabled={isSignUpDisabled}
               >
                 Sign Up
