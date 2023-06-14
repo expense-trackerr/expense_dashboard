@@ -3,6 +3,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { AddCategories } from "./AddCategories";
 
 export function ListOfTodos() {
   const [data, setData] = useState([]);
@@ -32,13 +33,13 @@ export function ListOfTodos() {
   return (
     <>
       <button onClick={handleLogout}>Logout</button>
-      <h1>This is a secured page.</h1>
       <h3>Here is the data</h3>
       {data.map((item: any) => (
         <div key={item.id}>
           <h4>{item.title}</h4>
         </div>
       ))}
+      <AddCategories />
     </>
   );
 }
