@@ -15,7 +15,6 @@ type TodoData = {
 
 export function ListOfTodos() {
   const [data, setData] = useState<TodoData['data']['todos']>([]);
-  console.log('data:', data);
   const token = localStorage.getItem('token');
   const navigate = useNavigate();
 

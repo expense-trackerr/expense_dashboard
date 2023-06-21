@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import axios from '../config/axiosConfig';
+import { AxiosError } from 'axios';
 
 export const AddCategories = () => {
   const [fields, setFields] = useState<string[]>(['']);
@@ -16,7 +18,14 @@ export const AddCategories = () => {
   };
 
   const handleSubmit = () => {
-    console.log(fields);
+    axios
+      .post('http://localhost:3000/api/categories/create', {
+        categories: fields,
+      })
+      .catch((err) => {
+        const error = err as AxiosError<{ message: string }>;
+        console.error(error.response?.data.message);
+      });
   };
 
   return (
