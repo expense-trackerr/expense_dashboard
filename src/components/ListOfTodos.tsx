@@ -2,7 +2,6 @@ import axios from 'axios';
 import { getAuth, signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
 import { AddCategories } from './AddCategories';
 
 type TodoData = {
@@ -16,7 +15,7 @@ type TodoData = {
 
 export function ListOfTodos() {
   const [data, setData] = useState<TodoData['data']['todos']>([]);
-  const { token } = useAuth();
+  const token = localStorage.getItem('token');
   const navigate = useNavigate();
 
   useEffect(() => {
