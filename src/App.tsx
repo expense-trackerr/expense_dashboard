@@ -1,7 +1,7 @@
+import { Route, Routes } from 'react-router-dom';
 import { MainDashboard } from './components/MainDashboard';
-import { Login } from './pages/auth-pages/Login';
 import { AuthProvider } from './contexts/AuthContext';
-import { Routes, Route } from 'react-router-dom';
+import { Login } from './pages/auth-pages/Login';
 import { Signup } from './pages/auth-pages/Signup';
 import { PrivateAuthRoute, PrivateRoute } from './pages/routes/PrivateRoute';
 
