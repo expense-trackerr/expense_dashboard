@@ -1,4 +1,4 @@
-import { ListOfTodos } from './components/ListOfTodos';
+import { MainDashboard } from './components/MainDashboard';
 import { Login } from './pages/auth-pages/Login';
 import { AuthProvider } from './contexts/AuthContext';
 import { Routes, Route } from 'react-router-dom';
@@ -13,7 +13,7 @@ function App() {
           path="/"
           element={
             <PrivateRoute>
-              <ListOfTodos />
+              <MainDashboard />
             </PrivateRoute>
           }
         />

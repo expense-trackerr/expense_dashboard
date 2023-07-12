@@ -1,7 +1,6 @@
-import { getAuth, signOut } from 'firebase/auth';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from '../config/axiosConfig';
+import Navbar from '../containers/NavBar';
 import { AddCategories } from './AddCategories';
 
 type TodoData = {
@@ -13,10 +12,9 @@ type TodoData = {
   };
 };
 
-export function ListOfTodos() {
+export function MainDashboard() {
   const [data, setData] = useState<TodoData['data']['todos']>([]);
   const token = localStorage.getItem('token');
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (token) void fetchData();
@@ -25,8 +23,9 @@ export function ListOfTodos() {
   const fetchData = async () => {
     try {
       const result: TodoData = await axios.get(
-        'http://localhost:3000/api/todo'
+        'http://localhost:3000/api/categories'
       );
+      console.log('result:', result);
       if (result.data.todos) {
         setData(result.data.todos);
       }
@@ -35,16 +34,9 @@ export function ListOfTodos() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.clear();
-    const auth = getAuth();
-    void signOut(auth).then();
-    navigate('/login');
-  };
-
   return (
     <>
-      <button onClick={handleLogout}>Logout</button>
+      <Navbar />
       <h3>Here is the data</h3>
       {data.map((item) => (
         <div key={item.id}>
