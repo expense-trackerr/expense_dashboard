@@ -1,5 +1,7 @@
+import { Container, Grid } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from '../config/axiosConfig';
+import { Categories } from '../containers/Categories';
 import Navbar from '../containers/NavBar';
 import { AddCategories } from './AddCategories';
 
@@ -37,13 +39,19 @@ export function MainDashboard() {
   return (
     <>
       <Navbar />
-      <h3>Here is the data</h3>
-      {data.map((item) => (
-        <div key={item.id}>
-          <h4>{item.title}</h4>
-        </div>
-      ))}
-      <AddCategories />
+      <Container>
+        <Grid container spacing={2}>
+          <Grid item md={4}>
+            <Categories />
+          </Grid>
+          {data.map((item) => (
+            <div key={item.id}>
+              <h4>{item.title}</h4>
+            </div>
+          ))}
+          <AddCategories />
+        </Grid>
+      </Container>
     </>
   );
 }

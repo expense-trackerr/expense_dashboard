@@ -16,11 +16,11 @@ export default function NavBar() {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, marginBottom: '20px' }}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
+            Expense Tracker
           </Typography>
           <Button color="inherit" onClick={() => handleLogout(navigate)}>
             Logout
