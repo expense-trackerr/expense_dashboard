@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'",
     "codegen": "graphql-codegen",
-    "codegen-watch": "graphql-codegen -w"
+    "codegen-watch": "graphql-codegen -w",
+    "prettier": "prettier --write --config prettierrc.json \"src/**/*.{js,jsx,ts,tsx,json}\" "
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",

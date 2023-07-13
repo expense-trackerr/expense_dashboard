@@ -31,6 +31,7 @@ export type Scalars = {
 
 export type Category = {
   __typename?: 'Category';
+  id?: Maybe<Scalars['Int']['output']>;
   name?: Maybe<Scalars['String']['output']>;
 };
 
@@ -49,7 +50,11 @@ export type GetCategoriesQueryVariables = Exact<{
 
 export type GetCategoriesQuery = {
   __typename?: 'Query';
-  getCategories: Array<{ __typename?: 'Category'; name?: string | null }>;
+  getCategories: Array<{
+    __typename?: 'Category';
+    id?: number | null;
+    name?: string | null;
+  }>;
 };
 
 export const GetCategoriesDocument = {
@@ -94,6 +99,7 @@ export const GetCategoriesDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
               ],
             },

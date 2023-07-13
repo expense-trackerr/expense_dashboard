@@ -11,11 +11,14 @@ import {
   Typography,
 } from '@mui/material';
 import { useAuth } from '../contexts/AuthContext';
+import RemoveIcon from '@mui/icons-material/Remove';
 import { gql } from '../__generated__/gql';
+import axios, { AxiosError } from 'axios';
 
 const GET_CATEGORIES = gql(`
   query getCategories($userId: String!) {
     getCategories(userId: $userId) {
+      id
       name
     }
   }
@@ -27,12 +30,25 @@ export const Categories = () => {
     variables: { userId: currentUser?.uid ?? '' },
   });
   const categoriesList = data?.getCategories;
+  console.log('categoriesList:', categoriesList);
 
   const handleAddCategory = () => {
     console.log('Added category');
   };
 
+  const handleDeleteCategory = (categoryId: number | undefined | null) => {
+    axios
+      .post('http://localhost:3000/api/categories/delete', {
+        categoriesId: categoryId,
+      })
+      .catch((err) => {
+        const axiosError = err as AxiosError<{ message: string }>;
+        console.error(axiosError.response?.data.message);
+      });
+  };
+
   if (error) console.error(error);
+  if (!categoriesList) return <CircularProgress />;
 
   return (
     <Card>
@@ -49,9 +65,16 @@ export const Categories = () => {
         </Grid>
         <List>
           {loading && <CircularProgress />}
-          {categoriesList?.map((category, index) => (
+          {categoriesList.map((category, index) => (
             <ListItem key={index}>
               <ListItemText primary={category.name} />
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => handleDeleteCategory(category.id)}
+              >
+                <RemoveIcon />
+              </Button>
             </ListItem>
           ))}
         </List>
