@@ -26,7 +26,7 @@ export const Categories = () => {
   const { data, error, loading } = useQuery(GET_CATEGORIES, {
     variables: { userId: currentUser?.uid },
   });
-  console.log('data:', data);
+  const categoriesList = data?.getCategories;
 
   const handleAddCategory = () => {
     console.log('Added category');
