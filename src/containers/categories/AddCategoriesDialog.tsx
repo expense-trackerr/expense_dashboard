@@ -23,11 +23,9 @@ export const AddCategoriesDialog = ({
 
   const handleCategoryBudgetTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
-    console.log('value:', value);
     if (value === 0) {
-      console.log('Here', value);
       setCategoryBudget('');
-    } else if (value !== NaN) {
+    } else if (!isNaN(value)) {
       setCategoryBudget(value);
     }
   };

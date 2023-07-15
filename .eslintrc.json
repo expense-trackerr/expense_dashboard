@@ -16,7 +16,8 @@
     "@typescript-eslint/comma-dangle": "off",
     "import/named": "off",
     "import/no-unresolved": "off",
-    "@typescript-eslint/indent": "warn"
+    "@typescript-eslint/indent": "warn",
+    "@typescript-eslint/no-shadow": "off"
     // "@typescript-eslint/space-before-function-paren": "off",
     // "@typescript-eslint/explicit-function-return-type": "off",
     // "react/react-in-jsx-scope": "off",

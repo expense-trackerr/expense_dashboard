@@ -45,13 +45,22 @@ export const Categories = () => {
     setAddCategoriesDialogOpen(true);
   };
 
-  const handleCloseAddCategoriesDialog: HandleCloseAddCategoriesDialogProps =
-    (shouldSave, values) => () => {
-      if (shouldSave && values) {
-        console.log('Saved', values.categoryName, values.categoryBudget);
-      }
-      setAddCategoriesDialogOpen(false);
-    };
+  const handleCloseAddCategoriesDialog: HandleCloseAddCategoriesDialogProps = (shouldSave, values) => () => {
+    if (shouldSave && values) {
+      axios
+        .post('http://localhost:3000/api/categories/create', {
+          categories: [values.categoryName],
+        })
+        .then(() => {
+          refetch();
+        })
+        .catch((err) => {
+          const error = err as AxiosError<{ message: string }>;
+          console.error(error.response?.data.message);
+        });
+    }
+    setAddCategoriesDialogOpen(false);
+  };
 
   const handleDeleteCategory = (categoryId: number | undefined | null) => {
     axios
@@ -86,14 +95,10 @@ export const Categories = () => {
           </Grid>
           <List>
             {loading && <CircularProgress />}
-            {categoriesList.map((category, index) => (
-              <ListItem key={index}>
+            {categoriesList.map((category) => (
+              <ListItem key={category.id}>
                 <ListItemText primary={category.name} />
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={() => handleDeleteCategory(category.id)}
-                >
+                <Button variant="contained" color="secondary" onClick={() => handleDeleteCategory(category.id)}>
                   <RemoveIcon />
                 </Button>
               </ListItem>
