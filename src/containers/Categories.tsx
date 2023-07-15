@@ -13,7 +13,8 @@ import {
 import { useAuth } from '../contexts/AuthContext';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { gql } from '../__generated__/gql';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
+import axios from '../config/axiosConfig';
 
 const GET_CATEGORIES = gql(`
   query getCategories($userId: String!) {
