@@ -1,5 +1,5 @@
 import { Container, Grid } from '@mui/material';
-import { Categories } from '../containers/Categories';
+import { Categories } from '../containers/categories/Categories';
 import Navbar from '../containers/NavBar';
 
 export function MainDashboard() {
