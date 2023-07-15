@@ -1,12 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, Container, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -51,13 +43,11 @@ export function Signup() {
   const classes = useStyles();
   const { signup } = useAuth();
 
-  const emailValidator = (email: string) =>
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  const emailValidator = (email: string) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
   const passwordValidator = (password: string) => password.length >= 8;
 
-  const passwordConfirmValidator = (password: string) =>
-    password === passwordValue;
+  const passwordConfirmValidator = (password: string) => password === passwordValue;
 
   const {
     value: emailValue,
@@ -81,12 +71,7 @@ export function Signup() {
   } = useField('', passwordConfirmValidator, 'Passwords must match');
 
   const isSignUpDisabled =
-    !emailValue ||
-    !passwordValue ||
-    !passwordConfirm ||
-    !!emailError ||
-    !!passwordError ||
-    !!passwordConfirmError;
+    !emailValue || !passwordValue || !passwordConfirm || !!emailError || !!passwordError || !!passwordConfirmError;
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

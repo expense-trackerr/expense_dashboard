@@ -1,15 +1,6 @@
 import googleIcon from '@iconify-icons/fa-brands/google';
 import { Icon } from '@iconify/react';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, Container, Stack, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -49,8 +40,7 @@ export function Login() {
   const { login, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
-  const emailValidator = (email: string) =>
-    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+  const emailValidator = (email: string) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 
   const passwordValidator = (password: string) => password.length >= 8;
 
@@ -68,8 +58,7 @@ export function Login() {
     validate: validatePassword,
   } = useField('', passwordValidator, 'Password must be at least 8 characters');
 
-  const isLoginDisabled =
-    !emailValue || !passwordValue || !!emailError || !!passwordError;
+  const isLoginDisabled = !emailValue || !passwordValue || !!emailError || !!passwordError;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

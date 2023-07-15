@@ -1,15 +1,6 @@
 import googleIcon from '@iconify-icons/fa-brands/google';
 import { Icon } from '@iconify/react';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  TextField,
-  Typography,
-  Stack,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, Container, TextField, Typography, Stack } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -133,9 +124,7 @@ export function Login() {
                   color="primary"
                   className={classes.submitButton}
                   fullWidth
-                  disabled={
-                    !email || !password || !!emailError || !!passwordError
-                  }
+                  disabled={!email || !password || !!emailError || !!passwordError}
                 >
                   Login
                 </Button>

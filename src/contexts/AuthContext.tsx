@@ -98,9 +98,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [currentUser, token, login, loginWithGoogle, signup, logout]
   );
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading && children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{!loading && children}</AuthContext.Provider>;
 }
