@@ -17,19 +17,12 @@
     "import/named": "off",
     "import/no-unresolved": "off",
     "@typescript-eslint/indent": "warn",
-    "@typescript-eslint/no-shadow": "off"
-    // "@typescript-eslint/space-before-function-paren": "off",
-    // "@typescript-eslint/explicit-function-return-type": "off",
-    // "react/react-in-jsx-scope": "off",
-    // "@typescript-eslint/indent": "off",
-    // "@typescript-eslint/comma-dangle": "off",
-    // "@typescript-eslint/strict-boolean-expressions": "off",
-    // "@typescript-eslint/semi": "off",
-    // "@typescript-eslint/no-explicit-any": "error",
-    // "@typescript-eslint/array-type": "off",
-    // "@typescript-eslint/member-delimiter-style": "off",
-    // "@typescript-eslint/consistent-type-definitions": "off",
-    // "@typescript-eslint/consistent-type-imports": "off",
-    // "@typescript-eslint/triple-slash-reference": "off"
+    "@typescript-eslint/no-shadow": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_" // ignore unused function arguments whose name starts with _
+      }
+    ]
   }
 }
