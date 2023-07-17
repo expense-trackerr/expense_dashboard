@@ -1,6 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
 import { Route, Routes } from 'react-router-dom';
-import { MainDashboard } from './components/MainDashboard';
+import { MainDashboard } from './pages/main/MainDashboard';
 import { gqlClient } from './config/gqlClient';
 import { AuthProvider } from './contexts/AuthContext';
 import { Login } from './pages/auth-pages/Login';

@@ -52,6 +52,8 @@ export const Categories = () => {
           categories: [values.categoryName],
         })
         .then(() => {
+          // check for response code and display error message
+
           refetch();
         })
         .catch((err) => {
