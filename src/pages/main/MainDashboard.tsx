@@ -2,15 +2,11 @@ import { Alert, Container, Grid, Typography } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { Categories } from '../../containers/categories/Categories';
 import Navbar from '../../containers/NavBar';
+import { PlaidLink } from '../../containers/plaid/PlaidLink';
 import { PlaidContext } from './PlaidContext';
 
 export function MainDashboard() {
   const { linkToken, linkTokenError } = useContext(PlaidContext);
-  console.log('linkToken:', linkToken);
-
-  useEffect(() => {
-    console.log('MainDashboard');
-  }, []);
 
   return (
     <>
@@ -33,7 +29,9 @@ export function MainDashboard() {
             <div>
               <Typography>Loading...</Typography>
             </div>
-          ) : null}
+          ) : (
+            <PlaidLink />
+          )}
 
           {/* <AddCategories /> */}
         </Grid>

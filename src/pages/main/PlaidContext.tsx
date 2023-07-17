@@ -50,7 +50,7 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
         console.error(axiosError.response?.data.message);
         setLinkTokenError(axiosError.response?.data.message);
       });
-  }, [linkToken, linkTokenError]);
+  }, []);
 
   type OnSuccessResponseType = {
     access_token: string;

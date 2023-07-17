@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setToken(currToken);
           })
           .catch((error) => {
-            console.log(error);
+            console.error(error);
           });
       }
       setLoading(false);

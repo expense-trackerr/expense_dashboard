@@ -80,7 +80,7 @@ export function Signup() {
       signup(emailValue, passwordValue)
         .then()
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     }
   };
