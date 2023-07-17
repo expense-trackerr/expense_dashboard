@@ -6,6 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { Login } from './pages/auth-pages/Login';
 import { Signup } from './pages/auth-pages/Signup';
 import { PrivateAuthRoute, PrivateRoute } from './pages/routes/PrivateRoute';
+import { PlaidContextProvider } from './pages/main/PlaidContext';
 
 function App() {
   return (
@@ -16,7 +17,9 @@ function App() {
             path="/"
             element={
               <PrivateRoute>
-                <MainDashboard />
+                <PlaidContextProvider>
+                  <MainDashboard />
+                </PlaidContextProvider>
               </PrivateRoute>
             }
           />
