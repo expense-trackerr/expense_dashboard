@@ -61,9 +61,12 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
   const onSuccess = React.useCallback((public_token: string, metadata: PlaidLinkOnSuccessMetadata) => {
     // If the access_token is needed, send public_token to server
     const exchangePublicTokenForAccessToken = async () => {
-      const response: AxiosResponse<OnSuccessResponseType> = await defaultAxios.post('/api/set_access_token', {
-        publicToken: `public_token=${public_token}`,
-      });
+      const response: AxiosResponse<OnSuccessResponseType> = await defaultAxios.post(
+        'http://localhost:3000/api/set_access_token',
+        {
+          publicToken: public_token,
+        }
+      );
       if (response.status !== 200) {
         setItemId('No item_id retrieved');
         setAccessToken('No access_token retrieved');

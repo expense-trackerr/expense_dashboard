@@ -1,5 +1,5 @@
 import { Alert, Container, Grid, Typography } from '@mui/material';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { Categories } from '../../containers/categories/Categories';
 import Navbar from '../../containers/NavBar';
 import { PlaidLink } from '../../containers/plaid/PlaidLink';
