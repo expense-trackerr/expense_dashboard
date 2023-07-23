@@ -6,19 +6,19 @@ import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import { LinkTokenCreateResponse } from 'plaid';
 
 type PlaidContextType = {
-  itemId?: string | null;
-  accessToken?: string | null;
-  linkToken?: string | null;
-  linkTokenError?: string | null;
+  itemId?: string;
+  accessToken?: string;
+  linkToken?: string;
+  linkTokenError?: string;
   generateToken?: () => void;
   onSuccess: (public_token: string, metadata: PlaidLinkOnSuccessMetadata) => void;
 };
 
 export const PlaidContext = createContext<PlaidContextType>({
-  itemId: null,
-  accessToken: null,
-  linkToken: null,
-  linkTokenError: null,
+  itemId: undefined,
+  accessToken: undefined,
+  linkToken: undefined,
+  linkTokenError: undefined,
   generateToken: () => {},
   onSuccess: () => {},
 });
@@ -68,13 +68,14 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
         }
       );
       if (response.status !== 200) {
-        setItemId('No item_id retrieved');
-        setAccessToken('No access_token retrieved');
+        setItemId(undefined);
+        setAccessToken(undefined);
         return;
       }
       const data = response.data;
       setItemId(data.item_id);
       setAccessToken(data.access_token);
+      localStorage.setItem('plaidAccessToken', data.access_token); // Remove this from local storage
     };
 
     exchangePublicTokenForAccessToken();
@@ -94,6 +95,14 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
     };
     init();
   }, [generateToken]);
+
+  // TODO: Set AccessToken in the database
+  useEffect(() => {
+    const accessToken = localStorage.getItem('plaidAccessToken');
+    if (accessToken) {
+      setAccessToken(accessToken);
+    }
+  }, []);
 
   const plaidContextValue = useMemo(
     () => ({ linkToken, linkTokenError, itemId, accessToken, onSuccess }),

@@ -1,12 +1,29 @@
-import { Alert, Container, Grid, Typography } from '@mui/material';
-import { useContext } from 'react';
+import { Alert, Button, Container, Grid, Typography } from '@mui/material';
+import { useContext, useState } from 'react';
+import defaultAxios from '../../config/axiosConfig';
 import { Categories } from '../../containers/categories/Categories';
 import Navbar from '../../containers/NavBar';
 import { PlaidLink } from '../../containers/plaid/PlaidLink';
 import { PlaidContext } from './PlaidContext';
 
 export function MainDashboard() {
-  const { linkToken, linkTokenError } = useContext(PlaidContext);
+  const { linkToken, linkTokenError, accessToken } = useContext(PlaidContext);
+
+  // const [transactions, setTransactions] = useState();
+
+  const handleGetTransactions = () => {
+    if (accessToken) {
+      defaultAxios
+        .get('http://localhost:3000/api/transactions')
+        .then((res) => {
+          console.log(res.data);
+          // setTransactions(res.data.transactions);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
 
   return (
     <>
@@ -32,6 +49,7 @@ export function MainDashboard() {
           ) : (
             <PlaidLink />
           )}
+          {accessToken && <Button onClick={handleGetTransactions}>Get transactions</Button>}
 
           {/* <AddCategories /> */}
         </Grid>
