@@ -2,8 +2,10 @@ import googleIcon from '@iconify-icons/fa-brands/google';
 import { Icon } from '@iconify/react';
 import { Box, Button, Card, CardContent, Container, Stack, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { AxiosError } from 'axios';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import defaultAxios from '../../config/axiosConfig';
 import { useAuth } from '../../contexts/AuthContext';
 import { useField } from '../../utils/custom-hooks';
 
@@ -75,9 +77,23 @@ export function Login() {
   };
 
   const handleLoginWithGoogle = () => {
+    // Saves user to database
     loginWithGoogle()
-      .then(() => {
-        navigate('/');
+      .then((res) => {
+        const userData = res.user.providerData;
+        defaultAxios
+          .post('http://localhost:3000/users/save-user', {
+            userUid: userData[0].uid,
+            email: userData[0].email,
+            name: userData[0].displayName,
+          })
+          .then(() => {
+            navigate('/');
+          })
+          .catch((err) => {
+            const error = err as AxiosError<{ message: string }>;
+            console.error(error.response?.data.message);
+          });
       })
       .catch((error) => {
         console.error(error);
