@@ -39,6 +39,7 @@ export const Categories = () => {
   const { data, error, loading, refetch } = useQuery(GET_CATEGORIES, {
     variables: { userId: currentUser?.uid ?? '' },
   });
+  console.log('data:', data);
   const categoriesList = data?.getCategories;
 
   const handleAddCategory = () => {
@@ -64,7 +65,7 @@ export const Categories = () => {
     setAddCategoriesDialogOpen(false);
   };
 
-  const handleDeleteCategory = (categoryId: number | undefined | null) => {
+  const handleDeleteCategory = (categoryId: string | undefined | null) => {
     axios
       .post('http://localhost:3000/api/categories/delete', {
         categoriesId: categoryId,
