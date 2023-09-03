@@ -18,16 +18,12 @@ import { getAuth, signOut } from 'firebase/auth';
 import { useState } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { gqlClient } from '../config/gqlClient';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const DRAWER_WIDTH = 200;
 
-const drawerItems = [
-  { text: 'Home', icon: <HomeIcon /> },
-  { text: 'Categories', icon: <DashboardCustomizeIcon /> },
-  { text: 'Stats', icon: <QueryStatsIcon /> },
-];
-
-const handleLogout = (navigate: NavigateFunction) => {
+const handleLogout = (navigate: NavigateFunction) => () => {
   localStorage.clear();
   const auth = getAuth();
   void signOut(auth).then(() => {
@@ -35,6 +31,14 @@ const handleLogout = (navigate: NavigateFunction) => {
     navigate('/login');
   });
 };
+
+const drawerItems = [
+  { text: 'Home', icon: <HomeIcon />, path: '/' },
+  { text: 'Categories', icon: <DashboardCustomizeIcon />, path: 'categories' },
+  { text: 'Stats', icon: <QueryStatsIcon />, path: 'stats' },
+  { text: 'Settings', icon: <SettingsIcon />, path: 'settings' },
+  { text: 'Logout', icon: <LogoutIcon />, action: handleLogout },
+];
 
 export const NavBar = () => {
   const navigate = useNavigate();
@@ -48,9 +52,9 @@ export const NavBar = () => {
   const drawer = (
     <Grid direction={'column'} container justifyContent={'center'} alignItems={'center'} height="100%" mt="-60px">
       <List>
-        {drawerItems.map((item, i) => (
+        {drawerItems.map((item) => (
           <ListItem key={item.text} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={item.action ? item.action?.(navigate) : () => navigate(`/${item.path}`)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>
