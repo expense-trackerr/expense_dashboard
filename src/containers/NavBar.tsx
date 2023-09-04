@@ -1,7 +1,9 @@
 import DashboardCustomizeIcon from '@mui/icons-material/DashboardCustomize';
 import HomeIcon from '@mui/icons-material/Home';
+import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {
   Box,
   Drawer,
@@ -14,74 +16,79 @@ import {
   ListItemText,
   Toolbar,
 } from '@mui/material';
-import { getAuth, signOut } from 'firebase/auth';
 import { useState } from 'react';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { gqlClient } from '../config/gqlClient';
-import SettingsIcon from '@mui/icons-material/Settings';
-import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from '../contexts/AuthContext';
 
 const DRAWER_WIDTH = 200;
-
-const handleLogout = (navigate: NavigateFunction) => () => {
-  localStorage.clear();
-  const auth = getAuth();
-  void signOut(auth).then(() => {
-    gqlClient.resetStore(); // Clear the graphql cache
-    navigate('/login');
-  });
-};
 
 const drawerItems = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
   { text: 'Categories', icon: <DashboardCustomizeIcon />, path: '/categories' },
   { text: 'Stats', icon: <QueryStatsIcon />, path: '/stats' },
   { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
-  { text: 'Logout', icon: <LogoutIcon />, action: handleLogout },
+];
+
+const getDrawerItemsWithAction = (handleLogout: () => Promise<void>) => [
+  { text: 'Logout', icon: <LogoutIcon />, path: '/login', action: handleLogout },
 ];
 
 export const NavBar = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedPath, setSelectedPath] = useState('');
-
-  console.log(window.location.pathname);
-
-  const handleListItemButtonClick = (path: string) => {
-    setSelectedPath(path);
-  };
+  // const [selectedPath, setSelectedPath] = useState('');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleLogout = async () => {
+    localStorage.clear();
+    await logout();
+    gqlClient.resetStore(); // Clear the graphql cache
+    navigate('/login');
+  };
+
+  const drawerItemsWithAction = getDrawerItemsWithAction(handleLogout);
+
   const drawer = (
-    <Grid direction={'column'} container justifyContent={'center'} alignItems={'center'} height="100%" mt="-60px">
-      <List>
-        {drawerItems.map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton onClick={item.action ? item.action?.(navigate) : () => navigate(item.path)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+    <Grid direction={'column'} container justifyContent="space-between" alignItems={'center'} height="100%">
+      <Grid item></Grid>
+      <Grid item>
+        <List>
+          {drawerItems.map((item) => (
+            <ListItem key={item.text} disablePadding>
+              <ListItemButton onClick={() => navigate(item.path)}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Grid>
+      <Grid item>
+        <List>
+          {drawerItemsWithAction.map((item) => (
+            <ListItem key={item.text} disablePadding>
+              <ListItemButton onClick={item.action}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Grid>
     </Grid>
   );
 
   return (
     <>
       {/* Temporary Drawer */}
-      <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          edge="start"
-          onClick={handleDrawerToggle}
-          sx={{ mr: 2, display: { sm: 'none' } }}
-        >
+      <Toolbar sx={{ display: { sm: 'none' } }}>
+        <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
           <MenuIcon />
         </IconButton>
       </Toolbar>
