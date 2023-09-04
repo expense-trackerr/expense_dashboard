@@ -3,7 +3,7 @@ import { PlaidContextProvider } from './contexts/PlaidContext';
 import { Login } from './pages/auth-pages/Login';
 import { Signup } from './pages/auth-pages/Signup';
 import { MainDashboard } from './pages/main/MainDashboard';
-import { PrivateAuthRoute, PrivateRoute } from './pages/routes/PrivateRoute';
+import { PrivateAuthRoute, PrivateRoute } from './utils/PrivateRoute';
 
 export const Router = () => {
   return (
