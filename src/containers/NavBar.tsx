@@ -16,12 +16,12 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
-  useTheme,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gqlClient } from '../config/gqlClient';
 import { useAuth } from '../contexts/AuthContext';
+import { themeColors } from '../utils/theme-utils';
 
 export const DRAWER_WIDTH = 180;
 
@@ -29,7 +29,7 @@ const drawerPaperStyle = {
   boxSizing: 'border-box',
   width: DRAWER_WIDTH,
   border: 'none',
-  backgroundColor: '#F9F9F9',
+  backgroundColor: themeColors.greyBackground,
 };
 
 const ListItemButtonStyled = (props: ListItemButtonProps) => (
@@ -45,14 +45,14 @@ const ListItemButtonStyled = (props: ListItemButtonProps) => (
         backgroundColor: 'transparent',
       },
       '&.Mui-selected:hover': {
-        backgroundColor: '#F5F5F5',
+        backgroundColor: themeColors.greyBackground,
       },
       '&.MuiListItemButton-root': {
-        color: '#B7B7B7',
+        color: themeColors.greyText,
         width: DRAWER_WIDTH,
       },
       ' & .MuiListItemIcon-root': {
-        color: '#B7B7B7',
+        color: themeColors.greyText,
         minWidth: '40px',
       },
     }}
@@ -73,7 +73,6 @@ const getDrawerItemsWithAction = (handleLogout: () => Promise<void>) => [
 export const NavBar = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
-  const theme = useTheme();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedPath, setSelectedPath] = useState('');

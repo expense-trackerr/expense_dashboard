@@ -30,4 +30,9 @@ const themeConfig = {
   typography: typographyConfig,
 };
 
+export const themeColors = {
+  greyBackground: '#F5F5F5',
+  greyText: '#B7B7B7',
+};
+
 export const theme = createTheme(themeConfig);
