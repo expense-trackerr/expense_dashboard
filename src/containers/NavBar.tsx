@@ -22,7 +22,14 @@ import { useNavigate } from 'react-router-dom';
 import { gqlClient } from '../config/gqlClient';
 import { useAuth } from '../contexts/AuthContext';
 
-const DRAWER_WIDTH = 220;
+const DRAWER_WIDTH = 180;
+
+const drawerPaperStyle = {
+  boxSizing: 'border-box',
+  width: DRAWER_WIDTH,
+  border: 'none',
+  backgroundColor: '#F9F9F9',
+};
 
 const ListItemButtonStyled = (props: ListItemButtonProps) => (
   <ListItemButton
@@ -33,14 +40,17 @@ const ListItemButtonStyled = (props: ListItemButtonProps) => (
           color: 'black',
         },
         color: 'black !important',
-        fontWeight: 'bold',
-        borderRight: '4px solid black',
+        borderRight: '5px solid black',
         backgroundColor: 'transparent',
       },
       '&.Mui-selected:hover': {
         backgroundColor: '#F5F5F5',
       },
-      '&.MuiListItemButton-root, & .MuiListItemIcon-root': {
+      '&.MuiListItemButton-root': {
+        color: '#B7B7B7',
+        width: DRAWER_WIDTH,
+      },
+      ' & .MuiListItemIcon-root': {
         color: '#B7B7B7',
       },
     }}
@@ -83,12 +93,12 @@ export const NavBar = () => {
   const drawerItemsWithAction = getDrawerItemsWithAction(handleLogout);
 
   const drawer = (
-    <Grid direction={'column'} container justifyContent="space-between" alignItems={'center'} height="100%">
+    <Grid direction={'column'} container justifyContent="space-between" alignItems="flex-start" height="100%">
       <Grid item></Grid>
       <Grid item>
         <List>
           {drawerItems.map((item) => (
-            <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)}>
+            <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)} disablePadding>
               <ListItemButtonStyled onClick={() => navigate(item.path)} selected={selectedPath === item.path}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
@@ -101,10 +111,18 @@ export const NavBar = () => {
         <List>
           {drawerItemsWithAction.map((item) => (
             <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)} disablePadding>
-              <ListItemButtonStyled onClick={item.action} selected={selectedPath === item.path}>
+              <ListItemButton
+                onClick={item.action}
+                selected={selectedPath === item.path}
+                sx={{
+                  '&.MuiListItemButton-root': {
+                    width: DRAWER_WIDTH,
+                  },
+                }}
+              >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
-              </ListItemButtonStyled>
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
@@ -120,7 +138,7 @@ export const NavBar = () => {
           <MenuIcon />
         </IconButton>
       </Toolbar>
-      <Box component="nav" sx={{ width: { sm: DRAWER_WIDTH }, flexShrink: { sm: 0 } }}>
+      <Box component="nav">
         <Drawer
           variant="temporary"
           open={mobileOpen}
@@ -130,7 +148,7 @@ export const NavBar = () => {
           }}
           sx={{
             display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
+            '& .MuiDrawer-paper': drawerPaperStyle,
           }}
         >
           {drawer}
@@ -140,7 +158,7 @@ export const NavBar = () => {
           variant="permanent"
           sx={{
             display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: DRAWER_WIDTH },
+            '& .MuiDrawer-paper': drawerPaperStyle,
           }}
           open
         >
