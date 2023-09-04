@@ -79,6 +79,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           .catch((error) => {
             console.error(error);
           });
+      } else {
+        setCurrentUser(null);
+        setToken('');
       }
       setLoading(false);
     });

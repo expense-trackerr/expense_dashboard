@@ -7,11 +7,11 @@ import { Router } from './Router';
 function App() {
   return (
     <ApolloProvider client={gqlClient}>
-      <NavigationProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <NavigationProvider>
           <Router />
-        </AuthProvider>
-      </NavigationProvider>
+        </NavigationProvider>
+      </AuthProvider>
     </ApolloProvider>
   );
 }

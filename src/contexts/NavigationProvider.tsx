@@ -1,8 +1,9 @@
-import React from 'react';
 import { NavBar } from '../containers/NavBar';
+import { useAuth } from './AuthContext';
 
 export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem('token');
+  const { token } = useAuth();
+
   return token ? (
     <>
       <NavBar />

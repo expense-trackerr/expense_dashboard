@@ -76,28 +76,21 @@ export function Login() {
     }
   };
 
-  const handleLoginWithGoogle = () => {
-    // Saves user to database
-    loginWithGoogle()
-      .then((res) => {
-        const userData = res.user.providerData;
-        defaultAxios
-          .post('http://localhost:3000/users/save-user', {
-            userUid: userData[0].uid,
-            email: userData[0].email,
-            name: userData[0].displayName,
-          })
-          .then(() => {
-            navigate('/');
-          })
-          .catch((err) => {
-            const error = err as AxiosError<{ message: string }>;
-            console.error(error.response?.data.message);
-          });
-      })
-      .catch((error) => {
-        console.error(error);
+  const handleLoginWithGoogle = async () => {
+    try {
+      const res = await loginWithGoogle();
+      const userData = res.user.providerData;
+
+      await defaultAxios.post('http://localhost:3000/users/save-user', {
+        userUid: userData[0].uid,
+        email: userData[0].email,
+        name: userData[0].displayName,
       });
+
+      navigate('/');
+    } catch (error) {
+      console.error('An error occured when logging in with Google', error);
+    }
   };
 
   return (
