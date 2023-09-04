@@ -33,10 +33,10 @@ const handleLogout = (navigate: NavigateFunction) => () => {
 };
 
 const drawerItems = [
-  { text: 'Home', icon: <HomeIcon />, path: '' },
-  { text: 'Categories', icon: <DashboardCustomizeIcon />, path: 'categories' },
-  { text: 'Stats', icon: <QueryStatsIcon />, path: 'stats' },
-  { text: 'Settings', icon: <SettingsIcon />, path: 'settings' },
+  { text: 'Home', icon: <HomeIcon />, path: '/' },
+  { text: 'Categories', icon: <DashboardCustomizeIcon />, path: '/categories' },
+  { text: 'Stats', icon: <QueryStatsIcon />, path: '/stats' },
+  { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
   { text: 'Logout', icon: <LogoutIcon />, action: handleLogout },
 ];
 
@@ -44,9 +44,13 @@ export const NavBar = () => {
   const navigate = useNavigate();
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedPath, setSelectedPath] = useState('');
 
   console.log(window.location.pathname);
+
+  const handleListItemButtonClick = (path: string) => {
+    setSelectedPath(path);
+  };
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -57,7 +61,7 @@ export const NavBar = () => {
       <List>
         {drawerItems.map((item) => (
           <ListItem key={item.text} disablePadding>
-            <ListItemButton onClick={item.action ? item.action?.(navigate) : () => navigate(`/${item.path}`)}>
+            <ListItemButton onClick={item.action ? item.action?.(navigate) : () => navigate(item.path)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

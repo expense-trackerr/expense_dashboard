@@ -2,7 +2,7 @@ import { Alert, Button, Container, Grid, Typography } from '@mui/material';
 import { useContext } from 'react';
 import defaultAxios from '../../config/axiosConfig';
 import { PlaidLink } from '../../containers/plaid/PlaidLink';
-import { PlaidContext } from './PlaidContext';
+import { PlaidContext } from '../../contexts/PlaidContext';
 
 export function MainDashboard() {
   const { linkToken, linkTokenError, accessToken } = useContext(PlaidContext);

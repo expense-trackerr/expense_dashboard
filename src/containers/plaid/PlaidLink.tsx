@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
-import { PlaidContext } from '../../pages/main/PlaidContext';
+import { PlaidContext } from '../../contexts/PlaidContext';
 
 export const PlaidLink = () => {
   const { linkToken, onSuccess } = useContext(PlaidContext);

@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import defaultAxios from '../../config/axiosConfig';
+import defaultAxios from '../config/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import { LinkTokenCreateResponse } from 'plaid';
