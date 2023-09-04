@@ -12,6 +12,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  ListItemButtonProps,
   ListItemIcon,
   ListItemText,
   Toolbar,
@@ -22,6 +23,23 @@ import { gqlClient } from '../config/gqlClient';
 import { useAuth } from '../contexts/AuthContext';
 
 const DRAWER_WIDTH = 200;
+
+const ListItemButtonStyled = (props: ListItemButtonProps) => (
+  <ListItemButton
+    {...props}
+    sx={{
+      '&.Mui-selected': {
+        color: 'black',
+        fontWeight: 'bold',
+        borderRight: '4px solid black',
+        backgroundColor: 'transparent',
+      },
+      '&.Mui-selected:hover': {
+        backgroundColor: '#F5F5F5',
+      },
+    }}
+  />
+);
 
 const drawerItems = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
@@ -65,10 +83,10 @@ export const NavBar = () => {
         <List>
           {drawerItems.map((item) => (
             <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)} disablePadding>
-              <ListItemButton onClick={() => navigate(item.path)} selected={selectedPath === item.path}>
+              <ListItemButtonStyled onClick={() => navigate(item.path)} selected={selectedPath === item.path}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
-              </ListItemButton>
+              </ListItemButtonStyled>
             </ListItem>
           ))}
         </List>
@@ -77,10 +95,10 @@ export const NavBar = () => {
         <List>
           {drawerItemsWithAction.map((item) => (
             <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)} disablePadding>
-              <ListItemButton onClick={item.action} selected={selectedPath === item.path}>
+              <ListItemButtonStyled onClick={item.action} selected={selectedPath === item.path}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
-              </ListItemButton>
+              </ListItemButtonStyled>
             </ListItem>
           ))}
         </List>
