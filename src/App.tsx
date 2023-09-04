@@ -7,11 +7,13 @@ import { Login } from './pages/auth-pages/Login';
 import { Signup } from './pages/auth-pages/Signup';
 import { PrivateAuthRoute, PrivateRoute } from './pages/routes/PrivateRoute';
 import { PlaidContextProvider } from './pages/main/PlaidContext';
+import { NavBar } from './containers/NavBar';
 
 function App() {
   return (
     <ApolloProvider client={gqlClient}>
       <AuthProvider>
+        <NavBar />
         <Routes>
           <Route
             path="/"

@@ -1,10 +1,8 @@
 import { Alert, Button, Container, Grid, Typography } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import defaultAxios from '../../config/axiosConfig';
-import { Categories } from '../../containers/categories/Categories';
 import { PlaidLink } from '../../containers/plaid/PlaidLink';
 import { PlaidContext } from './PlaidContext';
-import { NavBar } from '../../containers/NavBar';
 
 export function MainDashboard() {
   const { linkToken, linkTokenError, accessToken } = useContext(PlaidContext);
@@ -27,7 +25,6 @@ export function MainDashboard() {
 
   return (
     <>
-      <NavBar />
       <Container>
         <Grid container spacing={2}>
           <Grid item md={4}></Grid>

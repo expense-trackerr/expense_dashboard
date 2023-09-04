@@ -33,7 +33,7 @@ const handleLogout = (navigate: NavigateFunction) => () => {
 };
 
 const drawerItems = [
-  { text: 'Home', icon: <HomeIcon />, path: '/' },
+  { text: 'Home', icon: <HomeIcon />, path: '' },
   { text: 'Categories', icon: <DashboardCustomizeIcon />, path: 'categories' },
   { text: 'Stats', icon: <QueryStatsIcon />, path: 'stats' },
   { text: 'Settings', icon: <SettingsIcon />, path: 'settings' },
@@ -44,6 +44,9 @@ export const NavBar = () => {
   const navigate = useNavigate();
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  console.log(window.location.pathname);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
