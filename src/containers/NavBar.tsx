@@ -39,7 +39,7 @@ export const NavBar = () => {
   const { logout } = useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  // const [selectedPath, setSelectedPath] = useState('');
+  const [selectedPath, setSelectedPath] = useState('/');
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -52,6 +52,10 @@ export const NavBar = () => {
     navigate('/login');
   };
 
+  const handleListItemOnClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, path: string) => {
+    setSelectedPath(path);
+  };
+
   const drawerItemsWithAction = getDrawerItemsWithAction(handleLogout);
 
   const drawer = (
@@ -60,8 +64,8 @@ export const NavBar = () => {
       <Grid item>
         <List>
           {drawerItems.map((item) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton onClick={() => navigate(item.path)}>
+            <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)} disablePadding>
+              <ListItemButton onClick={() => navigate(item.path)} selected={selectedPath === item.path}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>
@@ -72,8 +76,8 @@ export const NavBar = () => {
       <Grid item>
         <List>
           {drawerItemsWithAction.map((item) => (
-            <ListItem key={item.text} disablePadding>
-              <ListItemButton onClick={item.action}>
+            <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)} disablePadding>
+              <ListItemButton onClick={item.action} selected={selectedPath === item.path}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>
