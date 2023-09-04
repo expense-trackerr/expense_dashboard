@@ -3,6 +3,7 @@ import { responsiveFontSizes, ThemeProvider } from '@mui/material';
 import { gqlClient } from './config/gqlClient';
 import { AuthProvider } from './contexts/AuthContext';
 import { NavigationProvider } from './contexts/NavigationProvider';
+import { PlaidContextProvider } from './contexts/PlaidContext';
 import { Router } from './Router';
 import { theme } from './utils/theme-utils';
 
@@ -13,9 +14,11 @@ function App() {
     <ApolloProvider client={gqlClient}>
       <AuthProvider>
         <ThemeProvider theme={responsiveTheme}>
-          <NavigationProvider>
-            <Router />
-          </NavigationProvider>
+          <PlaidContextProvider>
+            <NavigationProvider>
+              <Router />
+            </NavigationProvider>
+          </PlaidContextProvider>
         </ThemeProvider>
       </AuthProvider>
     </ApolloProvider>

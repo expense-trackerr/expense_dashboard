@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
-import { PlaidContextProvider } from './contexts/PlaidContext';
 import { Login } from './pages/auth-pages/Login';
 import { Signup } from './pages/auth-pages/Signup';
+import { CategoriesControl } from './pages/categories/CategoriesControl';
 import { MainDashboard } from './pages/main/MainDashboard';
 import { PrivateAuthRoute, PrivateRoute } from './utils/PrivateRoute';
 
@@ -12,9 +12,15 @@ export const Router = () => {
         path="/"
         element={
           <PrivateRoute>
-            <PlaidContextProvider>
-              <MainDashboard />
-            </PlaidContextProvider>
+            <MainDashboard />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/categories"
+        element={
+          <PrivateRoute>
+            <CategoriesControl />
           </PrivateRoute>
         }
       />
