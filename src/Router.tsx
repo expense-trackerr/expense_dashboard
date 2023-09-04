@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
+import { PlaidContextProvider } from './contexts/PlaidContext';
 import { Login } from './pages/auth-pages/Login';
 import { Signup } from './pages/auth-pages/Signup';
 import { MainDashboard } from './pages/main/MainDashboard';
-import { PlaidContextProvider } from './contexts/PlaidContext';
 import { PrivateAuthRoute, PrivateRoute } from './pages/routes/PrivateRoute';
 
 export const Router = () => {

@@ -2,7 +2,6 @@ import googleIcon from '@iconify-icons/fa-brands/google';
 import { Icon } from '@iconify/react';
 import { Box, Button, Card, CardContent, Container, Stack, TextField, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { AxiosError } from 'axios';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import defaultAxios from '../../config/axiosConfig';
