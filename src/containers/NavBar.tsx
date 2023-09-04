@@ -22,14 +22,17 @@ import { useNavigate } from 'react-router-dom';
 import { gqlClient } from '../config/gqlClient';
 import { useAuth } from '../contexts/AuthContext';
 
-const DRAWER_WIDTH = 200;
+const DRAWER_WIDTH = 220;
 
 const ListItemButtonStyled = (props: ListItemButtonProps) => (
   <ListItemButton
     {...props}
     sx={{
       '&.Mui-selected': {
-        color: 'black',
+        '& .MuiListItemIcon-root': {
+          color: 'black',
+        },
+        color: 'black !important',
         fontWeight: 'bold',
         borderRight: '4px solid black',
         backgroundColor: 'transparent',
@@ -37,13 +40,16 @@ const ListItemButtonStyled = (props: ListItemButtonProps) => (
       '&.Mui-selected:hover': {
         backgroundColor: '#F5F5F5',
       },
+      '&.MuiListItemButton-root, & .MuiListItemIcon-root': {
+        color: '#B7B7B7',
+      },
     }}
   />
 );
 
 const drawerItems = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
-  { text: 'Categories', icon: <DashboardCustomizeIcon />, path: '/categories' },
+  { text: 'Control', icon: <DashboardCustomizeIcon />, path: '/categories' },
   { text: 'Stats', icon: <QueryStatsIcon />, path: '/stats' },
   { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
 ];
@@ -82,7 +88,7 @@ export const NavBar = () => {
       <Grid item>
         <List>
           {drawerItems.map((item) => (
-            <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)} disablePadding>
+            <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)}>
               <ListItemButtonStyled onClick={() => navigate(item.path)} selected={selectedPath === item.path}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
