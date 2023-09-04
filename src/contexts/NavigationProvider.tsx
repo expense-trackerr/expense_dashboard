@@ -1,5 +1,5 @@
 import { Container } from '@mui/material';
-import { DRAWER_WIDTH, NavBar } from '../containers/NavBar';
+import { NavBar } from '../containers/NavBar';
 import { useAuth } from './AuthContext';
 
 export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
@@ -8,14 +8,7 @@ export const NavigationProvider = ({ children }: { children: React.ReactNode }) 
   return token ? (
     <>
       <NavBar />
-      <Container
-        maxWidth="lg"
-        sx={{
-          marginLeft: `${DRAWER_WIDTH}px`,
-        }}
-      >
-        {children}
-      </Container>
+      <Container maxWidth="lg">{children}</Container>
     </>
   ) : (
     <>{children}</>

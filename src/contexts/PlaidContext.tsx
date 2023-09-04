@@ -14,6 +14,11 @@ type PlaidContextType = {
   onSuccess: (public_token: string, metadata: PlaidLinkOnSuccessMetadata) => void;
 };
 
+type OnSuccessResponseType = {
+  access_token: string;
+  item_id: string;
+};
+
 export const PlaidContext = createContext<PlaidContextType>({
   itemId: undefined,
   accessToken: undefined,
@@ -51,11 +56,6 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
         setLinkTokenError(axiosError.response?.data.message);
       });
   }, []);
-
-  type OnSuccessResponseType = {
-    access_token: string;
-    item_id: string;
-  };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSuccess = React.useCallback((public_token: string, metadata: PlaidLinkOnSuccessMetadata) => {

@@ -1,7 +1,6 @@
-import { Alert, Button, Grid, Typography } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { useContext } from 'react';
 import defaultAxios from '../../config/axiosConfig';
-import { PlaidLink } from '../../containers/plaid/PlaidLink';
 import { PlaidContext } from '../../contexts/PlaidContext';
 
 export function MainDashboard() {
@@ -27,22 +26,7 @@ export function MainDashboard() {
     <>
       <Grid container spacing={2}>
         <Grid item md={4}></Grid>
-        {linkToken === null && (
-          <>
-            <Alert severity="warning">
-              Unable to fetch link_token: please make sure your backend server is running and that your .env file has
-              been configured correctly.
-            </Alert>
-            <div>Error Message: {linkTokenError}</div>
-          </>
-        )}
-        {linkToken === '' ? (
-          <div>
-            <Typography>Loading...</Typography>
-          </div>
-        ) : (
-          <PlaidLink />
-        )}
+
         {accessToken && <Button onClick={handleGetTransactions}>Get transactions</Button>}
       </Grid>
     </>
