@@ -1,4 +1,4 @@
-import { Alert, Button, Container, Grid, Typography } from '@mui/material';
+import { Alert, Button, Grid, Typography } from '@mui/material';
 import { useContext } from 'react';
 import defaultAxios from '../../config/axiosConfig';
 import { PlaidLink } from '../../containers/plaid/PlaidLink';

@@ -16,6 +16,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar,
+  useTheme,
 } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -72,6 +73,7 @@ const getDrawerItemsWithAction = (handleLogout: () => Promise<void>) => [
 export const NavBar = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
+  const theme = useTheme();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedPath, setSelectedPath] = useState('');
@@ -106,7 +108,7 @@ export const NavBar = () => {
             <ListItem key={item.text} onClick={(e) => handleListItemOnClick(e, item.path)} disablePadding>
               <ListItemButtonStyled onClick={() => navigate(item.path)} selected={selectedPath === item.path}>
                 <ListItemIcon>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} />
+                <ListItemText primary={item.text} primaryTypographyProps={{ variant: 'body1' }} />
               </ListItemButtonStyled>
             </ListItem>
           ))}
@@ -132,7 +134,7 @@ export const NavBar = () => {
                 >
                   {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={item.text} />
+                <ListItemText primary={item.text} primaryTypographyProps={{ variant: 'body1' }} />
               </ListItemButton>
             </ListItem>
           ))}
