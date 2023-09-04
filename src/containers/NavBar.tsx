@@ -52,6 +52,7 @@ const ListItemButtonStyled = (props: ListItemButtonProps) => (
       },
       ' & .MuiListItemIcon-root': {
         color: '#B7B7B7',
+        minWidth: '40px',
       },
     }}
   />
@@ -124,7 +125,13 @@ export const NavBar = () => {
                   },
                 }}
               >
-                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemIcon
+                  sx={{
+                    minWidth: '40px',
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>
             </ListItem>
