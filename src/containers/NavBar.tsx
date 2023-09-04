@@ -17,7 +17,7 @@ import {
   ListItemText,
   Toolbar,
 } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gqlClient } from '../config/gqlClient';
 import { useAuth } from '../contexts/AuthContext';
@@ -59,7 +59,7 @@ const ListItemButtonStyled = (props: ListItemButtonProps) => (
 
 const drawerItems = [
   { text: 'Home', icon: <HomeIcon />, path: '/' },
-  { text: 'Control', icon: <DashboardCustomizeIcon />, path: '/categories' },
+  { text: 'Categories', icon: <DashboardCustomizeIcon />, path: '/categories' },
   { text: 'Stats', icon: <QueryStatsIcon />, path: '/stats' },
   { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
 ];
@@ -73,7 +73,11 @@ export const NavBar = () => {
   const { logout } = useAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [selectedPath, setSelectedPath] = useState('/');
+  const [selectedPath, setSelectedPath] = useState('');
+
+  useEffect(() => {
+    setSelectedPath(window.location.pathname);
+  }, []);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
