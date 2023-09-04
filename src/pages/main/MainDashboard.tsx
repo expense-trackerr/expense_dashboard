@@ -25,28 +25,26 @@ export function MainDashboard() {
 
   return (
     <>
-      <Container>
-        <Grid container spacing={2}>
-          <Grid item md={4}></Grid>
-          {linkToken === null && (
-            <>
-              <Alert severity="warning">
-                Unable to fetch link_token: please make sure your backend server is running and that your .env file has
-                been configured correctly.
-              </Alert>
-              <div>Error Message: {linkTokenError}</div>
-            </>
-          )}
-          {linkToken === '' ? (
-            <div>
-              <Typography>Loading...</Typography>
-            </div>
-          ) : (
-            <PlaidLink />
-          )}
-          {accessToken && <Button onClick={handleGetTransactions}>Get transactions</Button>}
-        </Grid>
-      </Container>
+      <Grid container spacing={2}>
+        <Grid item md={4}></Grid>
+        {linkToken === null && (
+          <>
+            <Alert severity="warning">
+              Unable to fetch link_token: please make sure your backend server is running and that your .env file has
+              been configured correctly.
+            </Alert>
+            <div>Error Message: {linkTokenError}</div>
+          </>
+        )}
+        {linkToken === '' ? (
+          <div>
+            <Typography>Loading...</Typography>
+          </div>
+        ) : (
+          <PlaidLink />
+        )}
+        {accessToken && <Button onClick={handleGetTransactions}>Get transactions</Button>}
+      </Grid>
     </>
   );
 }

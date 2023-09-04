@@ -22,7 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { gqlClient } from '../config/gqlClient';
 import { useAuth } from '../contexts/AuthContext';
 
-const DRAWER_WIDTH = 180;
+export const DRAWER_WIDTH = 180;
 
 const drawerPaperStyle = {
   boxSizing: 'border-box',
