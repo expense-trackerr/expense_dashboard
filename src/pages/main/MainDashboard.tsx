@@ -22,13 +22,7 @@ export function MainDashboard() {
     }
   };
 
-  return (
-    <>
-      <Grid container spacing={2}>
-        <Grid item md={4}></Grid>
+  if (accessToken) return <Button onClick={handleGetTransactions}>Get transactions</Button>;
 
-        {accessToken && <Button onClick={handleGetTransactions}>Get transactions</Button>}
-      </Grid>
-    </>
-  );
+  return;
 }
