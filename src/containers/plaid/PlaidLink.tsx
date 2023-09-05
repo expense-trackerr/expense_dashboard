@@ -27,7 +27,7 @@ export const PlaidLink = () => {
 
   return (
     <Button onClick={() => open()} disabled={!ready}>
-      Launch Link
+      Add Account
     </Button>
   );
 };
