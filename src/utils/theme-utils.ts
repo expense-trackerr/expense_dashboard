@@ -4,6 +4,7 @@ export const themeColors = {
   greyBackground: '#F5F5F5',
   greyText: '#B7B7B7',
   normalText: '#5A5A5A',
+  danger: '#F16A6A',
 };
 
 const typographyConfig = {
