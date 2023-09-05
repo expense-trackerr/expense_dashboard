@@ -1,10 +1,10 @@
-import { Alert, Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Typography } from '@mui/material';
-import React, { useContext } from 'react';
-import { PlaidContext } from '../../contexts/PlaidContext';
-import { PlaidLink } from '../plaid/PlaidLink';
-import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from '@mui/icons-material/Edit';
+import { Alert, Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack } from '@mui/material';
+import { useContext } from 'react';
+import { PlaidContext } from '../../contexts/PlaidContext';
 import { themeColors } from '../../utils/theme-utils';
+import { PlaidLink } from '../plaid/PlaidLink';
 
 const mockAccounts = [
   {
@@ -18,14 +18,14 @@ const mockAccounts = [
 ];
 
 const LinkAccountButton = ({ linkToken }: { linkToken: string | undefined }) => {
-  if (linkToken === undefined)
-    return (
-      <Alert severity="warning">
-        Unable to fetch link_token: please make sure your backend server is running and that your .env file has been
-        configured correctly.
-      </Alert>
-    );
-  if (linkToken === '') return <Skeleton variant="text" sx={{ fontSize: '3rem', width: '100px' }} />;
+  //   if (linkToken === undefined)
+  //     return (
+  //       <Alert severity="warning">
+  //         Unable to fetch link_token: please make sure your backend server is running and that your .env file has been
+  //         configured correctly.
+  //       </Alert>
+  //     );
+  if (!linkToken) return <Skeleton variant="text" sx={{ fontSize: '3rem', width: '100px' }} />;
   return <PlaidLink />;
 };
 
@@ -33,7 +33,7 @@ export const AccountsTab = () => {
   const { linkToken } = useContext(PlaidContext);
 
   return (
-    <>
+    <Stack direction="column" justifyContent="center" alignItems="flex-end">
       <LinkAccountButton linkToken={linkToken} />
       <Paper
         variant="outlined"
@@ -61,6 +61,6 @@ export const AccountsTab = () => {
           </List>
         ))}
       </Paper>
-    </>
+    </Stack>
   );
 };
