@@ -5,41 +5,42 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { Box } from '@mui/system';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NameValueText } from '../../../components/NameValueText';
 import { CTextField } from '../../../components/TextField';
 import { formatDate } from '../../../utils/function-utils';
 import { themeColors } from '../../../utils/theme-utils';
+import { GetLinkedAccountsQuery } from '../../../__generated__/graphql';
 
 export type EditAccountsDialogProps = {
   open: boolean;
   handleClose: (payload: { itemId: string; accountName: string } | undefined) => void;
-  accountDetails: {
-    itemId: string;
-    name: string;
-    aliasName: string | undefined;
-    createdAt: string;
-  };
+  accountDetails: GetLinkedAccountsQuery['getLinkedAccounts'][0];
 };
 
 export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAccountsDialogProps) => {
-  const [aliasAccountName, setAliasAccountName] = useState<string>(accountDetails.aliasName ?? '');
+  console.log('accountDetails:', accountDetails);
+  const [aliasAccountName, setAliasAccountName] = useState<string>(accountDetails.alias_name ?? '');
 
   const handleAliasAccountNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAliasAccountName(event.target.value);
   };
 
+  useEffect(() => {
+    setAliasAccountName(accountDetails.alias_name ?? '');
+  }, [accountDetails]);
+
   const handleCloseDialog = (shouldSave: boolean) => () => {
     if (shouldSave) {
       const payload = {
-        itemId: accountDetails.itemId,
+        itemId: accountDetails.item_id,
         accountName: aliasAccountName,
       };
       handleClose(payload);
     } else {
       handleClose(undefined);
     }
-    setAliasAccountName(accountDetails.aliasName ?? '');
+    setAliasAccountName(accountDetails.alias_name ?? '');
   };
 
   return (
@@ -48,7 +49,7 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
       <DialogContent>
         <Stack direction="column" spacing={2}>
           <NameValueText name="Account Name" value={accountDetails.name} />
-          <NameValueText name="Created On" value={formatDate(accountDetails.createdAt)} />
+          <NameValueText name="Created On" value={formatDate(accountDetails.created_at)} />
           <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
             Alias Account Name
           </Typography>
@@ -80,7 +81,7 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
             color: themeColors.linkText,
             border: `1px solid ${themeColors.linkText}`,
           }}
-          disabled={aliasAccountName === accountDetails.aliasName}
+          disabled={aliasAccountName === accountDetails.alias_name}
         >
           Save
         </Button>

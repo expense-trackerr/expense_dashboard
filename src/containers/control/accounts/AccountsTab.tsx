@@ -28,22 +28,33 @@ const LinkAccountButton = ({ linkToken }: { linkToken: string | undefined }) => 
   return <PlaidLink />;
 };
 
+const accountDialogDetailsUndefined = {
+  item_id: '',
+  name: '',
+  created_at: '',
+};
+
 export const AccountsTab = () => {
   const { linkToken } = useContext(PlaidContext);
   const { currentUser } = useAuth();
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState<string | undefined>(undefined);
 
   const { data, error, loading, refetch } = useQuery(GET_LINKED_ACCOUNTS, {
     variables: { userId: currentUser?.uid ?? '' },
   });
   const linkedAccounts = data?.getLinkedAccounts;
+  const accountDialogDetails =
+    linkedAccounts?.find((account) => account.item_id === selectedAccount) ?? accountDialogDetailsUndefined;
 
-  const handleOpenEditDialog = () => {
+  const handleOpenEditDialog = (itemId: string) => {
     setOpenEditDialog(true);
+    setSelectedAccount(itemId);
   };
 
   const handleCloseEditDialog: EditAccountsDialogProps['handleClose'] = async (payload) => {
     setOpenEditDialog(false);
+    setSelectedAccount(undefined);
     if (payload?.accountName) {
       try {
         await defaultAxios.put('http://localhost:3000/api/update_account_name', payload);
@@ -72,18 +83,13 @@ export const AccountsTab = () => {
               width: '400px',
             }}
           >
+            <EditAccountsDialog
+              open={openEditDialog}
+              handleClose={handleCloseEditDialog}
+              accountDetails={accountDialogDetails}
+            />
             {linkedAccounts?.map((account) => (
               <Fragment key={account.item_id}>
-                <EditAccountsDialog
-                  open={openEditDialog}
-                  handleClose={handleCloseEditDialog}
-                  accountDetails={{
-                    itemId: account.item_id,
-                    name: account.name,
-                    aliasName: account.alias_name ?? undefined,
-                    createdAt: account.created_at,
-                  }}
-                />
                 <List>
                   <ListItem>
                     <Grid container direction="row" justifyContent="space-between" alignItems="center">
@@ -99,7 +105,7 @@ export const AccountsTab = () => {
                         />
                       </Grid>
                       <Grid item>
-                        <IconButton onClick={handleOpenEditDialog}>
+                        <IconButton onClick={() => handleOpenEditDialog(account.item_id)}>
                           <EditIcon sx={{ color: themeColors.greyText }} />
                         </IconButton>
                         <IconButton>
