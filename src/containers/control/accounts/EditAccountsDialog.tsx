@@ -1,14 +1,14 @@
-import { InputLabel, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
+import { Box } from '@mui/system';
 import { useState } from 'react';
 import { NameValueText } from '../../../components/NameValueText';
 import { CTextField } from '../../../components/TextField';
+import { formatDate } from '../../../utils/function-utils';
 import { themeColors } from '../../../utils/theme-utils';
 
 type EditAccountsDialogProps = {
@@ -29,13 +29,14 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
     setAliasAccountName(event.target.value);
   };
 
+  // FIXME - Make the text field width smaller
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+    <Dialog open={open} onClose={handleClose} fullWidth>
       <DialogTitle>Edit Account Details</DialogTitle>
       <DialogContent>
         <Stack direction="column" spacing={2}>
           <NameValueText name="Account Name" value={accountDetails.name} />
-          <NameValueText name="Created On" value={accountDetails.createdAt} />
+          <NameValueText name="Created On" value={formatDate(accountDetails.createdAt)} />
           <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
             Alias Account Name
           </Typography>
@@ -43,15 +44,43 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
             size="small"
             value={aliasAccountName}
             onChange={handleAliasAccountNameChange}
-            sx={{ marginTop: '4px !important' }}
+            sx={{ marginTop: '4px !important', width: '200px' }}
           />
+          <Box>
+            <Typography
+              variant="subtitle1"
+              sx={{
+                color: themeColors.linkText,
+                cursor: 'pointer',
+              }}
+              onClick={() => console.log('Refresh Access Token')}
+            >
+              Refresh Access Token
+            </Typography>
+          </Box>
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" onClick={handleClose}>
+        <Button
+          variant="outlined"
+          onClick={handleClose}
+          sx={{
+            color: themeColors.linkText,
+            border: `1px solid ${themeColors.linkText}`,
+          }}
+        >
           Save
         </Button>
-        <Button onClick={handleClose}>Cancel</Button>
+        <Button
+          variant="outlined"
+          onClick={handleClose}
+          sx={{
+            color: themeColors.normalText,
+            border: `1px solid ${themeColors.normalText}`,
+          }}
+        >
+          Cancel
+        </Button>
       </DialogActions>
     </Dialog>
   );

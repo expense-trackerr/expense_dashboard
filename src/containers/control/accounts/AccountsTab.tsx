@@ -1,7 +1,7 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
 import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack } from '@mui/material';
-import { useContext, useState } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import { PlaidContext } from '../../../contexts/PlaidContext';
 import { themeColors } from '../../../utils/theme-utils';
 import { PlaidLink } from '../../plaid/PlaidLink';
@@ -62,7 +62,7 @@ export const AccountsTab = () => {
           }}
         >
           {linkedAccounts?.map((account) => (
-            <>
+            <Fragment key={account.item_id}>
               <EditAccountsDialog
                 open={openEditDialog}
                 handleClose={handleCloseEditDialog}
@@ -73,7 +73,7 @@ export const AccountsTab = () => {
                   createdAt: account.created_at,
                 }}
               />
-              <List key={account.item_id}>
+              <List>
                 <ListItem>
                   <Grid container direction="row" justifyContent="space-between" alignItems="center">
                     <Grid item>
@@ -95,7 +95,7 @@ export const AccountsTab = () => {
                   </Grid>
                 </ListItem>
               </List>
-            </>
+            </Fragment>
           ))}
         </Paper>
       </Stack>
