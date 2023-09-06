@@ -9,7 +9,8 @@ import { gql } from '../../../__generated__/gql';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useQuery } from '@apollo/client';
 import { formatDate } from '../../../utils/function-utils';
-import { EditAccountsDialog } from './EditAccountsDialog';
+import { EditAccountsDialog, EditAccountsDialogProps } from './EditAccountsDialog';
+import defaultAxios from '../../../config/axiosConfig';
 
 const GET_LINKED_ACCOUNTS = gql(`
     query getLinkedAccounts($userId: String!) {
@@ -32,7 +33,7 @@ export const AccountsTab = () => {
   const { currentUser } = useAuth();
   const [openEditDialog, setOpenEditDialog] = useState(false);
 
-  const { data, error, loading } = useQuery(GET_LINKED_ACCOUNTS, {
+  const { data, error, loading, refetch } = useQuery(GET_LINKED_ACCOUNTS, {
     variables: { userId: currentUser?.uid ?? '' },
   });
   const linkedAccounts = data?.getLinkedAccounts;
@@ -41,9 +42,17 @@ export const AccountsTab = () => {
     setOpenEditDialog(true);
   };
 
-  const handleCloseEditDialog = (aliasName: string | undefined) => {
+  const handleCloseEditDialog: EditAccountsDialogProps['handleClose'] = async (payload) => {
     setOpenEditDialog(false);
-    console.log(aliasName);
+    if (payload?.accountName) {
+      try {
+        await defaultAxios.put('http://localhost:3000/api/update_account_name', payload);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        refetch();
+      }
+    }
   };
 
   if (loading) return <Skeleton variant="rounded" width="400px" height="300px" />;
@@ -78,7 +87,10 @@ export const AccountsTab = () => {
                 <ListItem>
                   <Grid container direction="row" justifyContent="space-between" alignItems="center">
                     <Grid item>
-                      <ListItemText primary={account.name} primaryTypographyProps={{ variant: 'h3' }} />
+                      <ListItemText
+                        primary={account.alias_name ? account.alias_name : account.name}
+                        primaryTypographyProps={{ variant: 'h3' }}
+                      />
                       <ListItemText
                         primary={formatDate(account.created_at)}
                         primaryTypographyProps={{ variant: 'subtitle1' }}

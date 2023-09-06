@@ -11,9 +11,9 @@ import { CTextField } from '../../../components/TextField';
 import { formatDate } from '../../../utils/function-utils';
 import { themeColors } from '../../../utils/theme-utils';
 
-type EditAccountsDialogProps = {
+export type EditAccountsDialogProps = {
   open: boolean;
-  handleClose: (aliasName: string | undefined) => void;
+  handleClose: (payload: { itemId: string; accountName: string } | undefined) => void;
   accountDetails: {
     itemId: string;
     name: string;
@@ -31,11 +31,15 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
 
   const handleCloseDialog = (shouldSave: boolean) => () => {
     if (shouldSave) {
-      handleClose(aliasAccountName);
+      const payload = {
+        itemId: accountDetails.itemId,
+        accountName: aliasAccountName,
+      };
+      handleClose(payload);
     } else {
       handleClose(undefined);
     }
-    setAliasAccountName('');
+    setAliasAccountName(accountDetails.aliasName ?? '');
   };
 
   return (
