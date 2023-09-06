@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
 
 export function Login() {
   const classes = useStyles();
-  const { login, loginWithGoogle } = useAuth();
+  const { login, loginWithGoogle, logout } = useAuth();
   const navigate = useNavigate();
 
   const emailValidator = (email: string) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
@@ -77,17 +77,16 @@ export function Login() {
 
   const handleLoginWithGoogle = async () => {
     try {
-      const res = await loginWithGoogle();
-      const userData = res.user.providerData;
+      await loginWithGoogle();
 
-      await defaultAxios.post('http://localhost:3000/users/save-user', {
-        userUid: userData[0].uid,
-        email: userData[0].email,
-        name: userData[0].displayName,
-      });
+      const saveUserRes = await defaultAxios.post('http://localhost:3000/users/save-user');
+      console.log('saveUserRes:', saveUserRes);
 
-      navigate('/');
+      if (saveUserRes.status !== 201) {
+        throw new Error('Failed to save user');
+      }
     } catch (error) {
+      await logout();
       console.error('An error occured when logging in with Google', error);
     }
   };

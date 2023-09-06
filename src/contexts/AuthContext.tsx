@@ -8,6 +8,8 @@ import {
 } from 'firebase/auth';
 import type { User, UserCredential } from 'firebase/auth';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { gqlClient } from '../config/gqlClient';
+import { useNavigate } from 'react-router-dom';
 
 type AuthContextType = {
   currentUser: User | null;
@@ -40,6 +42,8 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
+
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState('');
@@ -60,9 +64,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return signInWithPopup(auth, provider);
   }
 
-  function logout() {
-    const auth = getAuth();
-    return signOut(auth);
+  async function logout() {
+    try {
+      const auth = getAuth();
+      await signOut(auth);
+      localStorage.clear();
+      gqlClient.resetStore(); // Clear the graphql cache
+      navigate('/login');
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   useEffect(() => {

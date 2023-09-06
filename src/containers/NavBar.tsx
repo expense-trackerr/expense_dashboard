@@ -79,17 +79,14 @@ export const NavBar = () => {
 
   useEffect(() => {
     setSelectedPath(window.location.pathname);
-  }, []);
+  }, [window.location.pathname]);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
 
   const handleLogout = async () => {
-    localStorage.clear();
     await logout();
-    gqlClient.resetStore(); // Clear the graphql cache
-    navigate('/login');
   };
 
   const handleListItemOnClick = (event: React.MouseEvent<HTMLLIElement, MouseEvent>, path: string) => {
