@@ -12,16 +12,19 @@ export const CTextField = styled(TextField)({
   '& .MuiInput-underline:after': {
     borderBottomColor: '#B2BAC2',
   },
-  '& .MuiOutlinedInput-root': {
-    backgroundColor: '#F5F7FA',
-    '& fieldset': {
-      borderColor: '#E0E3E7',
-    },
-    '&:hover fieldset': {
-      borderColor: '#B2BAC2',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: '#1976d2', // border color on focus
-    },
+  '& .Mui-disabled': {
+    backgroundColor: '#E0E3E7',
   },
+  //   '& .MuiOutlinedInput-root': {
+  //     backgroundColor: '#F5F7FA',
+  //     '& fieldset': {
+  //       borderColor: '#E0E3E7',
+  //     },
+  //     '&:hover fieldset': {
+  //       borderColor: '#B2BAC2',
+  //     },
+  //     '&.Mui-focused fieldset': {
+  //       borderColor: '#1976d2', // border color on focus
+  //     },
+  //   },
 });

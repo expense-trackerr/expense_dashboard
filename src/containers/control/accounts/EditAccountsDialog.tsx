@@ -43,13 +43,15 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
             size="small"
             value={aliasAccountName}
             onChange={handleAliasAccountNameChange}
-            sx={{ marginTop: '0px !important' }}
+            sx={{ marginTop: '4px !important' }}
           />
         </Stack>
       </DialogContent>
       <DialogActions>
+        <Button variant="outlined" onClick={handleClose}>
+          Save
+        </Button>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={handleClose}>Subscribe</Button>
       </DialogActions>
     </Dialog>
   );
