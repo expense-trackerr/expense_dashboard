@@ -8,6 +8,7 @@ import { PlaidLink } from '../plaid/PlaidLink';
 import { gql } from '../../__generated__/gql';
 import { useAuth } from '../../contexts/AuthContext';
 import { useQuery } from '@apollo/client';
+import { formatDate } from '../../utils/function-utils';
 
 const GET_LINKED_ACCOUNTS = gql(`
     query getLinkedAccounts($userId: String!) {
@@ -20,17 +21,6 @@ const GET_LINKED_ACCOUNTS = gql(`
     }
 `);
 
-const mockAccounts = [
-  {
-    id: '1',
-    name: 'TD Bank',
-  },
-  {
-    id: '2',
-    name: 'Scotia Bank',
-  },
-];
-
 const LinkAccountButton = ({ linkToken }: { linkToken: string | undefined }) => {
   if (!linkToken) return <Skeleton variant="text" sx={{ fontSize: '3rem', width: '100px' }} />;
   return <PlaidLink />;
@@ -40,7 +30,7 @@ export const AccountsTab = () => {
   const { linkToken } = useContext(PlaidContext);
   const { currentUser } = useAuth();
 
-  const { data, error, loading, refetch } = useQuery(GET_LINKED_ACCOUNTS, {
+  const { data, error, loading } = useQuery(GET_LINKED_ACCOUNTS, {
     variables: { userId: currentUser?.uid ?? '' },
   });
   const linkedAccounts = data?.getLinkedAccounts;
@@ -67,7 +57,7 @@ export const AccountsTab = () => {
                 <Grid item>
                   <ListItemText primary={account.name} primaryTypographyProps={{ variant: 'h3' }} />
                   <ListItemText
-                    primary={account.created_at}
+                    primary={formatDate(account.created_at)}
                     primaryTypographyProps={{ variant: 'subtitle1' }}
                     sx={{ color: themeColors.greyText }}
                   />
