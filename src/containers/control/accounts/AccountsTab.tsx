@@ -9,6 +9,7 @@ import { gql } from '../../../__generated__/gql';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useQuery } from '@apollo/client';
 import { formatDate } from '../../../utils/function-utils';
+import { EditAccountsDialog } from './EditAccountsDialog';
 
 const GET_LINKED_ACCOUNTS = gql(`
     query getLinkedAccounts($userId: String!) {
@@ -40,6 +41,10 @@ export const AccountsTab = () => {
     setOpenEditDialog(true);
   };
 
+  const handleCloseEditDialog = () => {
+    setOpenEditDialog(false);
+  };
+
   if (loading) return <Skeleton variant="rounded" width="400px" height="300px" />;
   if (error) {
     console.error(error);
@@ -47,39 +52,53 @@ export const AccountsTab = () => {
   }
 
   return (
-    <Stack direction="column" justifyContent="center" alignItems="flex-end">
-      <LinkAccountButton linkToken={linkToken} />
-      <Paper
-        variant="outlined"
-        sx={{
-          width: '400px',
-        }}
-      >
-        {linkedAccounts?.map((account) => (
-          <List key={account.item_id}>
-            <ListItem>
-              <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                <Grid item>
-                  <ListItemText primary={account.name} primaryTypographyProps={{ variant: 'h3' }} />
-                  <ListItemText
-                    primary={formatDate(account.created_at)}
-                    primaryTypographyProps={{ variant: 'subtitle1' }}
-                    sx={{ color: themeColors.greyText }}
-                  />
-                </Grid>
-                <Grid item>
-                  <IconButton onClick={handleOpenEditDialog}>
-                    <EditIcon sx={{ color: themeColors.greyText }} />
-                  </IconButton>
-                  <IconButton>
-                    <CancelIcon sx={{ color: themeColors.danger }} />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </ListItem>
-          </List>
-        ))}
-      </Paper>
-    </Stack>
+    <>
+      <Stack direction="column" justifyContent="center" alignItems="flex-end">
+        <LinkAccountButton linkToken={linkToken} />
+        <Paper
+          variant="outlined"
+          sx={{
+            width: '400px',
+          }}
+        >
+          {linkedAccounts?.map((account) => (
+            <>
+              <EditAccountsDialog
+                open={openEditDialog}
+                handleClose={handleCloseEditDialog}
+                accountDetails={{
+                  itemId: account.item_id,
+                  name: account.name,
+                  aliasName: account.alias_name ?? undefined,
+                  createdAt: account.created_at,
+                }}
+              />
+              <List key={account.item_id}>
+                <ListItem>
+                  <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                    <Grid item>
+                      <ListItemText primary={account.name} primaryTypographyProps={{ variant: 'h3' }} />
+                      <ListItemText
+                        primary={formatDate(account.created_at)}
+                        primaryTypographyProps={{ variant: 'subtitle1' }}
+                        sx={{ color: themeColors.greyText }}
+                      />
+                    </Grid>
+                    <Grid item>
+                      <IconButton onClick={handleOpenEditDialog}>
+                        <EditIcon sx={{ color: themeColors.greyText }} />
+                      </IconButton>
+                      <IconButton>
+                        <CancelIcon sx={{ color: themeColors.danger }} />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                </ListItem>
+              </List>
+            </>
+          ))}
+        </Paper>
+      </Stack>
+    </>
   );
 };
