@@ -1,6 +1,6 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
-import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack } from '@mui/material';
+import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { Fragment, useContext, useState } from 'react';
 import { PlaidContext } from '../../../contexts/PlaidContext';
 import { themeColors } from '../../../utils/theme-utils';
@@ -65,52 +65,60 @@ export const AccountsTab = () => {
     <>
       <Stack direction="column" justifyContent="center" alignItems="flex-end">
         <LinkAccountButton linkToken={linkToken} />
-        <Paper
-          variant="outlined"
-          sx={{
-            width: '400px',
-          }}
-        >
-          {linkedAccounts?.map((account) => (
-            <Fragment key={account.item_id}>
-              <EditAccountsDialog
-                open={openEditDialog}
-                handleClose={handleCloseEditDialog}
-                accountDetails={{
-                  itemId: account.item_id,
-                  name: account.name,
-                  aliasName: account.alias_name ?? undefined,
-                  createdAt: account.created_at,
-                }}
-              />
-              <List>
-                <ListItem>
-                  <Grid container direction="row" justifyContent="space-between" alignItems="center">
-                    <Grid item>
-                      <ListItemText
-                        primary={account.alias_name ? account.alias_name : account.name}
-                        primaryTypographyProps={{ variant: 'h3' }}
-                      />
-                      <ListItemText
-                        primary={formatDate(account.created_at)}
-                        primaryTypographyProps={{ variant: 'subtitle1' }}
-                        sx={{ color: themeColors.greyText }}
-                      />
+        {linkedAccounts?.length ? (
+          <Paper
+            variant="outlined"
+            sx={{
+              width: '400px',
+            }}
+          >
+            {linkedAccounts?.map((account) => (
+              <Fragment key={account.item_id}>
+                <EditAccountsDialog
+                  open={openEditDialog}
+                  handleClose={handleCloseEditDialog}
+                  accountDetails={{
+                    itemId: account.item_id,
+                    name: account.name,
+                    aliasName: account.alias_name ?? undefined,
+                    createdAt: account.created_at,
+                  }}
+                />
+                <List>
+                  <ListItem>
+                    <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                      <Grid item>
+                        <ListItemText
+                          primary={account.alias_name ? account.alias_name : account.name}
+                          primaryTypographyProps={{ variant: 'h3' }}
+                        />
+                        <ListItemText
+                          primary={formatDate(account.created_at)}
+                          primaryTypographyProps={{ variant: 'subtitle1' }}
+                          sx={{ color: themeColors.greyText }}
+                        />
+                      </Grid>
+                      <Grid item>
+                        <IconButton onClick={handleOpenEditDialog}>
+                          <EditIcon sx={{ color: themeColors.greyText }} />
+                        </IconButton>
+                        <IconButton>
+                          <CancelIcon sx={{ color: themeColors.danger }} />
+                        </IconButton>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <IconButton onClick={handleOpenEditDialog}>
-                        <EditIcon sx={{ color: themeColors.greyText }} />
-                      </IconButton>
-                      <IconButton>
-                        <CancelIcon sx={{ color: themeColors.danger }} />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-              </List>
-            </Fragment>
-          ))}
-        </Paper>
+                  </ListItem>
+                </List>
+              </Fragment>
+            ))}
+          </Paper>
+        ) : (
+          <Paper variant="outlined" sx={{ width: '400px', height: '200px' }}>
+            <Grid container direction="row" justifyContent="center" alignItems="center" height="100%">
+              <Typography variant="h3"> No linked accounts</Typography>
+            </Grid>
+          </Paper>
+        )}
       </Stack>
     </>
   );
