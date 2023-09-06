@@ -41,8 +41,9 @@ export const AccountsTab = () => {
     setOpenEditDialog(true);
   };
 
-  const handleCloseEditDialog = () => {
+  const handleCloseEditDialog = (aliasName: string | undefined) => {
     setOpenEditDialog(false);
+    console.log(aliasName);
   };
 
   if (loading) return <Skeleton variant="rounded" width="400px" height="300px" />;

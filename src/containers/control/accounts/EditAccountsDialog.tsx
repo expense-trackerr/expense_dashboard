@@ -13,7 +13,7 @@ import { themeColors } from '../../../utils/theme-utils';
 
 type EditAccountsDialogProps = {
   open: boolean;
-  handleClose: () => void;
+  handleClose: (aliasName: string | undefined) => void;
   accountDetails: {
     itemId: string;
     name: string;
@@ -23,15 +23,23 @@ type EditAccountsDialogProps = {
 };
 
 export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAccountsDialogProps) => {
-  const [aliasAccountName, setAliasAccountName] = useState<string>('');
+  const [aliasAccountName, setAliasAccountName] = useState<string>(accountDetails.aliasName ?? '');
 
   const handleAliasAccountNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAliasAccountName(event.target.value);
   };
 
-  // FIXME - Make the text field width smaller
+  const handleCloseDialog = (shouldSave: boolean) => () => {
+    if (shouldSave) {
+      handleClose(aliasAccountName);
+    } else {
+      handleClose(undefined);
+    }
+    setAliasAccountName('');
+  };
+
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth>
+    <Dialog open={open} onClose={handleCloseDialog(false)} fullWidth>
       <DialogTitle>Edit Account Details</DialogTitle>
       <DialogContent>
         <Stack direction="column" spacing={2}>
@@ -63,17 +71,18 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
       <DialogActions>
         <Button
           variant="outlined"
-          onClick={handleClose}
+          onClick={handleCloseDialog(true)}
           sx={{
             color: themeColors.linkText,
             border: `1px solid ${themeColors.linkText}`,
           }}
+          disabled={aliasAccountName === accountDetails.aliasName}
         >
           Save
         </Button>
         <Button
           variant="outlined"
-          onClick={handleClose}
+          onClick={handleCloseDialog(false)}
           sx={{
             color: themeColors.normalText,
             border: `1px solid ${themeColors.normalText}`,
