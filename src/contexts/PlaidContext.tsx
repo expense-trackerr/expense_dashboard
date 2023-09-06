@@ -1,9 +1,8 @@
 import { AxiosError, AxiosResponse } from 'axios';
-import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
-import defaultAxios from '../config/axiosConfig';
-import { useNavigate } from 'react-router-dom';
-import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import { LinkTokenCreateResponse } from 'plaid';
+import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
+import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
+import defaultAxios from '../config/axiosConfig';
 
 type PlaidContextType = {
   itemId?: string;
@@ -29,7 +28,6 @@ export const PlaidContext = createContext<PlaidContextType>({
 });
 
 export function PlaidContextProvider({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
   const [itemId, setItemId] = useState<string | undefined>();
   const [accessToken, setAccessToken] = useState<string | undefined>();
   const [linkToken, setLinkToken] = useState<string | undefined>();
@@ -59,28 +57,20 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const onSuccess = React.useCallback((public_token: string, metadata: PlaidLinkOnSuccessMetadata) => {
-    // If the access_token is needed, send public_token to server
     const exchangePublicTokenForAccessToken = async () => {
-      const response: AxiosResponse<OnSuccessResponseType> = await defaultAxios.post(
-        'http://localhost:3000/api/set_access_token',
-        {
-          publicToken: public_token,
-        }
-      );
-      if (response.status !== 200) {
+      const response = await defaultAxios.post('http://localhost:3000/api/set_access_token', {
+        publicToken: public_token,
+      });
+      if (response.status !== 201) {
         setItemId(undefined);
         setAccessToken(undefined);
         return;
       }
       const data = response.data;
-      setItemId(data.item_id);
-      setAccessToken(data.access_token);
-      localStorage.setItem('plaidAccessToken', data.access_token); // Remove this from local storage
+      setItemId(data.itemId);
     };
 
     exchangePublicTokenForAccessToken();
-
-    navigate('/');
   }, []);
 
   useEffect(() => {
