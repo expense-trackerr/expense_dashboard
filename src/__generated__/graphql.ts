@@ -22,9 +22,18 @@ export type Category = {
   name?: Maybe<Scalars['String']['output']>;
 };
 
+export type LinkedAccount = {
+  __typename?: 'LinkedAccount';
+  alias_name?: Maybe<Scalars['String']['output']>;
+  created_at: Scalars['String']['output'];
+  item_id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Query = {
   __typename?: 'Query';
   getCategories: Array<Category>;
+  getLinkedAccounts: Array<LinkedAccount>;
 };
 
 
@@ -32,13 +41,17 @@ export type QueryGetCategoriesArgs = {
   userId: Scalars['String']['input'];
 };
 
-export type User = {
-  __typename?: 'User';
-  categories: Array<Category>;
-  email: Scalars['String']['output'];
-  id: Scalars['String']['output'];
-  name: Scalars['String']['output'];
+
+export type QueryGetLinkedAccountsArgs = {
+  userId: Scalars['String']['input'];
 };
+
+export type GetLinkedAccountsQueryVariables = Exact<{
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type GetLinkedAccountsQuery = { __typename?: 'Query', getLinkedAccounts: Array<{ __typename?: 'LinkedAccount', item_id: string, name: string, alias_name?: string | null, created_at: string }> };
 
 export type GetCategoriesQueryVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -48,4 +61,5 @@ export type GetCategoriesQueryVariables = Exact<{
 export type GetCategoriesQuery = { __typename?: 'Query', getCategories: Array<{ __typename?: 'Category', id: string, name?: string | null }> };
 
 
+export const GetLinkedAccountsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getLinkedAccounts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getLinkedAccounts"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"item_id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"alias_name"}},{"kind":"Field","name":{"kind":"Name","value":"created_at"}}]}}]}}]} as unknown as DocumentNode<GetLinkedAccountsQuery, GetLinkedAccountsQueryVariables>;
 export const GetCategoriesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCategories"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCategories"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetCategoriesQuery, GetCategoriesQueryVariables>;
