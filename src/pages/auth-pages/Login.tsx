@@ -80,9 +80,8 @@ export function Login() {
       await loginWithGoogle();
 
       const saveUserRes = await defaultAxios.post('http://localhost:3000/users/save-user');
-      console.log('saveUserRes:', saveUserRes);
 
-      if (saveUserRes.status !== 201) {
+      if (saveUserRes.status !== 201 && saveUserRes.status !== 200) {
         throw new Error('Failed to save user');
       }
     } catch (error) {
