@@ -1,6 +1,6 @@
 import { Box, Grid, Tab, Tabs } from '@mui/material';
 import React from 'react';
-import { AccountsTab } from '../../containers/categories/AccountsTab';
+import { AccountsTab } from '../../containers/control/accounts/AccountsTab';
 
 function CustomTabPanel({ children, value, index }: { children: React.ReactNode; value: number; index: number }) {
   return (

@@ -1,14 +1,14 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
 import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack } from '@mui/material';
-import { useContext } from 'react';
-import { PlaidContext } from '../../contexts/PlaidContext';
-import { themeColors } from '../../utils/theme-utils';
-import { PlaidLink } from '../plaid/PlaidLink';
-import { gql } from '../../__generated__/gql';
-import { useAuth } from '../../contexts/AuthContext';
+import { useContext, useState } from 'react';
+import { PlaidContext } from '../../../contexts/PlaidContext';
+import { themeColors } from '../../../utils/theme-utils';
+import { PlaidLink } from '../../plaid/PlaidLink';
+import { gql } from '../../../__generated__/gql';
+import { useAuth } from '../../../contexts/AuthContext';
 import { useQuery } from '@apollo/client';
-import { formatDate } from '../../utils/function-utils';
+import { formatDate } from '../../../utils/function-utils';
 
 const GET_LINKED_ACCOUNTS = gql(`
     query getLinkedAccounts($userId: String!) {
@@ -29,11 +29,16 @@ const LinkAccountButton = ({ linkToken }: { linkToken: string | undefined }) => 
 export const AccountsTab = () => {
   const { linkToken } = useContext(PlaidContext);
   const { currentUser } = useAuth();
+  const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const { data, error, loading } = useQuery(GET_LINKED_ACCOUNTS, {
     variables: { userId: currentUser?.uid ?? '' },
   });
   const linkedAccounts = data?.getLinkedAccounts;
+
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
 
   if (loading) return <Skeleton variant="rounded" width="400px" height="300px" />;
   if (error) {
@@ -63,7 +68,7 @@ export const AccountsTab = () => {
                   />
                 </Grid>
                 <Grid item>
-                  <IconButton>
+                  <IconButton onClick={handleOpenEditDialog}>
                     <EditIcon sx={{ color: themeColors.greyText }} />
                   </IconButton>
                   <IconButton>
