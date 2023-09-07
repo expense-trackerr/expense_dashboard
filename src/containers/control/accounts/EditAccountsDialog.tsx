@@ -32,13 +32,6 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
     setAliasAccountName(accountDetails.alias_name ?? '');
   }, [accountDetails]);
 
-  useEffect(() => {
-    const initialAliasAccountNameToString = accountDetails.alias_name ?? '';
-    if (aliasAccountName === initialAliasAccountNameToString) {
-      isAliasAccountNameChanged.current = false;
-    }
-  }, [aliasAccountName]);
-
   const handleCloseDialog = (shouldSave: boolean) => () => {
     if (shouldSave) {
       const payload = {

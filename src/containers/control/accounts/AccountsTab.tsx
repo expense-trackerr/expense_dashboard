@@ -11,6 +11,7 @@ import { useQuery } from '@apollo/client';
 import { formatDate } from '../../../utils/function-utils';
 import { EditAccountsDialog, EditAccountsDialogProps } from './EditAccountsDialog';
 import defaultAxios from '../../../config/axiosConfig';
+import { DeleteAccountDialog } from './DeleteAccountDialog';
 
 const GET_LINKED_ACCOUNTS = gql(`
     query getLinkedAccounts($userId: String!) {
@@ -38,6 +39,7 @@ export const AccountsTab = () => {
   const { linkToken } = useContext(PlaidContext);
   const { currentUser } = useAuth();
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>(undefined);
 
   const { data, error, loading, refetch } = useQuery(GET_LINKED_ACCOUNTS, {
@@ -58,6 +60,25 @@ export const AccountsTab = () => {
     if (payload?.accountName) {
       try {
         await defaultAxios.put('http://localhost:3000/api/update_account_name', payload);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        refetch();
+      }
+    }
+  };
+
+  const handleOpenDeleteDialog = (itemId: string) => {
+    setOpenDeleteDialog(true);
+    setSelectedAccount(itemId);
+  };
+
+  const handleCloseDeleteDialog = async (payload: { itemId: string } | undefined) => {
+    setOpenDeleteDialog(false);
+    setSelectedAccount(undefined);
+    if (payload?.itemId) {
+      try {
+        await defaultAxios.post('http://localhost:3000/api/item/remove', payload);
       } catch (err) {
         console.error(err);
       } finally {
@@ -88,6 +109,11 @@ export const AccountsTab = () => {
               handleClose={handleCloseEditDialog}
               accountDetails={accountDialogDetails}
             />
+            <DeleteAccountDialog
+              open={openDeleteDialog}
+              handleClose={handleCloseDeleteDialog}
+              accountDetails={accountDialogDetails}
+            />
             {linkedAccounts?.map((account) => (
               <Fragment key={account.item_id}>
                 <List>
@@ -108,7 +134,7 @@ export const AccountsTab = () => {
                         <IconButton onClick={() => handleOpenEditDialog(account.item_id)}>
                           <EditIcon sx={{ color: themeColors.greyText }} />
                         </IconButton>
-                        <IconButton>
+                        <IconButton onClick={() => handleOpenDeleteDialog(account.item_id)}>
                           <CancelIcon sx={{ color: themeColors.danger }} />
                         </IconButton>
                       </Grid>
