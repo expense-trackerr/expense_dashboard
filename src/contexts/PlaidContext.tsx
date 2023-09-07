@@ -6,21 +6,14 @@ import defaultAxios from '../config/axiosConfig';
 
 type PlaidContextType = {
   itemId?: string;
-  accessToken?: string;
   linkToken?: string;
   linkTokenError?: string;
   generateToken?: () => void;
   onSuccess: (public_token: string, metadata: PlaidLinkOnSuccessMetadata) => void;
 };
 
-type OnSuccessResponseType = {
-  access_token: string;
-  item_id: string;
-};
-
 export const PlaidContext = createContext<PlaidContextType>({
   itemId: undefined,
-  accessToken: undefined,
   linkToken: undefined,
   linkTokenError: undefined,
   generateToken: () => {},
@@ -29,7 +22,6 @@ export const PlaidContext = createContext<PlaidContextType>({
 
 export function PlaidContextProvider({ children }: { children: React.ReactNode }) {
   const [itemId, setItemId] = useState<string | undefined>();
-  const [accessToken, setAccessToken] = useState<string | undefined>();
   const [linkToken, setLinkToken] = useState<string | undefined>();
   const [linkTokenError, setLinkTokenError] = useState<string | undefined>();
 
@@ -63,7 +55,6 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
       });
       if (response.status !== 201) {
         setItemId(undefined);
-        setAccessToken(undefined);
         return;
       }
       const data = response.data;
@@ -86,17 +77,9 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
     init();
   }, [generateToken]);
 
-  // TODO: Set AccessToken in the database
-  useEffect(() => {
-    const accessToken = localStorage.getItem('plaidAccessToken');
-    if (accessToken) {
-      setAccessToken(accessToken);
-    }
-  }, []);
-
   const plaidContextValue = useMemo(
-    () => ({ linkToken, linkTokenError, itemId, accessToken, onSuccess }),
-    [linkToken, linkTokenError, itemId, accessToken, onSuccess]
+    () => ({ linkToken, linkTokenError, itemId, onSuccess }),
+    [linkToken, linkTokenError, itemId, onSuccess]
   );
 
   return <PlaidContext.Provider value={plaidContextValue}>{children}</PlaidContext.Provider>;
