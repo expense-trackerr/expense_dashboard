@@ -9,14 +9,20 @@ import { GetLinkedAccountsQuery } from '../__generated__/graphql';
 import { useAuth } from './AuthContext';
 
 const GET_LINKED_ACCOUNTS = gql(`
-    query getLinkedAccounts($userId: String!) {
-        getLinkedAccounts(userId: $userId) {
-            item_id
+query getLinkedAccounts($userId: String!) {
+    getLinkedAccounts(userId: $userId) {
+        item_id
+        name
+        alias_name
+        linked_sub_accounts {
+            account_id
             name
             alias_name
+            balance
             created_at
         }
     }
+}
 `);
 
 type PlaidContextType = {

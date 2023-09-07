@@ -23,9 +23,7 @@ const accountDialogDetailsUndefined = {
 
 // const getAccountsForItem = async (itemId: string) => {
 //   try {
-//     const res = await defaultAxios.post('http://localhost:3000/api/get-accounts', {
-//       itemId: 'jz8EkvqMp5TWAd4eXo3dhGg7K5PQwzH1Gz4PJ',
-//     });
+//     const res = await defaultAxios.post('http://localhost:3000/api/get-accounts', { itemId });
 //     return res.data;
 //   } catch (err) {
 //     console.error(err);
@@ -41,6 +39,13 @@ export const AccountsTab = () => {
 
   const accountDialogDetails =
     linkedAccounts?.find((account) => account.item_id === selectedAccount) ?? accountDialogDetailsUndefined;
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const accounts = await getAccountsForItem('7nxG33VGwlUZD5z86x7JTl7pwXwajDCg8gPnm');
+  //     console.log(accounts);
+  //   })();
+  // }, []);
 
   const handleOpenEditDialog = (itemId: string) => {
     setOpenEditDialog(true);

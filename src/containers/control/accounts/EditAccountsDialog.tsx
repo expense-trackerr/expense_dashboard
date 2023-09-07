@@ -54,7 +54,7 @@ export const EditAccountsDialog = ({ open, handleClose, accountDetails }: EditAc
     >
       <Stack direction="column" spacing={2}>
         <NameValueText name="Account Name" value={accountDetails.name} />
-        <NameValueText name="Created On" value={formatDate(accountDetails.created_at)} />
+        {/* <NameValueText name="Created On" value={formatDate(accountDetails.created_at)} /> */}
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
           Alias Account Name
         </Typography>
