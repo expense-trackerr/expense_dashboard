@@ -2,27 +2,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
 import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { Fragment, useContext, useState } from 'react';
+import defaultAxios from '../../../config/axiosConfig';
 import { PlaidContext } from '../../../contexts/PlaidContext';
+import { formatDate } from '../../../utils/function-utils';
 import { themeColors } from '../../../utils/theme-utils';
 import { PlaidLink } from '../../plaid/PlaidLink';
-import { gql } from '../../../__generated__/gql';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useQuery } from '@apollo/client';
-import { formatDate } from '../../../utils/function-utils';
-import { EditAccountsDialog, EditAccountsDialogProps } from './EditAccountsDialog';
-import defaultAxios from '../../../config/axiosConfig';
 import { DeleteAccountDialog } from './DeleteAccountDialog';
-
-const GET_LINKED_ACCOUNTS = gql(`
-    query getLinkedAccounts($userId: String!) {
-        getLinkedAccounts(userId: $userId) {
-            item_id
-            name
-            alias_name
-            created_at
-        }
-    }
-`);
+import { EditAccountsDialog, EditAccountsDialogProps } from './EditAccountsDialog';
 
 const LinkAccountButton = ({ linkToken }: { linkToken: string | undefined }) => {
   if (!linkToken) return <Skeleton variant="text" sx={{ fontSize: '3rem', width: '100px' }} />;
@@ -35,17 +21,24 @@ const accountDialogDetailsUndefined = {
   created_at: '',
 };
 
+// const getAccountsForItem = async (itemId: string) => {
+//   try {
+//     const res = await defaultAxios.post('http://localhost:3000/api/get-accounts', {
+//       itemId: 'jz8EkvqMp5TWAd4eXo3dhGg7K5PQwzH1Gz4PJ',
+//     });
+//     return res.data;
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
 export const AccountsTab = () => {
-  const { linkToken } = useContext(PlaidContext);
-  const { currentUser } = useAuth();
+  const { linkToken, linkedAccounts, linkedAccountLoading, linkedAccountError, linkedAccountRefetch } =
+    useContext(PlaidContext);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>(undefined);
 
-  const { data, error, loading, refetch } = useQuery(GET_LINKED_ACCOUNTS, {
-    variables: { userId: currentUser?.uid ?? '' },
-  });
-  const linkedAccounts = data?.getLinkedAccounts;
   const accountDialogDetails =
     linkedAccounts?.find((account) => account.item_id === selectedAccount) ?? accountDialogDetailsUndefined;
 
@@ -63,7 +56,7 @@ export const AccountsTab = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        refetch();
+        linkedAccountRefetch();
       }
     }
   };
@@ -82,15 +75,15 @@ export const AccountsTab = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        refetch();
+        linkedAccountRefetch();
       }
     }
   };
 
-  if (loading) return <Skeleton variant="rounded" width="400px" height="300px" />;
-  if (error) {
-    console.error(error);
-    return <div>Error: {error.message}</div>;
+  if (linkedAccountLoading) return <Skeleton variant="rounded" width="400px" height="300px" />;
+  if (linkedAccountError) {
+    console.error(linkedAccountError);
+    return <div>Error: {linkedAccountError.message}</div>;
   }
 
   return (

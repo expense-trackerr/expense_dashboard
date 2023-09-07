@@ -1,29 +1,64 @@
+import { ApolloError, ApolloQueryResult, useQuery } from '@apollo/client';
 import { AxiosError, AxiosResponse } from 'axios';
 import { LinkTokenCreateResponse } from 'plaid';
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 import { PlaidLinkOnSuccessMetadata } from 'react-plaid-link';
 import defaultAxios from '../config/axiosConfig';
+import { gql } from '../__generated__';
+import { GetLinkedAccountsQuery } from '../__generated__/graphql';
+import { useAuth } from './AuthContext';
+
+const GET_LINKED_ACCOUNTS = gql(`
+    query getLinkedAccounts($userId: String!) {
+        getLinkedAccounts(userId: $userId) {
+            item_id
+            name
+            alias_name
+            created_at
+        }
+    }
+`);
 
 type PlaidContextType = {
-  itemId?: string;
   linkToken?: string;
   linkTokenError?: string;
   generateToken?: () => void;
   onSuccess: (public_token: string, metadata: PlaidLinkOnSuccessMetadata) => void;
+  linkedAccounts: GetLinkedAccountsQuery['getLinkedAccounts'] | undefined;
+  linkedAccountError?: ApolloError;
+  linkedAccountLoading: boolean;
+  linkedAccountRefetch: () => Promise<ApolloQueryResult<GetLinkedAccountsQuery>>;
 };
 
 export const PlaidContext = createContext<PlaidContextType>({
-  itemId: undefined,
   linkToken: undefined,
   linkTokenError: undefined,
   generateToken: () => {},
   onSuccess: () => {},
+  linkedAccounts: [],
+  linkedAccountError: undefined,
+  linkedAccountLoading: false,
+  linkedAccountRefetch: () => Promise.resolve({} as ApolloQueryResult<GetLinkedAccountsQuery>),
 });
 
 export function PlaidContextProvider({ children }: { children: React.ReactNode }) {
-  const [itemId, setItemId] = useState<string | undefined>();
+  const { currentUser } = useAuth();
   const [linkToken, setLinkToken] = useState<string | undefined>();
   const [linkTokenError, setLinkTokenError] = useState<string | undefined>();
+
+  const {
+    data,
+    error: linkedAccountError,
+    loading: linkedAccountLoading,
+    refetch: linkedAccountRefetch,
+  } = useQuery(GET_LINKED_ACCOUNTS, {
+    variables: { userId: currentUser?.uid ?? '' },
+  });
+  const linkedAccounts = data?.getLinkedAccounts;
+
+  useEffect(() => {
+    linkedAccountRefetch();
+  }, [linkedAccounts]);
 
   const generateToken = useCallback(async () => {
     defaultAxios
@@ -54,20 +89,16 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
         publicToken: public_token,
       });
       if (response.status !== 201) {
-        setItemId(undefined);
         return;
       }
-      const data = response.data;
-      setItemId(data.itemId);
     };
 
     exchangePublicTokenForAccessToken();
   }, []);
 
+  // Generate token to initialize Plaid Link
   useEffect(() => {
     const init = async () => {
-      // do not generate a new token for OAuth redirect; instead
-      // setLinkToken from localStorage
       if (window.location.href.includes('?oauth_state_id=')) {
         setLinkToken(localStorage.getItem('plaidLinkToken') ?? undefined);
         return;
@@ -78,8 +109,24 @@ export function PlaidContextProvider({ children }: { children: React.ReactNode }
   }, [generateToken]);
 
   const plaidContextValue = useMemo(
-    () => ({ linkToken, linkTokenError, itemId, onSuccess }),
-    [linkToken, linkTokenError, itemId, onSuccess]
+    () => ({
+      linkToken,
+      linkTokenError,
+      onSuccess,
+      linkedAccounts,
+      linkedAccountError,
+      linkedAccountLoading,
+      linkedAccountRefetch,
+    }),
+    [
+      linkToken,
+      linkTokenError,
+      onSuccess,
+      linkedAccounts,
+      linkedAccountError,
+      linkedAccountLoading,
+      linkedAccountRefetch,
+    ]
   );
 
   return <PlaidContext.Provider value={plaidContextValue}>{children}</PlaidContext.Provider>;
