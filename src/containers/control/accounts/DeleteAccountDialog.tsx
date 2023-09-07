@@ -22,11 +22,17 @@ export const DeleteAccountDialog = ({ open, handleClose, accountDetails }: EditA
   };
 
   return (
-    <SaveDialog open={open} handleCloseDialog={handleCloseDialog} dialogTitle="Delete Account">
+    <SaveDialog
+      open={open}
+      handleCloseDialog={handleCloseDialog}
+      dialogTitle="Delete Account"
+      primaryButtonText="Delete"
+      primaryButtonColor={themeColors.danger}
+    >
       <Stack direction="column" spacing={2}>
         <Typography variant="body1" sx={{ color: themeColors.normalText }}>
-          Are you sure you want to delete this account? The transactions linked to this account will be shown as "Delete
-          account"
+          Are you sure you want to delete this account? The transactions linked to this account will be shown as
+          "Deleted account"
         </Typography>
       </Stack>
     </SaveDialog>

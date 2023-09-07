@@ -11,6 +11,9 @@ type SaveDialogProps = {
   dialogTitle: string;
   children: React.ReactNode;
   isSaveButtonDisabled?: boolean;
+  primaryButtonText?: string;
+  primaryButtonColor?: string;
+  secondaryButtonText?: string;
 };
 
 export const SaveDialog = ({
@@ -18,6 +21,9 @@ export const SaveDialog = ({
   handleCloseDialog,
   dialogTitle,
   isSaveButtonDisabled,
+  primaryButtonText = 'Save',
+  primaryButtonColor = themeColors.linkText,
+  secondaryButtonText = 'Cancel',
   children,
 }: SaveDialogProps) => {
   return (
@@ -29,12 +35,12 @@ export const SaveDialog = ({
           variant="outlined"
           onClick={handleCloseDialog(true)}
           sx={{
-            color: themeColors.linkText,
-            border: `1px solid ${themeColors.linkText}`,
+            color: primaryButtonColor,
+            border: `1px solid ${primaryButtonColor}`,
           }}
           disabled={isSaveButtonDisabled}
         >
-          Save
+          {primaryButtonText}
         </Button>
         <Button
           variant="outlined"
@@ -44,7 +50,7 @@ export const SaveDialog = ({
             border: `1px solid ${themeColors.normalText}`,
           }}
         >
-          Cancel
+          {secondaryButtonText}
         </Button>
       </DialogActions>
     </Dialog>
