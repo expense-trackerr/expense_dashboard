@@ -26,7 +26,6 @@ const accountDialogDetailsUndefined = {
 export const AccountsTab = () => {
   const { linkToken, linkedAccounts, linkedAccountLoading, linkedAccountError, linkedAccountRefetch } =
     useContext(PlaidContext);
-  console.log('linkedAccounts:', linkedAccounts);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedAccount, setSelectedAccount] = useState<string | undefined>(undefined);
