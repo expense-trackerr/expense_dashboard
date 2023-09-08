@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { NameValueText } from '../../../components/NameValueText';
 import { SaveDialog } from '../../../components/SaveDialog';
 import { CTextField } from '../../../components/TextField';
-import { formatDate } from '../../../utils/function-utils';
 import { themeColors } from '../../../utils/theme-utils';
 import { GetLinkedAccountsQuery } from '../../../__generated__/graphql';
 
