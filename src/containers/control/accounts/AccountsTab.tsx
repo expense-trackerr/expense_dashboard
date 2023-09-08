@@ -79,7 +79,7 @@ export const AccountsTab = () => {
 
   return (
     <>
-      <Stack direction="column" justifyContent="center" alignItems="flex-end">
+      <Stack direction="column" justifyContent="center" alignItems="flex-end" spacing={2}>
         <LinkAccountButton linkToken={linkToken} />
         {linkedAccounts?.length ? (
           <Paper

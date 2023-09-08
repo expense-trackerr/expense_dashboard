@@ -1,6 +1,6 @@
-import { Button } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { usePlaidLink } from 'react-plaid-link';
+import { AddButton } from '../../components/Buttons';
 import { PlaidContext } from '../../contexts/PlaidContext';
 
 export const PlaidLink = () => {
@@ -26,8 +26,8 @@ export const PlaidLink = () => {
   }, [ready, open, isOauth]);
 
   return (
-    <Button onClick={() => open()} disabled={!ready}>
+    <AddButton onClick={() => open()} disabled={!ready}>
       Add Account
-    </Button>
+    </AddButton>
   );
 };
