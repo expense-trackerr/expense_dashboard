@@ -1,54 +1,64 @@
-import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
-import { Grid, IconButton, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material';
-import { Fragment } from 'react';
-import { ExpandableListItem } from '../../../components/ExpandableListItem';
-import { formatDate } from '../../../utils/function-utils';
-import { themeColors } from '../../../utils/theme-utils';
+import { Grid, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material';
+import { Fragment, useState } from 'react';
+import { AddButton } from '../../../components/Buttons';
+import { AddCategoriesDialog, AddCategoriesDialogProps } from './AddCategoriesDialog';
+
+const mockCategories = [
+  {
+    id: 1,
+    name: 'Groceries',
+  },
+  {
+    id: 2,
+    name: 'Restaurants',
+  },
+  {
+    id: 3,
+    name: 'Gas',
+  },
+];
 
 export const CategoriesTab = () => {
-  const categories = [];
+  const [addCategoriesDialogOpen, setAddCategoriesDialogOpen] = useState(false);
+
+  const handleAddCategoryButtonClick = () => {
+    setAddCategoriesDialogOpen(true);
+  };
+
+  const handleCloseAddCategoriesDialog: AddCategoriesDialogProps['handleClose'] = (payload) => {
+    setAddCategoriesDialogOpen(false);
+    if (payload?.categoryName) {
+      console.log('Sending request to add category', payload.categoryName);
+    }
+  };
 
   return (
     <>
-      <Stack direction="column" justifyContent="center" alignItems="flex-end">
-        {/* <LinkAccountButton linkToken={linkToken} /> */}
-        {categories?.length ? (
+      <Stack direction="column" justifyContent="center" alignItems="flex-end" spacing={2}>
+        <AddButton onClick={handleAddCategoryButtonClick}>Add Category</AddButton>
+        {mockCategories?.length ? (
           <Paper
             variant="outlined"
             sx={{
               width: '400px',
             }}
           >
-            {categories?.map((account) => (
-              <Fragment key={account.item_id}>
+            <AddCategoriesDialog open={addCategoriesDialogOpen} handleClose={handleCloseAddCategoriesDialog} />
+            {mockCategories?.map((category) => (
+              <Fragment key={category.id}>
                 <List>
                   <ListItem>
                     <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
                       <Grid item>
-                        <ExpandableListItem
-                          primaryText={account.alias_name ? account.alias_name : account.name}
-                          secondaryText={formatDate(account.created_at)}
-                          nestedItems={account.linked_sub_accounts?.map((subAccount) => (
-                            <Stack
-                              key={subAccount.account_id}
-                              direction="row"
-                              justifyContent="space-between"
-                              alignItems="center"
-                            >
-                              <ListItemText primary={subAccount.alias_name ? subAccount.alias_name : subAccount.name} />
-                              <ListItemText primary={`$${subAccount.balance}`} />
-                            </Stack>
-                          ))}
-                        />
+                        <ListItemText primary={category.name} />
                       </Grid>
                       <Grid item>
-                        <IconButton onClick={() => handleOpenEditDialog(account.item_id)}>
+                        {/* <IconButton onClick={() => handleOpenEditDialog(account.item_id)}>
                           <EditIcon sx={{ color: themeColors.greyText }} />
                         </IconButton>
                         <IconButton onClick={() => handleOpenDeleteDialog(account.item_id)}>
                           <CancelIcon sx={{ color: themeColors.danger }} />
-                        </IconButton>
+                        </IconButton> */}
                       </Grid>
                     </Grid>
                   </ListItem>

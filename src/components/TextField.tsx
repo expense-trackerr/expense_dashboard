@@ -1,6 +1,7 @@
 import { TextField } from '@mui/material';
 import { styled } from '@mui/styles';
 
+// FIXUI - add the textfield text component here and accept as props
 export const CTextField = styled(TextField)({
   '& label.Mui-focused': {
     color: '#A0AAB4', // label color on focus

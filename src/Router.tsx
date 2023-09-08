@@ -1,7 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { Login } from './pages/auth-pages/Login';
 import { Signup } from './pages/auth-pages/Signup';
-import { CategoriesControl } from './pages/categories/CategoriesControl';
+import { Control } from './pages/control/Control';
 import { MainDashboard } from './pages/main/MainDashboard';
 import { PrivateAuthRoute, PrivateRoute } from './utils/PrivateRoute';
 
@@ -20,7 +20,7 @@ export const Router = () => {
         path="/categories"
         element={
           <PrivateRoute>
-            <CategoriesControl />
+            <Control />
           </PrivateRoute>
         }
       />

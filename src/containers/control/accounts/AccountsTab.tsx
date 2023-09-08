@@ -76,7 +76,8 @@ export const AccountsTab = () => {
     console.error(linkedAccountError);
     return <div>Error: {linkedAccountError.message}</div>;
   }
-
+  // FIXUI - Fix the UI for nested items
+  // Move the expand and collapse button to the left of the institution name
   return (
     <>
       <Stack direction="column" justifyContent="center" alignItems="flex-end" spacing={2}>
