@@ -1,5 +1,5 @@
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import { Collapse, Grid, List, ListItemButton, ListItemText } from '@mui/material';
+import { Box, Collapse, Grid, ListItemButton, ListItemText } from '@mui/material';
 import { useState } from 'react';
 import { themeColors } from '../utils/theme-utils';
 
@@ -36,9 +36,7 @@ export const ExpandableListItem = ({
         </Grid>
       </ListItemButton>
       <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          {nestedItems}
-        </List>
+        <Box component="div">{nestedItems}</Box>
       </Collapse>
     </>
   );

@@ -109,9 +109,10 @@ export const AccountsTab = () => {
                           primaryText={account.alias_name ? account.alias_name : account.name}
                           secondaryText={formatDate(account.created_at)}
                           nestedItems={account.linked_sub_accounts?.map((subAccount) => (
-                            <ListItem key={subAccount.account_id}>
-                              <ListItemText primary={subAccount.alias_name ? subAccount.alias_name : subAccount.name} />
-                            </ListItem>
+                            <ListItemText
+                              key={subAccount.account_id}
+                              primary={subAccount.alias_name ? subAccount.alias_name : subAccount.name}
+                            />
                           ))}
                         />
                       </Grid>
