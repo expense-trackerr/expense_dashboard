@@ -1,4 +1,4 @@
-import { InputAdornment, Stack, Typography } from '@mui/material';
+import { InputAdornment, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useState } from 'react';
 import { SaveDialog } from '../../../components/SaveDialog';
 import { CTextField } from '../../../components/TextField';
@@ -9,10 +9,20 @@ export type AddCategoriesDialogProps = {
   handleClose: (payload: { categoryName: string; categoryBudget?: number } | undefined) => void;
 };
 
+enum CategoryType {
+  EXPENSE = 'Expense',
+  INCOME = 'Income',
+}
+
 export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogProps) => {
+  const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | undefined>(undefined);
   //   const [categoryColor, setCategoryColor] = useState<string>('');
+
+  const handleCategoryTypeChange = (_: React.MouseEvent<HTMLElement>, newCategoryType: CategoryType) => {
+    setCategoryType(newCategoryType);
+  };
 
   const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryName(event.target.value);
@@ -49,6 +59,10 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
       isSaveButtonDisabled={categoryName === ''}
     >
       <Stack direction="column" spacing={2}>
+        <ToggleButtonGroup color="primary" value={categoryType} exclusive onChange={handleCategoryTypeChange}>
+          <ToggleButton value={CategoryType.EXPENSE}>{CategoryType.EXPENSE}</ToggleButton>
+          <ToggleButton value={CategoryType.INCOME}>{CategoryType.INCOME}</ToggleButton>
+        </ToggleButtonGroup>
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
           Category Name *
         </Typography>
