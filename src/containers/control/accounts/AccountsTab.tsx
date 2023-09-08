@@ -2,6 +2,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
 import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { Fragment, useContext, useState } from 'react';
+import { ExpandableListItem } from '../../../components/ExpandableListItem';
 import defaultAxios from '../../../config/axiosConfig';
 import { PlaidContext } from '../../../contexts/PlaidContext';
 import { formatDate } from '../../../utils/function-utils';
@@ -22,15 +23,6 @@ const accountDialogDetailsUndefined = {
   linked_sub_accounts: [],
 };
 
-// const getAccountsForItem = async (itemId: string) => {
-//   try {
-//     const res = await defaultAxios.post('http://localhost:3000/api/get-accounts', { itemId });
-//     return res.data;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
 export const AccountsTab = () => {
   const { linkToken, linkedAccounts, linkedAccountLoading, linkedAccountError, linkedAccountRefetch } =
     useContext(PlaidContext);
@@ -41,13 +33,6 @@ export const AccountsTab = () => {
 
   const accountDialogDetails =
     linkedAccounts?.find((account) => account.item_id === selectedAccount) ?? accountDialogDetailsUndefined;
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const accounts = await getAccountsForItem('7nxG33VGwlUZD5z86x7JTl7pwXwajDCg8gPnm');
-  //     console.log(accounts);
-  //   })();
-  // }, []);
 
   const handleOpenEditDialog = (itemId: string) => {
     setOpenEditDialog(true);
@@ -118,16 +103,16 @@ export const AccountsTab = () => {
               <Fragment key={account.item_id}>
                 <List>
                   <ListItem>
-                    <Grid container direction="row" justifyContent="space-between" alignItems="center">
+                    <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
                       <Grid item>
-                        <ListItemText
-                          primary={account.alias_name ? account.alias_name : account.name}
-                          primaryTypographyProps={{ variant: 'h3' }}
-                        />
-                        <ListItemText
-                          // primary={formatDate(account.created_at)}
-                          primaryTypographyProps={{ variant: 'subtitle1' }}
-                          sx={{ color: themeColors.greyText }}
+                        <ExpandableListItem
+                          primaryText={account.alias_name ? account.alias_name : account.name}
+                          secondaryText={formatDate(account.created_at)}
+                          nestedItems={account.linked_sub_accounts?.map((subAccount) => (
+                            <ListItem key={subAccount.account_id}>
+                              <ListItemText primary={subAccount.alias_name ? subAccount.alias_name : subAccount.name} />
+                            </ListItem>
+                          ))}
                         />
                       </Grid>
                       <Grid item>

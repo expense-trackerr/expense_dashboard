@@ -14,12 +14,12 @@ query getLinkedAccounts($userId: String!) {
         item_id
         name
         alias_name
+        created_at
         linked_sub_accounts {
             account_id
             name
             alias_name
-            balance
-            created_at
+            balance 
         }
     }
 }

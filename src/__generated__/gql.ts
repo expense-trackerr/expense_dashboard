@@ -14,7 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  query getCategories($userId: String!) {\n    getCategories(userId: $userId) {\n      id\n      name\n    }\n  }\n": types.GetCategoriesDocument,
-    "\nquery getLinkedAccounts($userId: String!) {\n    getLinkedAccounts(userId: $userId) {\n        item_id\n        name\n        alias_name\n        linked_sub_accounts {\n            account_id\n            name\n            alias_name\n            balance\n            created_at\n        }\n    }\n}\n": types.GetLinkedAccountsDocument,
+    "\nquery getLinkedAccounts($userId: String!) {\n    getLinkedAccounts(userId: $userId) {\n        item_id\n        name\n        alias_name\n        created_at\n        linked_sub_accounts {\n            account_id\n            name\n            alias_name\n            balance \n        }\n    }\n}\n": types.GetLinkedAccountsDocument,
 };
 
 /**
@@ -38,7 +38,7 @@ export function gql(source: "\n  query getCategories($userId: String!) {\n    ge
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery getLinkedAccounts($userId: String!) {\n    getLinkedAccounts(userId: $userId) {\n        item_id\n        name\n        alias_name\n        linked_sub_accounts {\n            account_id\n            name\n            alias_name\n            balance\n            created_at\n        }\n    }\n}\n"): (typeof documents)["\nquery getLinkedAccounts($userId: String!) {\n    getLinkedAccounts(userId: $userId) {\n        item_id\n        name\n        alias_name\n        linked_sub_accounts {\n            account_id\n            name\n            alias_name\n            balance\n            created_at\n        }\n    }\n}\n"];
+export function gql(source: "\nquery getLinkedAccounts($userId: String!) {\n    getLinkedAccounts(userId: $userId) {\n        item_id\n        name\n        alias_name\n        created_at\n        linked_sub_accounts {\n            account_id\n            name\n            alias_name\n            balance \n        }\n    }\n}\n"): (typeof documents)["\nquery getLinkedAccounts($userId: String!) {\n    getLinkedAccounts(userId: $userId) {\n        item_id\n        name\n        alias_name\n        created_at\n        linked_sub_accounts {\n            account_id\n            name\n            alias_name\n            balance \n        }\n    }\n}\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
