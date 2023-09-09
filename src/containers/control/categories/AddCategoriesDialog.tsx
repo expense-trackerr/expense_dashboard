@@ -14,6 +14,7 @@ enum CategoryType {
   INCOME = 'Income',
 }
 
+// FIXUI - The Category Type toggle button needs to follow the mock-up
 export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogProps) => {
   const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
   const [categoryName, setCategoryName] = useState<string>('');
@@ -21,7 +22,9 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
   //   const [categoryColor, setCategoryColor] = useState<string>('');
 
   const handleCategoryTypeChange = (_: React.MouseEvent<HTMLElement>, newCategoryType: CategoryType) => {
-    setCategoryType(newCategoryType);
+    if (newCategoryType !== null) {
+      setCategoryType(newCategoryType);
+    }
   };
 
   const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
