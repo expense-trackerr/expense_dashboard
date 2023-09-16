@@ -1,7 +1,6 @@
 import {
   FormControl,
   InputAdornment,
-  InputLabel,
   MenuItem,
   Select,
   Stack,
@@ -11,6 +10,7 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { SaveDialog } from '../../../components/SaveDialog';
+import { SelectInput } from '../../../components/Select';
 import { CTextField } from '../../../components/TextField';
 import { themeColors } from '../../../utils/theme-utils';
 
@@ -37,8 +37,8 @@ const ColorButton = ({ color, selectedColor, onClick }: ColorButtonProps) => (
   <div
     onClick={onClick}
     style={{
-      width: 24,
-      height: 24,
+      width: 17,
+      height: 17,
       borderRadius: '50%',
       backgroundColor: color,
       border: selectedColor === color ? '1px solid black' : 'none',
@@ -140,12 +140,12 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
           sx={{ marginTop: '4px !important', width: '200px' }}
         />
         <FormControl variant="outlined" size="small" sx={{ width: '200px' }}>
-          <InputLabel>Select Color</InputLabel>
           <Select
             value={categoryColor}
             onChange={(event) => setCategoryColor(event.target.value as string)}
             label="Select Color"
             autoWidth
+            input={<SelectInput />}
           >
             {colorOptions.map((color) => (
               <MenuItem key={color} value={color}>
