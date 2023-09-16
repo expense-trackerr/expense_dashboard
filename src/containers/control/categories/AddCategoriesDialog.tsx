@@ -18,7 +18,8 @@ enum CategoryType {
 export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogProps) => {
   const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
   const [categoryName, setCategoryName] = useState<string>('');
-  const [categoryBudget, setCategoryBudget] = useState<number | undefined>(undefined);
+  const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
+
   //   const [categoryColor, setCategoryColor] = useState<string>('');
 
   const handleCategoryTypeChange = (_: React.MouseEvent<HTMLElement>, newCategoryType: CategoryType) => {
@@ -33,8 +34,9 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
 
   const handleBudgetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
-    if (value === 0) {
-      setCategoryBudget(undefined);
+
+    if (value <= 0) {
+      setCategoryBudget('');
     } else if (!isNaN(value)) {
       setCategoryBudget(value);
     }
@@ -44,14 +46,14 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
     if (shouldSave) {
       const payload = {
         categoryName,
-        categoryBudget,
+        categoryBudget: categoryBudget === '' ? undefined : categoryBudget,
       };
       handleClose(payload);
     } else {
       handleClose(undefined);
     }
     setCategoryName('');
-    setCategoryBudget(undefined);
+    setCategoryBudget('');
   };
 
   return (
@@ -82,10 +84,14 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
         <CTextField
           size="small"
           value={categoryBudget}
-          type="number"
           onChange={handleBudgetChange}
+          error={categoryBudget !== '' && (categoryBudget <= 0 || isNaN(categoryBudget))}
           InputProps={{
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
+          }}
+          inputProps={{
+            inputMode: 'numeric',
+            pattern: '[0-9]*',
           }}
           sx={{ marginTop: '4px !important', width: '200px' }}
         />
