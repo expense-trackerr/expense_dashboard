@@ -1,7 +1,19 @@
+import { useQuery } from '@apollo/client';
 import { Grid, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { AddButton } from '../../../components/Buttons';
+import { gql } from '../../../__generated__';
 import { AddCategoriesDialog, AddCategoriesDialogProps } from './AddCategoriesDialog';
+
+const GET_CATEGORY_COLORS = gql(`
+query getCategoryColors {
+  getCategoryColors {
+    id
+    name
+    hex_code
+}
+}
+`);
 
 const mockCategories = [
   {
@@ -20,6 +32,8 @@ const mockCategories = [
 
 export const CategoriesTab = () => {
   const [addCategoriesDialogOpen, setAddCategoriesDialogOpen] = useState(false);
+
+  const categoryColorsGqlResponse = useQuery(GET_CATEGORY_COLORS);
 
   const handleAddCategoryButtonClick = () => {
     setAddCategoriesDialogOpen(true);
@@ -43,7 +57,11 @@ export const CategoriesTab = () => {
               width: '400px',
             }}
           >
-            <AddCategoriesDialog open={addCategoriesDialogOpen} handleClose={handleCloseAddCategoriesDialog} />
+            <AddCategoriesDialog
+              open={addCategoriesDialogOpen}
+              handleClose={handleCloseAddCategoriesDialog}
+              categoryColorsGqlResponse={categoryColorsGqlResponse}
+            />
             {mockCategories?.map((category) => (
               <Fragment key={category.id}>
                 <List>

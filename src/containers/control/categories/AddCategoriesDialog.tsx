@@ -1,10 +1,11 @@
-import { useQuery } from '@apollo/client';
+import { QueryResult } from '@apollo/client';
 import {
   FormControl,
   FormHelperText,
   InputAdornment,
   MenuItem,
   Select,
+  Skeleton,
   Stack,
   ToggleButton,
   ToggleButtonGroup,
@@ -15,17 +16,7 @@ import { SaveDialog } from '../../../components/SaveDialog';
 import { SelectInput } from '../../../components/Select';
 import { CTextField } from '../../../components/TextField';
 import { themeColors } from '../../../utils/theme-utils';
-import { gql } from '../../../__generated__';
-
-const GET_CATEGORY_COLORS = gql(`
-query getCategoryColors {
-  getCategoryColors {
-    id
-    name
-    hex_code
-}
-}
-`);
+import { Exact, GetCategoryColorsQuery } from '../../../__generated__/graphql';
 
 type ColorButtonProps = {
   color: string;
@@ -51,6 +42,12 @@ const ColorButton = ({ color, selectedColor, onClick }: ColorButtonProps) => (
 export type AddCategoriesDialogProps = {
   open: boolean;
   handleClose: (payload: { categoryName: string; categoryBudget?: number } | undefined) => void;
+  categoryColorsGqlResponse: QueryResult<
+    GetCategoryColorsQuery,
+    Exact<{
+      [key: string]: never;
+    }>
+  >;
 };
 
 enum CategoryType {
@@ -59,7 +56,7 @@ enum CategoryType {
 }
 
 // FIXUI - The Category Type toggle button needs to follow the mock-up
-export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogProps) => {
+export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlResponse }: AddCategoriesDialogProps) => {
   const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
@@ -67,9 +64,9 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
 
   const {
     data: categoryColorsData,
-    error: categoryColorsError,
     loading: categoryColorsLoading,
-  } = useQuery(GET_CATEGORY_COLORS);
+    error: categoryColorsError,
+  } = categoryColorsGqlResponse;
 
   const categoryColors = categoryColorsData?.getCategoryColors ?? [];
 
@@ -157,30 +154,34 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
           Cateogory Color
         </Typography>
-        <FormControl variant="outlined" size="small" sx={{ width: '200px', marginTop: '4px !important' }}>
-          <Select
-            value={categoryColor}
-            onChange={(event) => setCategoryColor(event.target.value as string)}
-            label="Select Color"
-            autoWidth
-            input={<SelectInput />}
-            disabled={categoryColorsLoading || categoryColorsError !== undefined}
-            error={categoryColorsError !== undefined}
-          >
-            {categoryColors.map((color) => (
-              <MenuItem key={color.id} value={color.hex_code}>
-                <ColorButton
-                  color={color.hex_code}
-                  selectedColor={categoryColor}
-                  onClick={() => setCategoryColor(color.hex_code)}
-                />
-              </MenuItem>
-            ))}
-          </Select>
-          {categoryColorsError !== undefined && (
-            <FormHelperText sx={{ color: themeColors.danger }}>Unable to fetch the colors</FormHelperText>
-          )}
-        </FormControl>
+        {categoryColorsLoading ? (
+          <Skeleton variant="rounded" width="200px" />
+        ) : (
+          <FormControl variant="outlined" size="small" sx={{ width: '200px', marginTop: '4px !important' }}>
+            <Select
+              value={categoryColor}
+              onChange={(event) => setCategoryColor(event.target.value as string)}
+              label="Select Color"
+              autoWidth
+              input={<SelectInput />}
+              disabled={categoryColorsError !== undefined}
+              error={categoryColorsError !== undefined}
+            >
+              {categoryColors.map((color) => (
+                <MenuItem key={color.id} value={color.hex_code}>
+                  <ColorButton
+                    color={color.hex_code}
+                    selectedColor={categoryColor}
+                    onClick={() => setCategoryColor(color.hex_code)}
+                  />
+                </MenuItem>
+              ))}
+            </Select>
+            {categoryColorsError !== undefined && (
+              <FormHelperText sx={{ color: themeColors.danger }}>Unable to fetch the colors</FormHelperText>
+            )}
+          </FormControl>
+        )}
       </Stack>
     </SaveDialog>
   );
