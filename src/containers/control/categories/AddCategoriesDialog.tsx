@@ -1,5 +1,7 @@
+import { useQuery } from '@apollo/client';
 import {
   FormControl,
+  FormHelperText,
   InputAdornment,
   MenuItem,
   Select,
@@ -8,24 +10,22 @@ import {
   ToggleButtonGroup,
   Typography,
 } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SaveDialog } from '../../../components/SaveDialog';
 import { SelectInput } from '../../../components/Select';
 import { CTextField } from '../../../components/TextField';
 import { themeColors } from '../../../utils/theme-utils';
+import { gql } from '../../../__generated__';
 
-const colorOptions = [
-  '#A5C8FF',
-  '#A8E6CF',
-  '#FFD3B6',
-  '#FFAAA5',
-  '#DCCCE7',
-  '#ACE4AA',
-  '#96E6B3',
-  '#FFD1A1',
-  '#FFA1A1',
-  '#C1A1FF',
-];
+const GET_CATEGORY_COLORS = gql(`
+query getCategoryColors {
+  getCategoryColors {
+    id
+    name
+    hex_code
+}
+}
+`);
 
 type ColorButtonProps = {
   color: string;
@@ -64,6 +64,21 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
   const [categoryColor, setCategoryColor] = useState<string>('');
+
+  const {
+    data: categoryColorsData,
+    error: categoryColorsError,
+    loading: categoryColorsLoading,
+  } = useQuery(GET_CATEGORY_COLORS);
+
+  const categoryColors = categoryColorsData?.getCategoryColors ?? [];
+
+  // Sets the initial value of categoryColor
+  useEffect(() => {
+    if (categoryColors.length > 0) {
+      setCategoryColor(categoryColors[0].hex_code);
+    }
+  }, [categoryColors]);
 
   const handleCategoryTypeChange = (_: React.MouseEvent<HTMLElement>, newCategoryType: CategoryType) => {
     if (newCategoryType !== null) {
@@ -149,13 +164,22 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
             label="Select Color"
             autoWidth
             input={<SelectInput />}
+            disabled={categoryColorsLoading || categoryColorsError !== undefined}
+            error={categoryColorsError !== undefined}
           >
-            {colorOptions.map((color) => (
-              <MenuItem key={color} value={color}>
-                <ColorButton color={color} selectedColor={categoryColor} onClick={() => setCategoryColor(color)} />
+            {categoryColors.map((color) => (
+              <MenuItem key={color.id} value={color.hex_code}>
+                <ColorButton
+                  color={color.hex_code}
+                  selectedColor={categoryColor}
+                  onClick={() => setCategoryColor(color.hex_code)}
+                />
               </MenuItem>
             ))}
           </Select>
+          {categoryColorsError !== undefined && (
+            <FormHelperText sx={{ color: themeColors.danger }}>Unable to fetch the colors</FormHelperText>
+          )}
         </FormControl>
       </Stack>
     </SaveDialog>
