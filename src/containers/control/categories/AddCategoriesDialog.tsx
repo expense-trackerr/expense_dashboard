@@ -139,7 +139,10 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
           }}
           sx={{ marginTop: '4px !important', width: '200px' }}
         />
-        <FormControl variant="outlined" size="small" sx={{ width: '200px' }}>
+        <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
+          Cateogory Color
+        </Typography>
+        <FormControl variant="outlined" size="small" sx={{ width: '200px', marginTop: '4px !important' }}>
           <Select
             value={categoryColor}
             onChange={(event) => setCategoryColor(event.target.value as string)}
