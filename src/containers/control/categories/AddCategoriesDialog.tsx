@@ -1,8 +1,52 @@
-import { InputAdornment, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import {
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from '@mui/material';
 import { useState } from 'react';
 import { SaveDialog } from '../../../components/SaveDialog';
 import { CTextField } from '../../../components/TextField';
 import { themeColors } from '../../../utils/theme-utils';
+
+const colorOptions = [
+  '#A5C8FF',
+  '#A8E6CF',
+  '#FFD3B6',
+  '#FFAAA5',
+  '#DCCCE7',
+  '#ACE4AA',
+  '#96E6B3',
+  '#FFD1A1',
+  '#FFA1A1',
+  '#C1A1FF',
+];
+
+type ColorButtonProps = {
+  color: string;
+  selectedColor: string;
+  onClick: () => void;
+};
+
+const ColorButton = ({ color, selectedColor, onClick }: ColorButtonProps) => (
+  <div
+    onClick={onClick}
+    style={{
+      width: 24,
+      height: 24,
+      borderRadius: '50%',
+      backgroundColor: color,
+      border: selectedColor === color ? '1px solid black' : 'none',
+      cursor: 'pointer',
+      margin: 4,
+    }}
+  />
+);
 
 export type AddCategoriesDialogProps = {
   open: boolean;
@@ -19,8 +63,7 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
   const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
-
-  //   const [categoryColor, setCategoryColor] = useState<string>('');
+  const [categoryColor, setCategoryColor] = useState<string>('');
 
   const handleCategoryTypeChange = (_: React.MouseEvent<HTMLElement>, newCategoryType: CategoryType) => {
     if (newCategoryType !== null) {
@@ -54,6 +97,7 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
     }
     setCategoryName('');
     setCategoryBudget('');
+    setCategoryColor('');
   };
 
   return (
@@ -95,6 +139,21 @@ export const AddCategoriesDialog = ({ open, handleClose }: AddCategoriesDialogPr
           }}
           sx={{ marginTop: '4px !important', width: '200px' }}
         />
+        <FormControl variant="outlined" size="small" sx={{ width: '200px' }}>
+          <InputLabel>Select Color</InputLabel>
+          <Select
+            value={categoryColor}
+            onChange={(event) => setCategoryColor(event.target.value as string)}
+            label="Select Color"
+            autoWidth
+          >
+            {colorOptions.map((color) => (
+              <MenuItem key={color} value={color}>
+                <ColorButton color={color} selectedColor={categoryColor} onClick={() => setCategoryColor(color)} />
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
       </Stack>
     </SaveDialog>
   );
