@@ -42,7 +42,7 @@ export const CategoriesTab = () => {
   const handleCloseAddCategoriesDialog: AddCategoriesDialogProps['handleClose'] = (payload) => {
     setAddCategoriesDialogOpen(false);
     if (payload?.categoryName) {
-      console.log('Sending request to add category', payload.categoryName);
+      console.log('Sending request to add category', payload);
     }
   };
 

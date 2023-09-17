@@ -21,12 +21,10 @@ import { Exact, GetCategoryColorsQuery } from '../../../__generated__/graphql';
 type ColorButtonProps = {
   color: string;
   selectedColor: string;
-  onClick: () => void;
 };
 
-const ColorButton = ({ color, selectedColor, onClick }: ColorButtonProps) => (
+const ColorButton = ({ color, selectedColor }: ColorButtonProps) => (
   <div
-    onClick={onClick}
     style={{
       width: 17,
       height: 17,
@@ -41,7 +39,11 @@ const ColorButton = ({ color, selectedColor, onClick }: ColorButtonProps) => (
 
 export type AddCategoriesDialogProps = {
   open: boolean;
-  handleClose: (payload: { categoryName: string; categoryBudget?: number } | undefined) => void;
+  handleClose: (
+    payload:
+      | { categoryType: CategoryType; categoryName: string; categoryBudget?: number; categoryColorId: string }
+      | undefined
+  ) => void;
   categoryColorsGqlResponse: QueryResult<
     GetCategoryColorsQuery,
     Exact<{
@@ -60,7 +62,7 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
   const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
-  const [categoryColor, setCategoryColor] = useState<string>('');
+  const [selectedCategoryColor, setSelectedCategoryColor] = useState<string>('');
 
   const {
     data: categoryColorsData,
@@ -73,7 +75,7 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
   // Sets the initial value of categoryColor
   useEffect(() => {
     if (categoryColors.length > 0) {
-      setCategoryColor(categoryColors[0].hex_code);
+      setSelectedCategoryColor(categoryColors[0].hex_code);
     }
   }, [categoryColors]);
 
@@ -100,8 +102,11 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
   const handleCloseDialog = (shouldSave: boolean) => () => {
     if (shouldSave) {
       const payload = {
+        categoryType,
         categoryName,
         categoryBudget: categoryBudget === '' ? undefined : categoryBudget,
+        categoryColorId:
+          categoryColors.find((color) => color.hex_code === selectedCategoryColor)?.id ?? categoryColors[0].id,
       };
       handleClose(payload);
     } else {
@@ -109,7 +114,7 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
     }
     setCategoryName('');
     setCategoryBudget('');
-    setCategoryColor('');
+    setSelectedCategoryColor('');
   };
 
   return (
@@ -159,8 +164,8 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
         ) : (
           <FormControl variant="outlined" size="small" sx={{ width: '200px', marginTop: '4px !important' }}>
             <Select
-              value={categoryColor}
-              onChange={(event) => setCategoryColor(event.target.value as string)}
+              value={selectedCategoryColor}
+              onChange={(event) => setSelectedCategoryColor(event.target.value as string)}
               label="Select Color"
               autoWidth
               input={<SelectInput />}
@@ -169,11 +174,7 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
             >
               {categoryColors.map((color) => (
                 <MenuItem key={color.id} value={color.hex_code}>
-                  <ColorButton
-                    color={color.hex_code}
-                    selectedColor={categoryColor}
-                    onClick={() => setCategoryColor(color.hex_code)}
-                  />
+                  <ColorButton color={color.hex_code} selectedColor={selectedCategoryColor} />
                 </MenuItem>
               ))}
             </Select>
