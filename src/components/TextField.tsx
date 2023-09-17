@@ -14,7 +14,7 @@ export const CTextField = styled(TextField)({
   //   borderBottomColor: '#B2BAC2',
   // },
   '& .Mui-disabled': {
-    backgroundColor: '#E0E3E7',
+    backgroundColor: '#ededed',
   },
   //   '& .MuiOutlinedInput-root': {
   //     backgroundColor: '#F5F7FA',

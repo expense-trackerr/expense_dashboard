@@ -157,6 +157,7 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
             pattern: '[0-9]*',
           }}
           sx={{ marginTop: '4px !important', width: '200px' }}
+          disabled={categoryType === CategoryType.INCOME}
         />
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
           Cateogory Color
