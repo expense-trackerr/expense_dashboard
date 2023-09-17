@@ -58,6 +58,8 @@ enum CategoryType {
 }
 
 // FIXUI - The Category Type toggle button needs to follow the mock-up
+
+// FIXNOW - cannot have same name for categories
 export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlResponse }: AddCategoriesDialogProps) => {
   const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
   const [categoryName, setCategoryName] = useState<string>('');

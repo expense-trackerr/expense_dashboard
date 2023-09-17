@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import { Grid, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { AddButton } from '../../../components/Buttons';
+import defaultAxios from '../../../config/axiosConfig';
 import { gql } from '../../../__generated__';
 import { AddCategoriesDialog, AddCategoriesDialogProps } from './AddCategoriesDialog';
 
@@ -12,6 +13,18 @@ query getCategoryColors {
     name
     hex_code
 }
+}
+`);
+
+const GET_CATEGORIES = gql(`
+query getCategories($userId: String!) {
+    getCategories(userId: $userId) {
+        id
+        name
+        budget
+        category_type
+        category_color
+    }
 }
 `);
 
@@ -39,10 +52,16 @@ export const CategoriesTab = () => {
     setAddCategoriesDialogOpen(true);
   };
 
-  const handleCloseAddCategoriesDialog: AddCategoriesDialogProps['handleClose'] = (payload) => {
+  const handleCloseAddCategoriesDialog: AddCategoriesDialogProps['handleClose'] = async (payload) => {
     setAddCategoriesDialogOpen(false);
     if (payload?.categoryName) {
-      console.log('Sending request to add category', payload);
+      try {
+        await defaultAxios.post('http://localhost:3000/api/categories/create', payload);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        console.log('Refresh categories');
+      }
     }
   };
 
