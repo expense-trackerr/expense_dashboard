@@ -8,7 +8,7 @@ import { PlaidContext } from '../../../contexts/PlaidContext';
 import { formatDate } from '../../../utils/function-utils';
 import { themeColors } from '../../../utils/theme-utils';
 import { PlaidLink } from '../../plaid/PlaidLink';
-import { DeleteAccountDialog } from './DeleteAccountDialog';
+import { DeleteAccountDialog, DeleteAccountDialogProps } from './DeleteAccountDialog';
 import { EditAccountsDialog, EditAccountsDialogProps } from './EditAccountsDialog';
 
 const LinkAccountButton = ({ linkToken }: { linkToken: string | undefined }) => {
@@ -57,7 +57,7 @@ export const AccountsTab = () => {
     setSelectedAccount(itemId);
   };
 
-  const handleCloseDeleteDialog = async (payload: { itemId: string } | undefined) => {
+  const handleCloseDeleteDialog: DeleteAccountDialogProps['handleClose'] = async (payload) => {
     setOpenDeleteDialog(false);
     setSelectedAccount(undefined);
     if (payload?.itemId) {

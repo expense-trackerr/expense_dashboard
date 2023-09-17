@@ -3,13 +3,13 @@ import { SaveDialog } from '../../../components/SaveDialog';
 import { themeColors } from '../../../utils/theme-utils';
 import { GetLinkedAccountsQuery } from '../../../__generated__/graphql';
 
-export type EditAccountsDialogProps = {
+export type DeleteAccountDialogProps = {
   open: boolean;
   handleClose: (payload: { itemId: string } | undefined) => void;
   accountDetails: GetLinkedAccountsQuery['getLinkedAccounts'][0];
 };
 
-export const DeleteAccountDialog = ({ open, handleClose, accountDetails }: EditAccountsDialogProps) => {
+export const DeleteAccountDialog = ({ open, handleClose, accountDetails }: DeleteAccountDialogProps) => {
   const handleCloseDialog = (shouldSave: boolean) => () => {
     if (shouldSave) {
       const payload = {
