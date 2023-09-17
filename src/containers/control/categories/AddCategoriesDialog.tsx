@@ -16,7 +16,7 @@ import { SaveDialog } from '../../../components/SaveDialog';
 import { SelectInput } from '../../../components/Select';
 import { CTextField } from '../../../components/TextField';
 import { themeColors } from '../../../utils/theme-utils';
-import { Exact, GetCategoryColorsQuery } from '../../../__generated__/graphql';
+import { Exact, GetCategoriesQuery, GetCategoryColorsQuery } from '../../../__generated__/graphql';
 
 type ColorButtonProps = {
   color: string;
@@ -50,6 +50,7 @@ export type AddCategoriesDialogProps = {
       [key: string]: never;
     }>
   >;
+  categoriesList: GetCategoriesQuery['getCategories'];
 };
 
 enum CategoryType {
@@ -59,12 +60,18 @@ enum CategoryType {
 
 // FIXUI - The Category Type toggle button needs to follow the mock-up
 
-// FIXME - cannot have same name for categories
-export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlResponse }: AddCategoriesDialogProps) => {
+export const AddCategoriesDialog = ({
+  open,
+  handleClose,
+  categoryColorsGqlResponse,
+  categoriesList,
+}: AddCategoriesDialogProps) => {
   const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
   const [selectedCategoryColor, setSelectedCategoryColor] = useState<string>('');
+
+  const doesCategoryNameExist = categoriesList.some((category) => category.name === categoryName);
 
   const {
     data: categoryColorsData,
@@ -124,7 +131,7 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
       open={open}
       handleCloseDialog={handleCloseDialog}
       dialogTitle="Add Category"
-      isSaveButtonDisabled={categoryName === ''}
+      isSaveButtonDisabled={categoryName === '' || doesCategoryNameExist}
     >
       <Stack direction="column" spacing={2}>
         <ToggleButtonGroup color="primary" value={categoryType} exclusive onChange={handleCategoryTypeChange}>
@@ -140,6 +147,8 @@ export const AddCategoriesDialog = ({ open, handleClose, categoryColorsGqlRespon
           value={categoryName}
           onChange={handleCategoryNameChange}
           sx={{ marginTop: '4px !important', width: '200px' }}
+          error={doesCategoryNameExist}
+          helperText={doesCategoryNameExist ? 'Category name already exists' : ''}
         />
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
           Budget per month

@@ -16,6 +16,9 @@ export const CTextField = styled(TextField)({
   '& .Mui-disabled': {
     backgroundColor: '#ededed',
   },
+  '& .MuiFormHelperText-root': {
+    marginLeft: '0px !important',
+  },
   //   '& .MuiOutlinedInput-root': {
   //     backgroundColor: '#F5F7FA',
   //     '& fieldset': {

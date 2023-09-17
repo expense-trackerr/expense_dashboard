@@ -56,7 +56,7 @@ export const CategoriesTab = () => {
     refetch: categoriesRefetch,
   } = useQuery(GET_CATEGORIES, { variables: { userId: currentUser?.uid ?? '' } });
 
-  const categoriesList = categoriesData?.getCategories;
+  const categoriesList = categoriesData?.getCategories ?? [];
 
   const categoryDialogDetails =
     categoriesList?.find((category) => category.id === selectedCategory) ?? categoryDialogDetailsUndefined;
@@ -123,6 +123,7 @@ export const CategoriesTab = () => {
           open={addCategoriesDialogOpen}
           handleClose={handleCloseAddCategoriesDialog}
           categoryColorsGqlResponse={categoryColorsGqlResponse}
+          categoriesList={categoriesList}
         />
         <DeleteCategoryDialog
           open={openDeleteDialog}
