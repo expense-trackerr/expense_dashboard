@@ -72,6 +72,7 @@ export const CategoriesTab = () => {
     if (payload?.categoryName) {
       try {
         await defaultAxios.post('http://localhost:3000/api/categories/create', payload);
+        // FIXME- Check status and show a snackbar
       } catch (err) {
         console.error(err);
       } finally {
@@ -97,7 +98,9 @@ export const CategoriesTab = () => {
     setSelectedCategory(undefined);
     if (payload?.categoryId) {
       try {
-        // await defaultAxios.post('http://localhost:3000/api/item/remove', payload);
+        await defaultAxios.delete(`http://localhost:3000/api/categories/delete/${payload.categoryId}`, {
+          data: { deleteTransactions: payload.deleteTransactions },
+        });
       } catch (err) {
         console.error(err);
       } finally {
@@ -116,6 +119,16 @@ export const CategoriesTab = () => {
     <>
       <Stack direction="column" justifyContent="center" alignItems="flex-end" spacing={2}>
         <AddButton onClick={handleAddCategoryButtonClick}>Add Category</AddButton>
+        <AddCategoriesDialog
+          open={addCategoriesDialogOpen}
+          handleClose={handleCloseAddCategoriesDialog}
+          categoryColorsGqlResponse={categoryColorsGqlResponse}
+        />
+        <DeleteCategoryDialog
+          open={openDeleteDialog}
+          handleClose={handleCloseDeleteDialog}
+          categoryDialogDetails={categoryDialogDetails}
+        />
         {categoriesList?.length ? (
           <Paper
             variant="outlined"
@@ -123,16 +136,6 @@ export const CategoriesTab = () => {
               width: '400px',
             }}
           >
-            <AddCategoriesDialog
-              open={addCategoriesDialogOpen}
-              handleClose={handleCloseAddCategoriesDialog}
-              categoryColorsGqlResponse={categoryColorsGqlResponse}
-            />
-            <DeleteCategoryDialog
-              open={openDeleteDialog}
-              handleClose={handleCloseDeleteDialog}
-              categoryId={categoryDialogDetails?.id}
-            />
             {categoriesList?.map((category) => (
               <Fragment key={category.id}>
                 <List>
@@ -171,7 +174,7 @@ export const CategoriesTab = () => {
         ) : (
           <Paper variant="outlined" sx={{ width: '400px', height: '200px' }}>
             <Grid container direction="row" justifyContent="center" alignItems="center" height="100%">
-              <Typography variant="h3"> No categories created</Typography>
+              <Typography variant="h3"> No categories available</Typography>
             </Grid>
           </Paper>
         )}

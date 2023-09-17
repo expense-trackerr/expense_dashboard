@@ -2,14 +2,15 @@ import { Checkbox, FormControlLabel, Stack, Typography } from '@mui/material';
 import { useState } from 'react';
 import { SaveDialog } from '../../../components/SaveDialog';
 import { themeColors } from '../../../utils/theme-utils';
+import { GetCategoriesQuery } from '../../../__generated__/graphql';
 
 export type DeleteCategoryDialogProps = {
   open: boolean;
   handleClose: (payload: { categoryId: string; deleteTransactions: boolean } | undefined) => void;
-  categoryId: string;
+  categoryDialogDetails: GetCategoriesQuery['getCategories'][0];
 };
 
-export const DeleteCategoryDialog = ({ open, handleClose, categoryId }: DeleteCategoryDialogProps) => {
+export const DeleteCategoryDialog = ({ open, handleClose, categoryDialogDetails }: DeleteCategoryDialogProps) => {
   const [deleteTransactionsCheckbox, setDeleteTransactionsCheckbox] = useState(false);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,7 +20,7 @@ export const DeleteCategoryDialog = ({ open, handleClose, categoryId }: DeleteCa
   const handleCloseDialog = (shouldSave: boolean) => () => {
     if (shouldSave) {
       const payload = {
-        categoryId,
+        categoryId: categoryDialogDetails.id,
         deleteTransactions: deleteTransactionsCheckbox,
       };
       handleClose(payload);
@@ -38,7 +39,7 @@ export const DeleteCategoryDialog = ({ open, handleClose, categoryId }: DeleteCa
     >
       <Stack direction="column" spacing={2}>
         <Typography variant="body1" sx={{ color: themeColors.normalText }}>
-          Are you sure you want to delete this category?
+          Are you sure you want to delete "{categoryDialogDetails.name}" category?
         </Typography>
         <FormControlLabel
           control={<Checkbox checked={deleteTransactionsCheckbox} onChange={handleCheckboxChange} />}
