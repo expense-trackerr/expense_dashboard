@@ -1,9 +1,12 @@
 import { useQuery } from '@apollo/client';
-import { Grid, List, ListItem, ListItemText, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from '@mui/icons-material/Edit';
+import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { AddButton } from '../../../components/Buttons';
 import defaultAxios from '../../../config/axiosConfig';
 import { useAuth } from '../../../contexts/AuthContext';
+import { themeColors } from '../../../utils/theme-utils';
 import { gql } from '../../../__generated__';
 import { AddCategoriesDialog, AddCategoriesDialogProps } from './AddCategoriesDialog';
 
@@ -32,6 +35,8 @@ query getCategories($userId: String!) {
 export const CategoriesTab = () => {
   const { currentUser } = useAuth();
   const [addCategoriesDialogOpen, setAddCategoriesDialogOpen] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const categoryColorsGqlResponse = useQuery(GET_CATEGORY_COLORS);
   const {
@@ -39,18 +44,16 @@ export const CategoriesTab = () => {
     error: categoriesError,
     loading: categoriesLoading,
     refetch: categoriesRefetch,
-  } = useQuery(GET_CATEGORIES, {
-    variables: {
-      userId: currentUser?.uid ?? '',
-    },
-  });
+  } = useQuery(GET_CATEGORIES, { variables: { userId: currentUser?.uid ?? '' } });
 
   const categoriesList = categoriesData?.getCategories;
 
+  // Open add category dialog
   const handleAddCategoryButtonClick = () => {
     setAddCategoriesDialogOpen(true);
   };
 
+  // Close add category dialog
   const handleCloseAddCategoriesDialog: AddCategoriesDialogProps['handleClose'] = async (payload) => {
     setAddCategoriesDialogOpen(false);
     if (payload?.categoryName) {
@@ -62,6 +65,32 @@ export const CategoriesTab = () => {
         categoriesRefetch();
       }
     }
+  };
+
+  // Open edit category dialog
+  const handleOpenEditDialog = () => {
+    setOpenEditDialog(true);
+  };
+
+  // Open delete category dialog
+  const handleOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
+    // setSelectedAccount(itemId);
+  };
+
+  // Close delete category dialog
+  const handleCloseDeleteDialog = async () => {
+    setOpenDeleteDialog(false);
+    // setSelectedAccount(undefined);
+    // if (payload?.itemId) {
+    //   try {
+    //     await defaultAxios.post('http://localhost:3000/api/item/remove', payload);
+    //   } catch (err) {
+    //     console.error(err);
+    //   } finally {
+    //     linkedAccountRefetch();
+    //   }
+    // }
   };
 
   if (categoriesLoading) return <Skeleton variant="rounded" width="400px" height="300px" />;
@@ -92,15 +121,25 @@ export const CategoriesTab = () => {
                   <ListItem>
                     <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
                       <Grid item>
-                        <ListItemText primary={category.name} />
+                        <ListItemText
+                          primary={category.name}
+                          sx={{ color: category.category_color, marginBottom: '0px' }}
+                        />
+                        {category.budget && (
+                          <ListItemText
+                            primary={`$${category.budget} per month`}
+                            primaryTypographyProps={{ variant: 'subtitle1' }}
+                            sx={{ color: themeColors.greyText, marginTop: '0px' }}
+                          />
+                        )}
                       </Grid>
                       <Grid item>
-                        {/* <IconButton onClick={() => handleOpenEditDialog(account.item_id)}>
+                        <IconButton onClick={handleOpenEditDialog}>
                           <EditIcon sx={{ color: themeColors.greyText }} />
                         </IconButton>
-                        <IconButton onClick={() => handleOpenDeleteDialog(account.item_id)}>
+                        <IconButton onClick={handleOpenDeleteDialog}>
                           <CancelIcon sx={{ color: themeColors.danger }} />
-                        </IconButton> */}
+                        </IconButton>
                       </Grid>
                     </Grid>
                   </ListItem>
