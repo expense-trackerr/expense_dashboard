@@ -9,6 +9,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { themeColors } from '../../../utils/theme-utils';
 import { gql } from '../../../__generated__';
 import { AddCategoriesDialog, AddCategoriesDialogProps } from './AddCategoriesDialog';
+import { DeleteCategoryDialog, DeleteCategoryDialogProps } from './DeleteCategoryDialog';
 
 const GET_CATEGORY_COLORS = gql(`
 query getCategoryColors {
@@ -32,11 +33,20 @@ query getCategories($userId: String!) {
 }
 `);
 
+const categoryDialogDetailsUndefined = {
+  id: '',
+  name: '',
+  budget: undefined,
+  category_type: '',
+  category_color: '',
+};
+
 export const CategoriesTab = () => {
   const { currentUser } = useAuth();
   const [addCategoriesDialogOpen, setAddCategoriesDialogOpen] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
 
   const categoryColorsGqlResponse = useQuery(GET_CATEGORY_COLORS);
   const {
@@ -47,6 +57,9 @@ export const CategoriesTab = () => {
   } = useQuery(GET_CATEGORIES, { variables: { userId: currentUser?.uid ?? '' } });
 
   const categoriesList = categoriesData?.getCategories;
+
+  const categoryDialogDetails =
+    categoriesList?.find((category) => category.id === selectedCategory) ?? categoryDialogDetailsUndefined;
 
   // Open add category dialog
   const handleAddCategoryButtonClick = () => {
@@ -73,24 +86,24 @@ export const CategoriesTab = () => {
   };
 
   // Open delete category dialog
-  const handleOpenDeleteDialog = () => {
+  const handleOpenDeleteDialog = (categoryId: string) => {
     setOpenDeleteDialog(true);
-    // setSelectedAccount(itemId);
+    setSelectedCategory(categoryId);
   };
 
   // Close delete category dialog
-  const handleCloseDeleteDialog = async () => {
+  const handleCloseDeleteDialog: DeleteCategoryDialogProps['handleClose'] = async (payload) => {
     setOpenDeleteDialog(false);
-    // setSelectedAccount(undefined);
-    // if (payload?.itemId) {
-    //   try {
-    //     await defaultAxios.post('http://localhost:3000/api/item/remove', payload);
-    //   } catch (err) {
-    //     console.error(err);
-    //   } finally {
-    //     linkedAccountRefetch();
-    //   }
-    // }
+    setSelectedCategory(undefined);
+    if (payload?.categoryId) {
+      try {
+        // await defaultAxios.post('http://localhost:3000/api/item/remove', payload);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        categoriesRefetch();
+      }
+    }
   };
 
   if (categoriesLoading) return <Skeleton variant="rounded" width="400px" height="300px" />;
@@ -115,6 +128,11 @@ export const CategoriesTab = () => {
               handleClose={handleCloseAddCategoriesDialog}
               categoryColorsGqlResponse={categoryColorsGqlResponse}
             />
+            <DeleteCategoryDialog
+              open={openDeleteDialog}
+              handleClose={handleCloseDeleteDialog}
+              categoryId={categoryDialogDetails?.id}
+            />
             {categoriesList?.map((category) => (
               <Fragment key={category.id}>
                 <List>
@@ -134,10 +152,13 @@ export const CategoriesTab = () => {
                         )}
                       </Grid>
                       <Grid item>
-                        <IconButton onClick={handleOpenEditDialog}>
+                        <IconButton onClick={handleOpenEditDialog} disabled={!!categoryDialogDetails?.id}>
                           <EditIcon sx={{ color: themeColors.greyText }} />
                         </IconButton>
-                        <IconButton onClick={handleOpenDeleteDialog}>
+                        <IconButton
+                          onClick={() => handleOpenDeleteDialog(category.id)}
+                          disabled={!!categoryDialogDetails?.id}
+                        >
                           <CancelIcon sx={{ color: themeColors.danger }} />
                         </IconButton>
                       </Grid>
