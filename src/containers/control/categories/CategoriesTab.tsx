@@ -1,8 +1,9 @@
 import { useQuery } from '@apollo/client';
-import { Grid, List, ListItem, ListItemText, Paper, Stack, Typography } from '@mui/material';
+import { Grid, List, ListItem, ListItemText, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { Fragment, useState } from 'react';
 import { AddButton } from '../../../components/Buttons';
 import defaultAxios from '../../../config/axiosConfig';
+import { useAuth } from '../../../contexts/AuthContext';
 import { gql } from '../../../__generated__';
 import { AddCategoriesDialog, AddCategoriesDialogProps } from './AddCategoriesDialog';
 
@@ -28,25 +29,23 @@ query getCategories($userId: String!) {
 }
 `);
 
-const mockCategories = [
-  {
-    id: 1,
-    name: 'Groceries',
-  },
-  {
-    id: 2,
-    name: 'Restaurants',
-  },
-  {
-    id: 3,
-    name: 'Gas',
-  },
-];
-
 export const CategoriesTab = () => {
+  const { currentUser } = useAuth();
   const [addCategoriesDialogOpen, setAddCategoriesDialogOpen] = useState(false);
 
   const categoryColorsGqlResponse = useQuery(GET_CATEGORY_COLORS);
+  const {
+    data: categoriesData,
+    error: categoriesError,
+    loading: categoriesLoading,
+    refetch: categoriesRefetch,
+  } = useQuery(GET_CATEGORIES, {
+    variables: {
+      userId: currentUser?.uid ?? '',
+    },
+  });
+
+  const categoriesList = categoriesData?.getCategories;
 
   const handleAddCategoryButtonClick = () => {
     setAddCategoriesDialogOpen(true);
@@ -60,16 +59,22 @@ export const CategoriesTab = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        console.log('Refresh categories');
+        categoriesRefetch();
       }
     }
   };
+
+  if (categoriesLoading) return <Skeleton variant="rounded" width="400px" height="300px" />;
+  if (categoriesError) {
+    console.error(categoriesError);
+    return <div>Error: {categoriesError.message}</div>;
+  }
 
   return (
     <>
       <Stack direction="column" justifyContent="center" alignItems="flex-end" spacing={2}>
         <AddButton onClick={handleAddCategoryButtonClick}>Add Category</AddButton>
-        {mockCategories?.length ? (
+        {categoriesList?.length ? (
           <Paper
             variant="outlined"
             sx={{
@@ -81,7 +86,7 @@ export const CategoriesTab = () => {
               handleClose={handleCloseAddCategoriesDialog}
               categoryColorsGqlResponse={categoryColorsGqlResponse}
             />
-            {mockCategories?.map((category) => (
+            {categoriesList?.map((category) => (
               <Fragment key={category.id}>
                 <List>
                   <ListItem>
