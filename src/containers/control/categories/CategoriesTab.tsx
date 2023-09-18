@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
 import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack, Typography } from '@mui/material';
-import { Fragment, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import { AddButton } from '../../../components/Buttons';
 import defaultAxios from '../../../config/axiosConfig';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -10,6 +10,7 @@ import { themeColors } from '../../../utils/theme-utils';
 import { gql } from '../../../__generated__';
 import { AddCategoriesDialog, AddCategoriesDialogProps } from './AddCategoriesDialog';
 import { DeleteCategoryDialog, DeleteCategoryDialogProps } from './DeleteCategoryDialog';
+import { EditCategoryDialog, EditCategoryDialogProps } from './EditCategoryDialog';
 
 const GET_CATEGORY_COLORS = gql(`
 query getCategoryColors {
@@ -58,8 +59,10 @@ export const CategoriesTab = () => {
 
   const categoriesList = categoriesData?.getCategories ?? [];
 
-  const categoryDialogDetails =
-    categoriesList?.find((category) => category.id === selectedCategory) ?? categoryDialogDetailsUndefined;
+  const categoryDialogDetails = useMemo(
+    () => categoriesList?.find((category) => category.id === selectedCategory) ?? categoryDialogDetailsUndefined,
+    [categoriesList, selectedCategory]
+  );
 
   // Open add category dialog
   const handleAddCategoryButtonClick = () => {
@@ -82,8 +85,14 @@ export const CategoriesTab = () => {
   };
 
   // Open edit category dialog
-  const handleOpenEditDialog = () => {
+  const handleOpenEditDialog = (categoryId: string) => {
     setOpenEditDialog(true);
+    setSelectedCategory(categoryId);
+  };
+
+  const handleCloseEditCategoryDialog: EditCategoryDialogProps['handleClose'] = async (payload) => {
+    setOpenEditDialog(false);
+    console.log(payload);
   };
 
   // Open delete category dialog
@@ -125,6 +134,13 @@ export const CategoriesTab = () => {
           categoryColorsGqlResponse={categoryColorsGqlResponse}
           categoriesList={categoriesList}
         />
+        <EditCategoryDialog
+          open={openEditDialog}
+          handleClose={handleCloseEditCategoryDialog}
+          categoryColorsGqlResponse={categoryColorsGqlResponse}
+          categoriesList={categoriesList}
+          categoryDialogDetails={categoryDialogDetails}
+        />
         <DeleteCategoryDialog
           open={openDeleteDialog}
           handleClose={handleCloseDeleteDialog}
@@ -156,13 +172,10 @@ export const CategoriesTab = () => {
                         )}
                       </Grid>
                       <Grid item>
-                        <IconButton onClick={handleOpenEditDialog} disabled={!!categoryDialogDetails?.id}>
+                        <IconButton onClick={() => handleOpenEditDialog(category.id)}>
                           <EditIcon sx={{ color: themeColors.greyText }} />
                         </IconButton>
-                        <IconButton
-                          onClick={() => handleOpenDeleteDialog(category.id)}
-                          disabled={!!categoryDialogDetails?.id}
-                        >
+                        <IconButton onClick={() => handleOpenDeleteDialog(category.id)}>
                           <CancelIcon sx={{ color: themeColors.danger }} />
                         </IconButton>
                       </Grid>

@@ -7,8 +7,6 @@ import {
   Select,
   Skeleton,
   Stack,
-  ToggleButton,
-  ToggleButtonGroup,
   Typography,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
@@ -17,32 +15,12 @@ import { SelectInput } from '../../../components/Select';
 import { CTextField } from '../../../components/TextField';
 import { themeColors } from '../../../utils/theme-utils';
 import { Exact, GetCategoriesQuery, GetCategoryColorsQuery } from '../../../__generated__/graphql';
+import { CategoryType, ColorButton } from './AddCategoriesDialog';
 
-type ColorButtonProps = {
-  color: string;
-  selectedColor: string;
-};
-
-export const ColorButton = ({ color, selectedColor }: ColorButtonProps) => (
-  <div
-    style={{
-      width: 17,
-      height: 17,
-      borderRadius: '50%',
-      backgroundColor: color,
-      border: selectedColor === color ? '1px solid black' : 'none',
-      cursor: 'pointer',
-      margin: 4,
-    }}
-  />
-);
-
-export type AddCategoriesDialogProps = {
+export type EditCategoryDialogProps = {
   open: boolean;
   handleClose: (
-    payload:
-      | { categoryType: CategoryType; categoryName: string; categoryBudget?: number; categoryColorId: string }
-      | undefined
+    payload: { categoryName: string; categoryBudget?: number; categoryColorId: string } | undefined
   ) => void;
   categoryColorsGqlResponse: QueryResult<
     GetCategoryColorsQuery,
@@ -51,25 +29,24 @@ export type AddCategoriesDialogProps = {
     }>
   >;
   categoriesList: GetCategoriesQuery['getCategories'];
+  categoryDialogDetails: GetCategoriesQuery['getCategories'][0];
 };
 
-export enum CategoryType {
-  EXPENSE = 'Expense',
-  INCOME = 'Income',
-}
-
-// FIXUI - The Category Type toggle button needs to follow the mock-up
-
-export const AddCategoriesDialog = ({
+export const EditCategoryDialog = ({
   open,
   handleClose,
   categoryColorsGqlResponse,
+  categoryDialogDetails,
   categoriesList,
-}: AddCategoriesDialogProps) => {
-  const [categoryType, setCategoryType] = useState<CategoryType>(CategoryType.EXPENSE);
+}: EditCategoryDialogProps) => {
+  console.log('categoryDialogDetails:', categoryDialogDetails);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
-  const [selectedCategoryColor, setSelectedCategoryColor] = useState<string>('');
+  const [categoryColor, setCategoryColor] = useState<string>('');
+
+  useEffect(() => {
+    setCategoryColor(categoryDialogDetails.category_color);
+  }, [categoryDialogDetails.category_color]);
 
   const doesCategoryNameExist = categoriesList.some((category) => category.name === categoryName);
 
@@ -80,19 +57,6 @@ export const AddCategoriesDialog = ({
   } = categoryColorsGqlResponse;
 
   const categoryColors = categoryColorsData?.getCategoryColors ?? [];
-
-  // Sets the initial value of categoryColor
-  useEffect(() => {
-    if (categoryColors.length > 0) {
-      setSelectedCategoryColor(categoryColors[0].hex_code);
-    }
-  }, [categoryColors]);
-
-  const handleCategoryTypeChange = (_: React.MouseEvent<HTMLElement>, newCategoryType: CategoryType) => {
-    if (newCategoryType !== null) {
-      setCategoryType(newCategoryType);
-    }
-  };
 
   const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryName(event.target.value);
@@ -111,11 +75,9 @@ export const AddCategoriesDialog = ({
   const handleCloseDialog = (shouldSave: boolean) => () => {
     if (shouldSave) {
       const payload = {
-        categoryType,
         categoryName,
         categoryBudget: categoryBudget === '' ? undefined : categoryBudget,
-        categoryColorId:
-          categoryColors.find((color) => color.hex_code === selectedCategoryColor)?.id ?? categoryColors[0].id,
+        categoryColorId: categoryColors.find((color) => color.hex_code === categoryColor)?.id ?? categoryColors[0].id,
       };
       handleClose(payload);
     } else {
@@ -123,51 +85,56 @@ export const AddCategoriesDialog = ({
     }
     setCategoryName('');
     setCategoryBudget('');
-    setSelectedCategoryColor('');
+    setCategoryColor('');
   };
 
   return (
     <SaveDialog
       open={open}
       handleCloseDialog={handleCloseDialog}
-      dialogTitle="Add Category"
+      dialogTitle="Edit Category"
       isSaveButtonDisabled={categoryName === '' || doesCategoryNameExist}
     >
       <Stack direction="column" spacing={2}>
-        <ToggleButtonGroup color="primary" value={categoryType} exclusive onChange={handleCategoryTypeChange}>
-          <ToggleButton value={CategoryType.EXPENSE}>{CategoryType.EXPENSE}</ToggleButton>
-          <ToggleButton value={CategoryType.INCOME}>{CategoryType.INCOME}</ToggleButton>
-        </ToggleButtonGroup>
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
-          Category Name *
+          Category Type
+        </Typography>
+        <Typography variant="body1">{categoryDialogDetails?.category_type}</Typography>
+        <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
+          Category Name
         </Typography>
         <CTextField
           size="small"
           required
           value={categoryName}
+          placeholder={categoryDialogDetails.name}
           onChange={handleCategoryNameChange}
           sx={{ marginTop: '4px !important', width: '200px' }}
           error={doesCategoryNameExist}
           helperText={doesCategoryNameExist ? 'Category name already exists' : ''}
         />
-        <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
-          Budget per month
-        </Typography>
-        <CTextField
-          size="small"
-          value={categoryBudget}
-          onChange={handleBudgetChange}
-          error={categoryBudget !== '' && (categoryBudget <= 0 || isNaN(categoryBudget))}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-          }}
-          inputProps={{
-            inputMode: 'numeric',
-            pattern: '[0-9]*',
-          }}
-          sx={{ marginTop: '4px !important', width: '200px' }}
-          disabled={categoryType === CategoryType.INCOME}
-        />
+        {categoryDialogDetails.category_type === CategoryType.EXPENSE && (
+          <>
+            <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
+              Budget per month
+            </Typography>
+            <CTextField
+              size="small"
+              value={categoryBudget}
+              placeholder={categoryDialogDetails.budget?.toString()}
+              onChange={handleBudgetChange}
+              error={categoryBudget !== '' && (categoryBudget <= 0 || isNaN(categoryBudget))}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+              }}
+              inputProps={{
+                inputMode: 'numeric',
+                pattern: '[0-9]*',
+              }}
+              sx={{ marginTop: '4px !important', width: '200px' }}
+            />
+          </>
+        )}
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
           Cateogory Color
         </Typography>
@@ -176,8 +143,8 @@ export const AddCategoriesDialog = ({
         ) : (
           <FormControl variant="outlined" size="small" sx={{ width: '200px', marginTop: '4px !important' }}>
             <Select
-              value={selectedCategoryColor}
-              onChange={(event) => setSelectedCategoryColor(event.target.value as string)}
+              value={categoryColor}
+              onChange={(event) => setCategoryColor(event.target.value as string)}
               label="Select Color"
               autoWidth
               input={<SelectInput />}
@@ -186,7 +153,7 @@ export const AddCategoriesDialog = ({
             >
               {categoryColors.map((color) => (
                 <MenuItem key={color.id} value={color.hex_code}>
-                  <ColorButton color={color.hex_code} selectedColor={selectedCategoryColor} />
+                  <ColorButton color={color.hex_code} selectedColor={categoryColor} />
                 </MenuItem>
               ))}
             </Select>
