@@ -47,8 +47,6 @@ export const EditCategoryDialog = ({
     setCategoryColor(categoryDialogDetails.category_color);
   }, [categoryDialogDetails.category_color, open]);
 
-  const doesCategoryNameExist = categoriesList.some((category) => category.name === categoryName);
-
   const {
     data: categoryColorsData,
     loading: categoryColorsLoading,
@@ -56,6 +54,19 @@ export const EditCategoryDialog = ({
   } = categoryColorsGqlResponse;
 
   const categoryColors = categoryColorsData?.getCategoryColors ?? [];
+  const doesCategoryNameExist = categoriesList.some((category) => category.name === categoryName);
+
+  const isSaveButtonDisabled = () => {
+    // If the category type is expense, then the budget is required
+    if (categoryDialogDetails.category_type === CategoryType.EXPENSE) {
+      return (
+        (!categoryName && !categoryBudget && categoryColor === categoryDialogDetails.category_color) ||
+        doesCategoryNameExist
+      );
+    }
+    // If the category type is income, then the budget is not required
+    return (!categoryName && categoryColor === categoryDialogDetails.category_color) || doesCategoryNameExist;
+  };
 
   const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategoryName(event.target.value);
@@ -92,7 +103,7 @@ export const EditCategoryDialog = ({
       open={open}
       handleCloseDialog={handleCloseDialog}
       dialogTitle="Edit Category"
-      isSaveButtonDisabled={categoryName === '' || doesCategoryNameExist}
+      isSaveButtonDisabled={isSaveButtonDisabled()}
     >
       <Stack direction="column" spacing={2}>
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
