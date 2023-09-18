@@ -86,7 +86,7 @@ export const AddCategoriesDialog = ({
     if (categoryColors.length > 0) {
       setSelectedCategoryColor(categoryColors[0].hex_code);
     }
-  }, [categoryColors]);
+  }, [categoryColors, open]);
 
   const handleCategoryTypeChange = (_: React.MouseEvent<HTMLElement>, newCategoryType: CategoryType) => {
     if (newCategoryType !== null) {

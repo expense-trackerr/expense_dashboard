@@ -39,14 +39,13 @@ export const EditCategoryDialog = ({
   categoryDialogDetails,
   categoriesList,
 }: EditCategoryDialogProps) => {
-  console.log('categoryDialogDetails:', categoryDialogDetails);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
   const [categoryColor, setCategoryColor] = useState<string>('');
 
   useEffect(() => {
     setCategoryColor(categoryDialogDetails.category_color);
-  }, [categoryDialogDetails.category_color]);
+  }, [categoryDialogDetails.category_color, open]);
 
   const doesCategoryNameExist = categoriesList.some((category) => category.name === categoryName);
 
