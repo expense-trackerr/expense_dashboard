@@ -55,13 +55,17 @@ export const EditCategoryDialog = ({
 
   const categoryColors = categoryColorsData?.getCategoryColors ?? [];
   const doesCategoryNameExist = categoriesList.some((category) => category.name === categoryName);
+  const categoryBudgetError =
+    (categoryBudget !== '' && (categoryBudget <= 0 || isNaN(categoryBudget))) ||
+    categoryBudget.toString() === categoryDialogDetails.budget?.toString();
 
   const isSaveButtonDisabled = () => {
     // If the category type is expense, then the budget is required
     if (categoryDialogDetails.category_type === CategoryType.EXPENSE) {
       return (
         (!categoryName && !categoryBudget && categoryColor === categoryDialogDetails.category_color) ||
-        doesCategoryNameExist
+        doesCategoryNameExist ||
+        categoryBudgetError
       );
     }
     // If the category type is income, then the budget is not required
@@ -133,7 +137,8 @@ export const EditCategoryDialog = ({
               value={categoryBudget}
               placeholder={categoryDialogDetails.budget?.toString()}
               onChange={handleBudgetChange}
-              error={categoryBudget !== '' && (categoryBudget <= 0 || isNaN(categoryBudget))}
+              error={categoryBudgetError}
+              helperText={categoryBudgetError ? 'Category budget same as current budget' : ''}
               InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
               }}
