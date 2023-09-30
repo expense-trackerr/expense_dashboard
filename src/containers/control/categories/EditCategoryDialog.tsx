@@ -20,7 +20,15 @@ import { CategoryType, ColorButton } from './AddCategoriesDialog';
 export type EditCategoryDialogProps = {
   open: boolean;
   handleClose: (
-    payload: { categoryName: string; categoryBudget?: number; categoryColorId: string } | undefined
+    payload:
+      | {
+          categoryId: string;
+          categoryName: string;
+          categoryBudget?: number;
+          categoryColorId: string;
+          categoryType: CategoryType;
+        }
+      | undefined
   ) => void;
   categoryColorsGqlResponse: QueryResult<
     GetCategoryColorsQuery,
@@ -39,6 +47,7 @@ export const EditCategoryDialog = ({
   categoryDialogDetails,
   categoriesList,
 }: EditCategoryDialogProps) => {
+  console.log('categoryDialogDetails:', categoryDialogDetails);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
   const [categoryColor, setCategoryColor] = useState<string>('');
@@ -89,9 +98,11 @@ export const EditCategoryDialog = ({
   const handleCloseDialog = (shouldSave: boolean) => () => {
     if (shouldSave) {
       const payload = {
+        categoryId: categoryDialogDetails.id,
         categoryName,
         categoryBudget: categoryBudget === '' ? undefined : categoryBudget,
         categoryColorId: categoryColors.find((color) => color.hex_code === categoryColor)?.id ?? categoryColors[0].id,
+        categoryType: categoryDialogDetails.category_type as CategoryType,
       };
       handleClose(payload);
     } else {
