@@ -19,6 +19,13 @@ export const CategoryListItem = ({ category, handleOpenEditDialog, handleOpenDel
           <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
             <Grid item>
               <ListItemText primary={category.name} sx={{ color: category.category_color, marginBottom: '0px' }} />
+              {category.budget && (
+                <ListItemText
+                  primary={`$${category.budget} per month`}
+                  primaryTypographyProps={{ variant: 'subtitle1' }}
+                  sx={{ color: themeColors.greyText, marginTop: '0px' }}
+                />
+              )}
             </Grid>
             <Grid item>
               <IconButton onClick={() => handleOpenEditDialog(category.id)}>
