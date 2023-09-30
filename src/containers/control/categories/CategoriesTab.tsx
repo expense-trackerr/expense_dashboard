@@ -92,7 +92,15 @@ export const CategoriesTab = () => {
 
   const handleCloseEditCategoryDialog: EditCategoryDialogProps['handleClose'] = async (payload) => {
     setOpenEditDialog(false);
-    console.log(payload);
+    if (payload?.categoryId) {
+      try {
+        await defaultAxios.put(`http://localhost:3000/api/categories/update/${payload.categoryId}`, payload);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        categoriesRefetch();
+      }
+    }
   };
 
   // Open delete category dialog

@@ -47,7 +47,6 @@ export const EditCategoryDialog = ({
   categoryDialogDetails,
   categoriesList,
 }: EditCategoryDialogProps) => {
-  console.log('categoryDialogDetails:', categoryDialogDetails);
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryBudget, setCategoryBudget] = useState<number | ''>('');
   const [categoryColor, setCategoryColor] = useState<string>('');
