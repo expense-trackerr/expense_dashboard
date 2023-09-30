@@ -1,14 +1,12 @@
 import { useQuery } from '@apollo/client';
-import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
-import { Grid, IconButton, List, ListItem, ListItemText, Paper, Skeleton, Stack, Typography } from '@mui/material';
-import { Fragment, useMemo, useState } from 'react';
+import { Grid, Paper, Skeleton, Stack, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
 import { AddButton } from '../../../components/Buttons';
 import defaultAxios from '../../../config/axiosConfig';
 import { useAuth } from '../../../contexts/AuthContext';
-import { themeColors } from '../../../utils/theme-utils';
 import { gql } from '../../../__generated__';
-import { AddCategoriesDialog, AddCategoriesDialogProps } from './AddCategoriesDialog';
+import { AddCategoriesDialog, AddCategoriesDialogProps, CategoryType } from './AddCategoriesDialog';
+import { CategoryListItem } from './CategoryListItem';
 import { DeleteCategoryDialog, DeleteCategoryDialogProps } from './DeleteCategoryDialog';
 import { EditCategoryDialog, EditCategoryDialogProps } from './EditCategoryDialog';
 
@@ -58,6 +56,14 @@ export const CategoriesTab = () => {
   } = useQuery(GET_CATEGORIES, { variables: { userId: currentUser?.uid ?? '' } });
 
   const categoriesList = categoriesData?.getCategories ?? [];
+  const incomeCategories = useMemo(
+    () => categoriesList.filter((category) => category.category_type === CategoryType.INCOME),
+    [categoriesList]
+  );
+  const expenseCategories = useMemo(
+    () => categoriesList.filter((category) => category.category_type === CategoryType.EXPENSE),
+    [categoriesList]
+  );
 
   const categoryDialogDetails = useMemo(
     () => categoriesList?.find((category) => category.id === selectedCategory) ?? categoryDialogDetailsUndefined,
@@ -159,38 +165,26 @@ export const CategoriesTab = () => {
             variant="outlined"
             sx={{
               width: '400px',
+              padding: '16px',
             }}
           >
-            {categoriesList?.map((category) => (
-              <Fragment key={category.id}>
-                <List>
-                  <ListItem>
-                    <Grid container direction="row" justifyContent="space-between" alignItems="flex-start">
-                      <Grid item>
-                        <ListItemText
-                          primary={category.name}
-                          sx={{ color: category.category_color, marginBottom: '0px' }}
-                        />
-                        {category.budget && (
-                          <ListItemText
-                            primary={`$${category.budget} per month`}
-                            primaryTypographyProps={{ variant: 'subtitle1' }}
-                            sx={{ color: themeColors.greyText, marginTop: '0px' }}
-                          />
-                        )}
-                      </Grid>
-                      <Grid item>
-                        <IconButton onClick={() => handleOpenEditDialog(category.id)}>
-                          <EditIcon sx={{ color: themeColors.greyText }} />
-                        </IconButton>
-                        <IconButton onClick={() => handleOpenDeleteDialog(category.id)}>
-                          <CancelIcon sx={{ color: themeColors.danger }} />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                  </ListItem>
-                </List>
-              </Fragment>
+            <Typography variant="h3">Expenses</Typography>
+            {expenseCategories?.map((category) => (
+              <CategoryListItem
+                key={category.id}
+                category={category}
+                handleOpenEditDialog={handleOpenEditDialog}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
+              />
+            ))}
+            <Typography variant="h3">Income</Typography>
+            {incomeCategories?.map((category) => (
+              <CategoryListItem
+                key={category.id}
+                category={category}
+                handleOpenEditDialog={handleOpenEditDialog}
+                handleOpenDeleteDialog={handleOpenDeleteDialog}
+              />
             ))}
           </Paper>
         ) : (
