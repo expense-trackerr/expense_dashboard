@@ -9,8 +9,10 @@ export const isValidDate = (date: Date | string | undefined) => {
   return false;
 };
 
-export const formatDate = (date: Date | string) => {
+export const formatDate = (date?: Date | string, showTime = true) => {
+  if (!date) return '';
   if (!isValidDate(date)) return '';
   const dateFormat = new Date(date);
-  return format(dateFormat, "DD MMM 'YY HH:mm");
+  if (showTime) return format(dateFormat, "dd MMM ''yy, HH:mm");
+  return format(dateFormat, "dd MMM ''yy");
 };

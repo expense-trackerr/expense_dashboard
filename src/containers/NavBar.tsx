@@ -19,7 +19,6 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { gqlClient } from '../config/gqlClient';
 import { useAuth } from '../contexts/AuthContext';
 import { themeColors } from '../utils/theme-utils';
 

@@ -1,14 +1,22 @@
-import { Container } from '@mui/material';
-import { NavBar } from '../containers/NavBar';
+import { Container, styled } from '@mui/material';
+import { DRAWER_WIDTH, NavBar } from '../containers/NavBar';
 import { useAuth } from './AuthContext';
 
+const StyledContainer = styled(Container)(({ theme }) => ({
+  '&&': {
+    paddingLeft: `${DRAWER_WIDTH + 30}px `,
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: '20px',
+    },
+  },
+}));
 export const NavigationProvider = ({ children }: { children: React.ReactNode }) => {
   const { token } = useAuth();
 
   return token ? (
     <>
       <NavBar />
-      <Container maxWidth="lg">{children}</Container>
+      <StyledContainer maxWidth="lg">{children}</StyledContainer>
     </>
   ) : (
     <>{children}</>

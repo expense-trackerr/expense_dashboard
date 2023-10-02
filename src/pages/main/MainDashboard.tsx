@@ -2,6 +2,7 @@ import { Button, Grid, Typography } from '@mui/material';
 import { addDays } from 'date-fns';
 import { useState, useRef, useEffect } from 'react';
 import { DateRangePicker, Range, RangeKeyDict } from 'react-date-range';
+import { formatDate } from '../../utils/function-utils';
 
 export const MainDashboard = () => {
   const [showDateRangePicker, setShowDateRangePicker] = useState(false);
@@ -48,7 +49,7 @@ export const MainDashboard = () => {
       </Grid>
       <Grid item style={{ position: 'relative' }}>
         <Button ref={buttonRef} onClick={togglePicker}>
-          {dateRange[0].startDate?.toLocaleDateString()} - {dateRange[0].endDate?.toLocaleDateString()}
+          {formatDate(dateRange[0].startDate, false)} - {formatDate(dateRange[0].endDate, false)}
         </Button>
         {showDateRangePicker && (
           <div ref={pickerRef} style={{ position: 'absolute', top: '100%', right: '-80%', zIndex: 1000 }}>
