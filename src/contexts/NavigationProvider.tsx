@@ -5,6 +5,7 @@ import { useAuth } from './AuthContext';
 const StyledContainer = styled(Container)(({ theme }) => ({
   '&&': {
     paddingLeft: `${DRAWER_WIDTH + 30}px `,
+    paddingTop: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
       paddingLeft: '20px',
     },
