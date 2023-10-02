@@ -1,26 +1,27 @@
-import { useContext } from 'react';
-import { PlaidContext } from '../../contexts/PlaidContext';
+import { addDays } from 'date-fns';
+import { useState } from 'react';
+import { DateRangePicker, Range, RangeKeyDict } from 'react-date-range';
 
-export function MainDashboard() {
-  const { linkToken, linkTokenError } = useContext(PlaidContext);
+export const MainDashboard = () => {
+  const [dateRange, setDateRange] = useState<Range[]>([
+    {
+      startDate: new Date(),
+      endDate: addDays(new Date(), 7),
+      key: 'selection',
+    },
+  ]);
 
-  // const [transactions, setTransactions] = useState();
+  const handleDateRangeChange = (item: RangeKeyDict) => {
+    setDateRange([item.selection]);
+  };
 
-  // const handleGetTransactions = () => {
-  //   if (accessToken) {
-  //     defaultAxios
-  //       .get('http://localhost:3000/api/transactions')
-  //       .then((res) => {
-  //         console.log(res.data);
-  //         // setTransactions(res.data.transactions);
-  //       })
-  //       .catch((err) => {
-  //         console.log(err);
-  //       });
-  //   }
-  // };
-
-  // if (accessToken) return <Button onClick={handleGetTransactions}>Get transactions</Button>;
-
-  return <div>Main Dashboard</div>;
-}
+  return (
+    <DateRangePicker
+      onChange={handleDateRangeChange}
+      moveRangeOnFirstSelection={false}
+      months={2}
+      ranges={dateRange}
+      direction="horizontal"
+    />
+  );
+};
