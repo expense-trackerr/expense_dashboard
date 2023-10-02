@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { format } from 'date-fns';
 
 export const isValidDate = (date: Date | string | undefined) => {
   if (typeof date === 'string') {
@@ -12,5 +12,5 @@ export const isValidDate = (date: Date | string | undefined) => {
 export const formatDate = (date: Date | string) => {
   if (!isValidDate(date)) return '';
   const dateFormat = new Date(date);
-  return moment(dateFormat).format("DD MMM 'YY HH:mm");
+  return format(dateFormat, "DD MMM 'YY HH:mm");
 };
