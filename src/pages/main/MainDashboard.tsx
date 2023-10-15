@@ -16,7 +16,7 @@ export const MainDashboard = () => {
   const getInitialTransactions = async () => {
     const itemId = linkedAccounts?.[0].item_id;
     try {
-      const result = await defaultAxios.get(`http://localhost:3000/api/transactions/${itemId}`);
+      const result = await defaultAxios.post(`http://localhost:3000/api/transactions/${itemId}`);
 
       console.log('result:', result);
     } catch (err) {
