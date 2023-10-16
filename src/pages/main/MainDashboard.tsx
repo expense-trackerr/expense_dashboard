@@ -18,6 +18,7 @@ import { PlaidContext } from '../../contexts/PlaidContext';
 import { formatDate } from '../../utils/function-utils';
 import { themeColors } from '../../utils/theme-utils';
 import { gql } from '../../__generated__';
+import { makeStyles } from '@mui/styles';
 
 const GET_TRANSACTIONS = gql(`
 query GetTransactions($userId: String!) {
@@ -40,7 +41,17 @@ query GetTransactions($userId: String!) {
 }
 `);
 
+const useStyles = makeStyles({
+  root: {
+    '& .MuiTableCell-head': {
+      color: themeColors.greyText,
+      backgroundColor: themeColors.greyBackground,
+    },
+  },
+});
+
 export const MainDashboard = () => {
+  const classes = useStyles();
   const { currentUser } = useAuth();
   const { linkedAccounts } = useContext(PlaidContext);
 
@@ -77,11 +88,11 @@ export const MainDashboard = () => {
           <DateRangePicker />
         </Grid>
       </Grid>
-      <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 5 }}>
+      <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 5 }} elevation={0}>
         <TableContainer sx={{ maxHeight: 500 }}>
           <Table stickyHeader>
             <TableHead>
-              <TableRow sx={{ backgroundColor: 'grey' }}>
+              <TableRow className={classes.root}>
                 <TableCell>Date</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Category</TableCell>
