@@ -1,27 +1,12 @@
 import { useQuery } from '@apollo/client';
-import {
-  Chip,
-  Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useContext, useEffect } from 'react';
 import { DateRangePicker } from '../../components/DateRangePicker';
 import defaultAxios from '../../config/axiosConfig';
+import { TransactionsTable } from '../../containers/main/TransactionsTable';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlaidContext } from '../../contexts/PlaidContext';
-import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
-import { themeColors } from '../../utils/theme-utils';
 import { gql } from '../../__generated__';
-import { makeStyles } from '@mui/styles';
-import { GetTransactionsQuery } from '../../__generated__/graphql';
-import Decimal from 'decimal.js-light';
 
 const GET_TRANSACTIONS = gql(`
 query GetTransactions($userId: String!) {
@@ -47,35 +32,11 @@ query GetTransactions($userId: String!) {
 }
 `);
 
-const useStyles = makeStyles({
-  root: {
-    '& .MuiTableCell-head': {
-      color: themeColors.greyText,
-      backgroundColor: themeColors.greyBackground,
-    },
-  },
-});
-
-const CategoryChip = ({ category }: { category: GetTransactionsQuery['getTransactions'][0]['category'] }) => {
-  if (category?.name) {
-    return <Chip label={category.name} variant="outlined" sx={{ color: category.category_color }} />;
-  } else {
-    return <Chip label="" variant="outlined" sx={{ borderColor: 'red', width: '80px' }} />;
-  }
-};
-
 export const MainDashboard = () => {
-  const classes = useStyles();
   const { currentUser } = useAuth();
   const { linkedAccounts } = useContext(PlaidContext);
 
-  const {
-    data: transactionsData,
-    // error: transactionsError,
-    // loading: transactionsLoading,
-    // refetch: transactionsRefetch,
-  } = useQuery(GET_TRANSACTIONS, { variables: { userId: currentUser?.uid ?? '' } });
-  console.log('transactionsData:', transactionsData);
+  const transactionsQuery = useQuery(GET_TRANSACTIONS, { variables: { userId: currentUser?.uid ?? '' } });
 
   useEffect(() => {
     if (linkedAccounts?.length) {
@@ -95,7 +56,7 @@ export const MainDashboard = () => {
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center">
+      <Grid container justifyContent="space-between" alignItems="center" marginBottom={5}>
         <Grid item>
           <Typography variant="h1">Summary</Typography>
         </Grid>
@@ -103,39 +64,7 @@ export const MainDashboard = () => {
           <DateRangePicker />
         </Grid>
       </Grid>
-      <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 5 }} elevation={0}>
-        <TableContainer sx={{ maxHeight: 500 }}>
-          <Table stickyHeader>
-            <TableHead>
-              <TableRow className={classes.root}>
-                <TableCell>Date</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Amount</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {transactionsData?.getTransactions.map((txn) => (
-                <TableRow key={txn.id}>
-                  <TableCell>{formatDate(txn.date, false)}</TableCell>
-                  <TableCell>
-                    {txn.name}
-                    <Typography variant="subtitle1" sx={{ color: themeColors.greyText, marginTop: '0px' }}>
-                      {txn.linked_sub_account.alias_name ?? txn.linked_sub_account.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <CategoryChip category={txn.category} />
-                  </TableCell>
-                  <TableCell sx={{ color: getDisplayPriceColor(txn.amount) }}>
-                    {formatDisplayPrice(txn.amount)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
+      <TransactionsTable transactionsQuery={transactionsQuery} />
     </>
   );
 };
