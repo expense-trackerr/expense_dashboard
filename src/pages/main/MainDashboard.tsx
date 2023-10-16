@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import {
   Grid,
-  ListItemText,
   Paper,
   Table,
   TableBody,
@@ -16,9 +15,9 @@ import { DateRangePicker } from '../../components/DateRangePicker';
 import defaultAxios from '../../config/axiosConfig';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlaidContext } from '../../contexts/PlaidContext';
-import { gql } from '../../__generated__';
 import { formatDate } from '../../utils/function-utils';
 import { themeColors } from '../../utils/theme-utils';
+import { gql } from '../../__generated__';
 
 const GET_TRANSACTIONS = gql(`
 query GetTransactions($userId: String!) {
@@ -82,7 +81,7 @@ export const MainDashboard = () => {
         <TableContainer sx={{ maxHeight: 500 }}>
           <Table stickyHeader>
             <TableHead>
-              <TableRow>
+              <TableRow sx={{ backgroundColor: 'grey' }}>
                 <TableCell>Date</TableCell>
                 <TableCell>Description</TableCell>
                 <TableCell>Category</TableCell>
@@ -95,11 +94,9 @@ export const MainDashboard = () => {
                   <TableCell>{formatDate(txn.date, false)}</TableCell>
                   <TableCell>
                     {txn.name}
-                    <ListItemText
-                      primary={txn.linked_sub_account.alias_name ?? txn.linked_sub_account.name}
-                      primaryTypographyProps={{ variant: 'subtitle1' }}
-                      sx={{ color: themeColors.greyText, marginTop: '0px' }}
-                    />
+                    <Typography variant="subtitle1" sx={{ color: themeColors.greyText, marginTop: '0px' }}>
+                      {txn.linked_sub_account.alias_name ?? txn.linked_sub_account.name}
+                    </Typography>
                   </TableCell>
                   <TableCell>{txn?.category?.name}</TableCell>
                   <TableCell>{txn.amount}</TableCell>
