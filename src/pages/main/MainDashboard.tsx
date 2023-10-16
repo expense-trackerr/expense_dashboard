@@ -40,29 +40,29 @@ export const MainDashboard = () => {
 
   const transactionsQuery = useQuery(GET_TRANSACTIONS, { variables: { userId: currentUser?.uid ?? '' } });
 
-  useEffect(() => {
-    if (linkedAccounts?.length) {
-      getInitialTransactions();
-    }
-  }, [linkedAccounts]);
+  // useEffect(() => {
+  //   if (linkedAccounts?.length) {
+  //     getInitialTransactions();
+  //   }
+  // }, [linkedAccounts]);
 
-  const getInitialTransactions = async () => {
-    const itemId = linkedAccounts?.[0].item_id;
-    try {
-      const result = await defaultAxios.post(`http://localhost:3000/api/transactions/${itemId}`);
-      if (result.status === 200) {
-        const { added, removed, modified, errors } = result.data.summary;
-        const message = `Added: ${added} Modified: ${modified} Removed: ${removed}`;
-        enqueueSnackbar(message, { variant: 'success' });
-        if (errors) {
-          enqueueSnackbar(errors, { variant: 'error' });
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      enqueueSnackbar('Error retrieving transactions', { variant: 'error' });
-    }
-  };
+  // const getInitialTransactions = async () => {
+  //   const itemId = linkedAccounts?.[0].item_id;
+  //   try {
+  //     const result = await defaultAxios.post(`http://localhost:3000/api/transactions/${itemId}`);
+  //     if (result.status === 200) {
+  //       const { added, removed, modified, errors } = result.data.summary;
+  //       const message = `Added: ${added} Modified: ${modified} Removed: ${removed}`;
+  //       enqueueSnackbar(message, { variant: 'success' });
+  //       if (errors) {
+  //         enqueueSnackbar(errors, { variant: 'error' });
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     enqueueSnackbar('Error retrieving transactions', { variant: 'error' });
+  //   }
+  // };
 
   return (
     <>

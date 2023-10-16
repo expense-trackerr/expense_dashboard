@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import CachedIcon from '@mui/icons-material/Cached';
 import { makeStyles } from '@mui/styles';
 import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
 import { themeColors } from '../../utils/theme-utils';
@@ -61,10 +62,17 @@ export const TransactionsTable = ({
           <Grid item>
             <Typography variant="h3">Transactions</Typography>
           </Grid>
-          <Grid item>
-            <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
-              Syncd 2 hours ago
-            </Typography>
+          <Grid item container justifyContent="flex-start" alignItems="center">
+            <Grid item>
+              <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
+                Syncd 2 hours ago
+              </Typography>
+            </Grid>
+            <Grid item>
+              <IconButton>
+                <CachedIcon fontSize="small" sx={{ color: themeColors.linkText }} />
+              </IconButton>
+            </Grid>
           </Grid>
         </Grid>
         <Grid item container sm={'auto'} justifyContent="flex-end" alignItems="center" spacing={1}>
@@ -92,7 +100,7 @@ export const TransactionsTable = ({
           </Grid>
         </Grid>
       </Grid>
-      <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 2 }} elevation={0}>
+      <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 1 }} elevation={0}>
         <TableContainer sx={{ maxHeight: 500 }}>
           <Table stickyHeader>
             <TableHead>
