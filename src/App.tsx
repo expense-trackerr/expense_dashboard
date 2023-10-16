@@ -4,16 +4,22 @@ import { gqlClient } from './config/gqlClient';
 import { AuthProvider } from './contexts/AuthContext';
 import { NavigationProvider } from './contexts/NavigationProvider';
 import { PlaidContextProvider } from './contexts/PlaidContext';
-import { SnackbarContextProvider } from './contexts/SnackbarContext';
 import { Router } from './Router';
 import { theme } from './utils/theme-utils';
+import { SnackbarProvider } from 'notistack';
 
 const responsiveTheme = responsiveFontSizes(theme);
 
 function App() {
   return (
     <ApolloProvider client={gqlClient}>
-      <SnackbarContextProvider>
+      <SnackbarProvider
+        maxSnack={3}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
         <AuthProvider>
           <ThemeProvider theme={responsiveTheme}>
             <PlaidContextProvider>
@@ -23,7 +29,7 @@ function App() {
             </PlaidContextProvider>
           </ThemeProvider>
         </AuthProvider>
-      </SnackbarContextProvider>
+      </SnackbarProvider>
     </ApolloProvider>
   );
 }

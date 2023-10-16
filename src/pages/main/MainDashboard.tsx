@@ -1,12 +1,12 @@
 import { useQuery } from '@apollo/client';
 import { Grid, Typography } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { useContext, useEffect } from 'react';
 import { DateRangePicker } from '../../components/DateRangePicker';
 import defaultAxios from '../../config/axiosConfig';
 import { TransactionsTable } from '../../containers/main/TransactionsTable';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlaidContext } from '../../contexts/PlaidContext';
-import { SnackbarContext } from '../../contexts/SnackbarContext';
 import { gql } from '../../__generated__';
 
 const GET_TRANSACTIONS = gql(`
@@ -36,7 +36,7 @@ query GetTransactions($userId: String!) {
 export const MainDashboard = () => {
   const { currentUser } = useAuth();
   const { linkedAccounts } = useContext(PlaidContext);
-  const { showSuccess, showError } = useContext(SnackbarContext);
+  const { enqueueSnackbar } = useSnackbar();
 
   const transactionsQuery = useQuery(GET_TRANSACTIONS, { variables: { userId: currentUser?.uid ?? '' } });
 
@@ -51,14 +51,13 @@ export const MainDashboard = () => {
     try {
       const result = await defaultAxios.post(`http://localhost:3000/api/transactions/${itemId}`);
       if (result.status === 200) {
-        console.log('result:', result);
         const { added, removed, modified, errors } = result.data.summary;
         const message = `Added: ${added} Modified: ${modified} Removed: ${removed} Error: ${errors}`;
-        showSuccess(message);
+        enqueueSnackbar(message, { variant: 'success' });
       }
     } catch (err) {
       console.error(err);
-      showError('Error retrieving transactions');
+      enqueueSnackbar('Error retrieving transactions', { variant: 'error' });
     }
   };
 
