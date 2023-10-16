@@ -52,8 +52,11 @@ export const MainDashboard = () => {
       const result = await defaultAxios.post(`http://localhost:3000/api/transactions/${itemId}`);
       if (result.status === 200) {
         const { added, removed, modified, errors } = result.data.summary;
-        const message = `Added: ${added} Modified: ${modified} Removed: ${removed} Error: ${errors}`;
+        const message = `Added: ${added} Modified: ${modified} Removed: ${removed}`;
         enqueueSnackbar(message, { variant: 'success' });
+        if (errors) {
+          enqueueSnackbar(errors, { variant: 'error' });
+        }
       }
     } catch (err) {
       console.error(err);
