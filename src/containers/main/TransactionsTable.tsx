@@ -1,6 +1,8 @@
 import { QueryResult } from '@apollo/client';
 import {
   Chip,
+  Grid,
+  IconButton,
   Paper,
   Skeleton,
   Table,
@@ -11,6 +13,8 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { makeStyles } from '@mui/styles';
 import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
 import { themeColors } from '../../utils/theme-utils';
@@ -51,44 +55,82 @@ export const TransactionsTable = ({
   if (error) return <Typography>Error loading transactions</Typography>;
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }} elevation={0}>
-      <TableContainer sx={{ maxHeight: 500 }}>
-        <Table stickyHeader>
-          <TableHead>
-            <TableRow className={classes.root}>
-              <TableCell>Date</TableCell>
-              <TableCell>Description</TableCell>
-              <TableCell>Category</TableCell>
-              <TableCell>Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data?.getTransactions.length ? (
-              data?.getTransactions.map((txn) => (
-                <TableRow key={txn.id}>
-                  <TableCell>{formatDate(txn.date, false)}</TableCell>
-                  <TableCell>
-                    {txn.name}
-                    <Typography variant="subtitle1" sx={{ color: themeColors.greyText, marginTop: '0px' }}>
-                      {txn.linked_sub_account.alias_name ?? txn.linked_sub_account.name}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <CategoryChip category={txn.category} />
-                  </TableCell>
-                  <TableCell sx={{ color: getDisplayPriceColor(txn.amount) }}>
-                    {formatDisplayPrice(txn.amount)}
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={4}>No transactions found</TableCell>
+    <>
+      <Grid container justifyContent="space-between" alignItems="center">
+        <Grid item container direction="column" sm={'auto'}>
+          <Grid item>
+            <Typography variant="h3">Transactions</Typography>
+          </Grid>
+          <Grid item>
+            <Typography variant="subtitle1" sx={{ color: themeColors.greyText }}>
+              Syncd 2 hours ago
+            </Typography>
+          </Grid>
+        </Grid>
+        <Grid item container sm={'auto'} justifyContent="flex-end" alignItems="center" spacing={1}>
+          <Grid item>
+            <IconButton
+              sx={{
+                border: `1px solid ${themeColors.greyBackground}`,
+                backgroundColor: themeColors.greyBackground,
+                borderRadius: 3,
+              }}
+            >
+              <EditIcon sx={{ color: themeColors.greyText }} />
+            </IconButton>
+          </Grid>
+          <Grid item>
+            <IconButton
+              sx={{
+                border: `1px solid ${themeColors.greyBackground}`,
+                backgroundColor: themeColors.greyBackground,
+                borderRadius: 3,
+              }}
+            >
+              <FilterAltIcon sx={{ color: themeColors.greyText }} />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 2 }} elevation={0}>
+        <TableContainer sx={{ maxHeight: 500 }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow className={classes.root}>
+                <TableCell>Date</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Amount</TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+            </TableHead>
+            <TableBody>
+              {data?.getTransactions.length ? (
+                data?.getTransactions.map((txn) => (
+                  <TableRow key={txn.id}>
+                    <TableCell>{formatDate(txn.date, false)}</TableCell>
+                    <TableCell>
+                      {txn.name}
+                      <Typography variant="subtitle1" sx={{ color: themeColors.greyText, marginTop: '0px' }}>
+                        {txn.linked_sub_account.alias_name ?? txn.linked_sub_account.name}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <CategoryChip category={txn.category} />
+                    </TableCell>
+                    <TableCell sx={{ color: getDisplayPriceColor(txn.amount) }}>
+                      {formatDisplayPrice(txn.amount)}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4}>No transactions found</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+    </>
   );
 };
