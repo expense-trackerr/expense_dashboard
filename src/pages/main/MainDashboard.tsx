@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client';
 import {
   Grid,
+  ListItemText,
   Paper,
   Table,
   TableBody,
@@ -16,6 +17,8 @@ import defaultAxios from '../../config/axiosConfig';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlaidContext } from '../../contexts/PlaidContext';
 import { gql } from '../../__generated__';
+import { formatDate } from '../../utils/function-utils';
+import { themeColors } from '../../utils/theme-utils';
 
 const GET_TRANSACTIONS = gql(`
 query GetTransactions($userId: String!) {
@@ -75,30 +78,37 @@ export const MainDashboard = () => {
           <DateRangePicker />
         </Grid>
       </Grid>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Date</TableCell>
-              <TableCell align="right">Description</TableCell>
-              <TableCell align="right">Category</TableCell>
-              <TableCell align="right">Amount</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {transactionsData?.getTransactions.map((txn) => (
-              <TableRow key={txn.id}>
-                <TableCell component="th" scope="row">
-                  {txn.date}
-                </TableCell>
-                <TableCell align="right">{txn.name}</TableCell>
-                <TableCell align="right">{txn?.category?.name}</TableCell>
-                <TableCell align="right">{txn.amount}</TableCell>
+      <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 5 }}>
+        <TableContainer sx={{ maxHeight: 500 }}>
+          <Table stickyHeader>
+            <TableHead>
+              <TableRow>
+                <TableCell>Date</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Category</TableCell>
+                <TableCell>Amount</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {transactionsData?.getTransactions.map((txn) => (
+                <TableRow key={txn.id}>
+                  <TableCell>{formatDate(txn.date, false)}</TableCell>
+                  <TableCell>
+                    {txn.name}
+                    <ListItemText
+                      primary={txn.linked_sub_account.alias_name ?? txn.linked_sub_account.name}
+                      primaryTypographyProps={{ variant: 'subtitle1' }}
+                      sx={{ color: themeColors.greyText, marginTop: '0px' }}
+                    />
+                  </TableCell>
+                  <TableCell>{txn?.category?.name}</TableCell>
+                  <TableCell>{txn.amount}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
     </>
   );
 };
