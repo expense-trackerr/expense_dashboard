@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client';
 import {
+  Chip,
   Grid,
   Paper,
   Table,
@@ -19,6 +20,7 @@ import { formatDate } from '../../utils/function-utils';
 import { themeColors } from '../../utils/theme-utils';
 import { gql } from '../../__generated__';
 import { makeStyles } from '@mui/styles';
+import { GetTransactionsQuery } from '../../__generated__/graphql';
 
 const GET_TRANSACTIONS = gql(`
 query GetTransactions($userId: String!) {
@@ -26,7 +28,10 @@ query GetTransactions($userId: String!) {
     amount
     currency
     category {
+      id
       name
+      category_type
+      category_color
     }
     date
     id
@@ -49,6 +54,14 @@ const useStyles = makeStyles({
     },
   },
 });
+
+const CategoryChip = ({ category }: { category: GetTransactionsQuery['getTransactions'][0]['category'] }) => {
+  if (category?.name) {
+    return <Chip label={category.name} variant="outlined" sx={{ color: category.category_color }} />;
+  } else {
+    return <Chip label="" variant="outlined" sx={{ borderColor: 'red', width: '80px' }} />;
+  }
+};
 
 export const MainDashboard = () => {
   const classes = useStyles();
@@ -109,8 +122,10 @@ export const MainDashboard = () => {
                       {txn.linked_sub_account.alias_name ?? txn.linked_sub_account.name}
                     </Typography>
                   </TableCell>
-                  <TableCell>{txn?.category?.name}</TableCell>
-                  <TableCell>{txn.amount}</TableCell>
+                  <TableCell>
+                    <CategoryChip category={txn.category} />
+                  </TableCell>
+                  <TableCell>$ {txn.amount}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

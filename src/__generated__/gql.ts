@@ -16,7 +16,7 @@ const documents = {
     "\nquery getCategoryColors {\n  getCategoryColors {\n    id\n    name\n    hex_code\n}\n}\n": types.GetCategoryColorsDocument,
     "\nquery getCategories($userId: String!) {\n    getCategories(userId: $userId) {\n        id\n        name\n        budget\n        category_type\n        category_color\n    }\n}\n": types.GetCategoriesDocument,
     "\nquery getLinkedAccounts($userId: String!) {\n    getLinkedAccounts(userId: $userId) {\n        item_id\n        name\n        alias_name\n        created_at\n        linked_sub_accounts {\n            account_id\n            name\n            alias_name\n            balance \n        }\n    }\n}\n": types.GetLinkedAccountsDocument,
-    "\nquery GetTransactions($userId: String!) {\n  getTransactions(userId: $userId) {\n    amount\n    currency\n    category {\n      name\n    }\n    date\n    id\n    name\n    pending\n    linked_sub_account {\n      account_id\n      name\n      alias_name\n    }\n  }\n}\n": types.GetTransactionsDocument,
+    "\nquery GetTransactions($userId: String!) {\n  getTransactions(userId: $userId) {\n    amount\n    currency\n    category {\n      id\n      name\n      category_type\n      category_color\n    }\n    date\n    id\n    name\n    pending\n    linked_sub_account {\n      account_id\n      name\n      alias_name\n    }\n  }\n}\n": types.GetTransactionsDocument,
 };
 
 /**
@@ -48,7 +48,7 @@ export function gql(source: "\nquery getLinkedAccounts($userId: String!) {\n    
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery GetTransactions($userId: String!) {\n  getTransactions(userId: $userId) {\n    amount\n    currency\n    category {\n      name\n    }\n    date\n    id\n    name\n    pending\n    linked_sub_account {\n      account_id\n      name\n      alias_name\n    }\n  }\n}\n"): (typeof documents)["\nquery GetTransactions($userId: String!) {\n  getTransactions(userId: $userId) {\n    amount\n    currency\n    category {\n      name\n    }\n    date\n    id\n    name\n    pending\n    linked_sub_account {\n      account_id\n      name\n      alias_name\n    }\n  }\n}\n"];
+export function gql(source: "\nquery GetTransactions($userId: String!) {\n  getTransactions(userId: $userId) {\n    amount\n    currency\n    category {\n      id\n      name\n      category_type\n      category_color\n    }\n    date\n    id\n    name\n    pending\n    linked_sub_account {\n      account_id\n      name\n      alias_name\n    }\n  }\n}\n"): (typeof documents)["\nquery GetTransactions($userId: String!) {\n  getTransactions(userId: $userId) {\n    amount\n    currency\n    category {\n      id\n      name\n      category_type\n      category_color\n    }\n    date\n    id\n    name\n    pending\n    linked_sub_account {\n      account_id\n      name\n      alias_name\n    }\n  }\n}\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
