@@ -20,6 +20,7 @@ import { makeStyles } from '@mui/styles';
 import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
 import { themeColors } from '../../utils/theme-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
+import { useState } from 'react';
 
 const useStyles = makeStyles({
   root: {
@@ -38,19 +39,24 @@ const CategoryChip = ({ category }: { category: GetTransactionsQuery['getTransac
   }
 };
 
-export const TransactionsTable = ({
-  transactionsQuery,
-}: {
+type TransactionsTableProps = {
   transactionsQuery: QueryResult<
     GetTransactionsQuery,
     {
       userId: string;
     }
   >;
-}) => {
+};
+
+export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps) => {
   const classes = useStyles();
+  const [editMode, setEditMode] = useState(false);
 
   const { data, error, loading } = transactionsQuery;
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
 
   if (loading) return <Skeleton variant="rectangular" height={500} />;
   if (error) return <Typography>Error loading transactions</Typography>;
@@ -83,6 +89,7 @@ export const TransactionsTable = ({
                 backgroundColor: themeColors.greyBackground,
                 borderRadius: 3,
               }}
+              onClick={handleEditClick}
             >
               <EditIcon sx={{ color: themeColors.greyText }} />
             </IconButton>

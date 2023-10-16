@@ -1,20 +1,21 @@
 import { Button, ButtonProps } from '@mui/material';
 import React from 'react';
 import { themeColors } from '../utils/theme-utils';
-import AddIcon from '@mui/icons-material/Add';
 
-type AddButtonProps = {
+type MainButtonProps = {
   children: React.ReactNode;
   onClick: () => void;
   primaryButtonColor?: string;
+  startIcon?: React.ReactNode;
 } & ButtonProps;
 
-export const AddButton = ({
+export const MainButton = ({
   children,
   onClick,
   primaryButtonColor = themeColors.linkText,
+  startIcon,
   ...rest
-}: AddButtonProps) => {
+}: MainButtonProps) => {
   return (
     <Button
       variant="outlined"
@@ -23,7 +24,7 @@ export const AddButton = ({
         color: primaryButtonColor,
         border: `1px solid ${primaryButtonColor}`,
       }}
-      startIcon={<AddIcon />}
+      startIcon={startIcon}
       {...rest}
     >
       {children}

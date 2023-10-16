@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { Grid, Paper, Skeleton, Stack, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
-import { AddButton } from '../../../components/Buttons';
+import { MainButton } from '../../../components/Buttons';
 import defaultAxios from '../../../config/axiosConfig';
 import { useAuth } from '../../../contexts/AuthContext';
 import { gql } from '../../../__generated__';
@@ -9,6 +9,7 @@ import { AddCategoriesDialog, AddCategoriesDialogProps, CategoryType } from './A
 import { CategoryListItem } from './CategoryListItem';
 import { DeleteCategoryDialog, DeleteCategoryDialogProps } from './DeleteCategoryDialog';
 import { EditCategoryDialog, EditCategoryDialogProps } from './EditCategoryDialog';
+import AddIcon from '@mui/icons-material/Add';
 
 const GET_CATEGORY_COLORS = gql(`
 query getCategoryColors {
@@ -141,7 +142,9 @@ export const CategoriesTab = () => {
   return (
     <>
       <Stack direction="column" justifyContent="center" alignItems="flex-end" spacing={2}>
-        <AddButton onClick={handleAddCategoryButtonClick}>Add Category</AddButton>
+        <MainButton onClick={handleAddCategoryButtonClick} startIcon={<AddIcon />}>
+          Add Category
+        </MainButton>
         <AddCategoriesDialog
           open={addCategoriesDialogOpen}
           handleClose={handleCloseAddCategoriesDialog}
