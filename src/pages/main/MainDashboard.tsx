@@ -16,11 +16,12 @@ import { DateRangePicker } from '../../components/DateRangePicker';
 import defaultAxios from '../../config/axiosConfig';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlaidContext } from '../../contexts/PlaidContext';
-import { formatDate } from '../../utils/function-utils';
+import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
 import { themeColors } from '../../utils/theme-utils';
 import { gql } from '../../__generated__';
 import { makeStyles } from '@mui/styles';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
+import Decimal from 'decimal.js-light';
 
 const GET_TRANSACTIONS = gql(`
 query GetTransactions($userId: String!) {
@@ -86,6 +87,7 @@ export const MainDashboard = () => {
     const itemId = linkedAccounts?.[0].item_id;
     try {
       const result = await defaultAxios.post(`http://localhost:3000/api/transactions/${itemId}`);
+      console.log('result:', result);
     } catch (err) {
       console.error(err);
     }
@@ -125,7 +127,9 @@ export const MainDashboard = () => {
                   <TableCell>
                     <CategoryChip category={txn.category} />
                   </TableCell>
-                  <TableCell>$ {txn.amount}</TableCell>
+                  <TableCell sx={{ color: getDisplayPriceColor(txn.amount) }}>
+                    {formatDisplayPrice(txn.amount)}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

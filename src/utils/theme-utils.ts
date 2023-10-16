@@ -6,6 +6,8 @@ export const themeColors = {
   normalText: '#5A5A5A',
   danger: '#F16A6A',
   linkText: '#003CBF',
+  debitAmount: '#F16A6A',
+  creditAmount: '#00B14F',
 };
 
 const typographyConfig = {

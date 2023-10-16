@@ -8,6 +8,11 @@ import './App.css';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 
+// Decimal.config({
+//   precision: 2,
+//   rounding: Decimal.ROUND_HALF_UP,
+// });
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <BrowserRouter>
