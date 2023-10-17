@@ -7,6 +7,7 @@ type MainButtonProps = {
   onClick: () => void;
   buttonColor?: string;
   startIcon?: React.ReactNode;
+  variant?: 'text' | 'outlined';
 } & ButtonProps;
 
 export const MainButton = ({
@@ -14,15 +15,16 @@ export const MainButton = ({
   onClick,
   buttonColor = themeColors.linkText,
   startIcon,
+  variant = 'outlined',
   ...rest
 }: MainButtonProps) => {
   return (
     <Button
-      variant="outlined"
+      variant={variant}
       onClick={onClick}
       sx={{
         color: buttonColor,
-        border: `1px solid ${buttonColor}`,
+        ...(variant === 'outlined' && { border: `1px solid ${buttonColor}` }),
       }}
       startIcon={startIcon}
       {...rest}

@@ -21,6 +21,8 @@ import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../util
 import { themeColors } from '../../utils/theme-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
 import { useState } from 'react';
+import { MainButton, SecondaryButton } from '../../components/Buttons';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles({
   root: {
@@ -50,12 +52,26 @@ type TransactionsTableProps = {
 
 export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [editMode, setEditMode] = useState(false);
 
   const { data, error, loading } = transactionsQuery;
 
   const handleEditClick = () => {
     setEditMode(true);
+  };
+
+  const handleSaveEditsClick = () => {
+    setEditMode(false);
+    enqueueSnackbar('Saved Edits', { variant: 'success' });
+  };
+
+  const handleDiscardEdits = () => {
+    setEditMode(false);
+  };
+
+  const handleAddRowClick = () => {
+    enqueueSnackbar('Added Row', { variant: 'success' });
   };
 
   if (loading) return <Skeleton variant="rectangular" height={500} />;
@@ -82,29 +98,47 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
           </Grid>
         </Grid>
         <Grid item container sm={'auto'} justifyContent="flex-end" alignItems="center" spacing={1}>
-          <Grid item>
-            <IconButton
-              sx={{
-                border: `1px solid ${themeColors.greyBackground}`,
-                backgroundColor: themeColors.greyBackground,
-                borderRadius: 3,
-              }}
-              onClick={handleEditClick}
-            >
-              <EditIcon sx={{ color: themeColors.greyText }} />
-            </IconButton>
-          </Grid>
-          <Grid item>
-            <IconButton
-              sx={{
-                border: `1px solid ${themeColors.greyBackground}`,
-                backgroundColor: themeColors.greyBackground,
-                borderRadius: 3,
-              }}
-            >
-              <FilterAltIcon sx={{ color: themeColors.greyText }} />
-            </IconButton>
-          </Grid>
+          {editMode ? (
+            <>
+              <Grid item>
+                <MainButton onClick={handleSaveEditsClick}>Save Edits</MainButton>
+              </Grid>
+              <Grid item>
+                <SecondaryButton onClick={handleDiscardEdits}>Discard</SecondaryButton>
+              </Grid>
+              <Grid item>
+                <MainButton variant="text" onClick={handleAddRowClick}>
+                  Add Row
+                </MainButton>
+              </Grid>
+            </>
+          ) : (
+            <>
+              <Grid item>
+                <IconButton
+                  sx={{
+                    border: `1px solid ${themeColors.greyBackground}`,
+                    backgroundColor: themeColors.greyBackground,
+                    borderRadius: 3,
+                  }}
+                  onClick={handleEditClick}
+                >
+                  <EditIcon sx={{ color: themeColors.greyText }} />
+                </IconButton>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  sx={{
+                    border: `1px solid ${themeColors.greyBackground}`,
+                    backgroundColor: themeColors.greyBackground,
+                    borderRadius: 3,
+                  }}
+                >
+                  <FilterAltIcon sx={{ color: themeColors.greyText }} />
+                </IconButton>
+              </Grid>
+            </>
+          )}
         </Grid>
       </Grid>
       <Paper sx={{ width: '100%', overflow: 'hidden', marginTop: 1 }} elevation={0}>
