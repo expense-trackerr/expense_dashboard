@@ -42,15 +42,33 @@ type TransactionsTableProps = {
   >;
 };
 
+type EditedTxnState = {
+  id: string;
+  [key: string]: string;
+}[];
+
 export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+
   const [editMode, setEditMode] = useState(false);
+  const [editedTxns, setEditedTxns] = useState<EditedTxnState>([]);
 
   const { data, error, loading } = transactionsQuery;
 
   const handleEditClick = () => {
     setEditMode(true);
+  };
+
+  const handleEditedTxnChange = (txnId: string, field: string, value: string) => {
+    const updatedTxns = [...editedTxns];
+    const txnIndex = updatedTxns.findIndex((txn) => txn.id === txnId);
+    if (txnIndex === -1) {
+      updatedTxns.push({ id: txnId, [field]: value });
+    } else {
+      updatedTxns[txnIndex][field] = value;
+    }
+    setEditedTxns(updatedTxns);
   };
 
   const handleSaveEditsClick = () => {
@@ -147,7 +165,11 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
             <TableBody>
               {data?.getTransactions.length ? (
                 data?.getTransactions.map((txn) =>
-                  editMode ? <EditableTableBody key={txn.id} txn={txn} /> : <RegularTableBody key={txn.id} txn={txn} />
+                  editMode ? (
+                    <EditableTableBody key={txn.id} txn={txn} handleEditedTxnChange={handleEditedTxnChange} />
+                  ) : (
+                    <RegularTableBody key={txn.id} txn={txn} />
+                  )
                 )
               ) : (
                 <TableRow>
