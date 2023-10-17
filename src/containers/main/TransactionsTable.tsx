@@ -156,10 +156,10 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
           <Table stickyHeader>
             <TableHead>
               <TableRow className={classes.root}>
-                <TableCell>Date</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>Amount</TableCell>
+                <TableCell sx={{ width: '25%' }}>Date</TableCell>
+                <TableCell sx={{ width: '35%' }}>Description</TableCell>
+                <TableCell sx={{ width: '25%' }}>Category</TableCell>
+                <TableCell sx={{ width: '15%' }}>Amount</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

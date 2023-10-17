@@ -20,6 +20,11 @@ export const EditableTableBody = ({
             size="small"
             defaultValue={txn.name}
             onChange={(e) => handleEditedTxnChange(txn.id, 'name', e.target.value)}
+            sx={{
+              '& input': {
+                fontSize: '15px',
+              },
+            }}
           />
         </TableCell>
         <TableCell>
@@ -30,6 +35,11 @@ export const EditableTableBody = ({
             size="small"
             defaultValue={formatDisplayPrice(txn.amount)}
             onChange={(e) => handleEditedTxnChange(txn.id, 'amount', e.target.value)}
+            sx={{
+              '& input': {
+                fontSize: '15px',
+              },
+            }}
           />
         </TableCell>
       </TableRow>
