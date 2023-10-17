@@ -1,14 +1,13 @@
 import { TableCell, TableRow, Typography } from '@mui/material';
-import React from 'react';
 import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
-import { CategoryChip } from './CategoryChip';
-import { GetTransactionsQuery } from '../../__generated__/graphql';
 import { themeColors } from '../../utils/theme-utils';
+import { GetTransactionsQuery } from '../../__generated__/graphql';
+import { CategoryChip } from './CategoryChip';
 
 export const RegularTableBody = ({ txn }: { txn: GetTransactionsQuery['getTransactions'][0] }) => {
   return (
     <>
-      <TableRow key={txn.id}>
+      <TableRow>
         <TableCell>{formatDate(txn.date, false)}</TableCell>
         <TableCell>
           {txn.name}

@@ -24,7 +24,7 @@ export const formatDisplayPrice = (price: string) => {
   if (decimalPrice.isNegative()) {
     return `+ $${decimalPrice.abs().toFixed(2)}`;
   }
-  return `  $${decimalPrice.toFixed(2)}`;
+  return `$${decimalPrice.toFixed(2)}`;
 };
 
 export const getDisplayPriceColor = (price: string) => {

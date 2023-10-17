@@ -19,6 +19,7 @@ import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { MainButton, SecondaryButton } from '../../components/Buttons';
+import { EditableTableBody } from '../../components/transactions-table/EditableTableBody';
 import { RegularTableBody } from '../../components/transactions-table/RegularTableBody';
 import { themeColors } from '../../utils/theme-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
@@ -145,7 +146,9 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
             </TableHead>
             <TableBody>
               {data?.getTransactions.length ? (
-                data?.getTransactions.map((txn) => <RegularTableBody key={txn.id} txn={txn} />)
+                data?.getTransactions.map((txn) =>
+                  editMode ? <EditableTableBody key={txn.id} txn={txn} /> : <RegularTableBody key={txn.id} txn={txn} />
+                )
               ) : (
                 <TableRow>
                   <TableCell colSpan={4}>No transactions found</TableCell>
