@@ -1,6 +1,8 @@
 import { QueryResult } from '@apollo/client';
+import CachedIcon from '@mui/icons-material/Cached';
+import EditIcon from '@mui/icons-material/Edit';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import {
-  Chip,
   Grid,
   IconButton,
   Paper,
@@ -13,16 +15,13 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import CachedIcon from '@mui/icons-material/Cached';
 import { makeStyles } from '@mui/styles';
-import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
-import { themeColors } from '../../utils/theme-utils';
-import { GetTransactionsQuery } from '../../__generated__/graphql';
+import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import { MainButton, SecondaryButton } from '../../components/Buttons';
-import { useSnackbar } from 'notistack';
+import { RegularTableBody } from '../../components/transactions-table/RegularTableBody';
+import { themeColors } from '../../utils/theme-utils';
+import { GetTransactionsQuery } from '../../__generated__/graphql';
 
 const useStyles = makeStyles({
   root: {
@@ -32,14 +31,6 @@ const useStyles = makeStyles({
     },
   },
 });
-
-const CategoryChip = ({ category }: { category: GetTransactionsQuery['getTransactions'][0]['category'] }) => {
-  if (category?.name) {
-    return <Chip label={category.name} variant="outlined" sx={{ color: category.category_color }} />;
-  } else {
-    return <Chip label="" variant="outlined" sx={{ borderColor: 'red', width: '80px' }} />;
-  }
-};
 
 type TransactionsTableProps = {
   transactionsQuery: QueryResult<
@@ -154,23 +145,7 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
             </TableHead>
             <TableBody>
               {data?.getTransactions.length ? (
-                data?.getTransactions.map((txn) => (
-                  <TableRow key={txn.id}>
-                    <TableCell>{formatDate(txn.date, false)}</TableCell>
-                    <TableCell>
-                      {txn.name}
-                      <Typography variant="subtitle1" sx={{ color: themeColors.greyText, marginTop: '0px' }}>
-                        {txn.linked_sub_account.alias_name ?? txn.linked_sub_account.name}
-                      </Typography>
-                    </TableCell>
-                    <TableCell>
-                      <CategoryChip category={txn.category} />
-                    </TableCell>
-                    <TableCell sx={{ color: getDisplayPriceColor(txn.amount) }}>
-                      {formatDisplayPrice(txn.amount)}
-                    </TableCell>
-                  </TableRow>
-                ))
+                data?.getTransactions.map((txn) => <RegularTableBody key={txn.id} txn={txn} />)
               ) : (
                 <TableRow>
                   <TableCell colSpan={4}>No transactions found</TableCell>
