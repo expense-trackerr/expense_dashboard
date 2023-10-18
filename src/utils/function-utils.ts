@@ -21,10 +21,14 @@ export const formatDate = (date?: Date | string, showTime = true) => {
 
 export const formatDisplayPrice = (price: string) => {
   const decimalPrice = new Decimal(price);
+  // Plaid returns a negative price for a credit transaction
   if (decimalPrice.isNegative()) {
-    return `+ $${decimalPrice.abs().toFixed(2)}`;
+    return `+ $${decimalPrice
+      .abs()
+      .toNumber()
+      .toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
-  return `$${decimalPrice.toFixed(2)}`;
+  return `$${decimalPrice.toNumber().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
 export const getDisplayPriceColor = (price: string) => {

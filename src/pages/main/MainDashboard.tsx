@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client';
 import { Grid, Typography } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { DateRangePicker } from '../../components/DateRangePicker';
-import defaultAxios from '../../config/axiosConfig';
+import { OverviewData } from '../../containers/main/OverviewData';
 import { TransactionsTable } from '../../containers/main/TransactionsTable';
 import { useAuth } from '../../contexts/AuthContext';
 import { PlaidContext } from '../../contexts/PlaidContext';
@@ -74,6 +74,7 @@ export const MainDashboard = () => {
           <DateRangePicker />
         </Grid>
       </Grid>
+      <OverviewData />
       <TransactionsTable transactionsQuery={transactionsQuery} />
     </>
   );

@@ -8,6 +8,7 @@ export const themeColors = {
   linkText: '#003CBF',
   debitAmount: '#F16A6A',
   creditAmount: '#00B14F',
+  neutralAmount: '#FFCB14',
 };
 
 const typographyConfig = {

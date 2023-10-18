@@ -84,12 +84,12 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
     enqueueSnackbar('Added Row', { variant: 'success' });
   };
 
-  if (loading) return <Skeleton variant="rectangular" height={500} />;
+  if (loading) return <Skeleton variant="rectangular" height={500} sx={{ marginTop: 3 }} />;
   if (error) return <Typography>Error loading transactions</Typography>;
 
   return (
     <>
-      <Grid container justifyContent="space-between" alignItems="center">
+      <Grid container justifyContent="space-between" alignItems="center" mt={3}>
         <Grid item container direction="column" sm={'auto'}>
           <Grid item>
             <Typography variant="h3">Transactions</Typography>
