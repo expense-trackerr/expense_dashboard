@@ -168,26 +168,26 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
             <TableBody>
               {data?.getTransactions.length ? (
                 <>
-                  <Accordion name="Pending">
-                    {pendingTransactions?.map((txn) => (
-                      <TransactionsTableBody
-                        key={txn.id}
-                        txn={txn}
-                        editMode={editMode}
-                        handleEditedTxnChange={handleEditedTxnChange}
-                      />
-                    ))}
-                  </Accordion>
-                  <Accordion name="Posted">
-                    {postedTransactions?.map((txn) => (
-                      <TransactionsTableBody
-                        key={txn.id}
-                        txn={txn}
-                        editMode={editMode}
-                        handleEditedTxnChange={handleEditedTxnChange}
-                      />
-                    ))}
-                  </Accordion>
+                  {/* <Accordion name="Pending"> */}
+                  {pendingTransactions?.map((txn) => (
+                    <TransactionsTableBody
+                      key={txn.id}
+                      txn={txn}
+                      editMode={editMode}
+                      handleEditedTxnChange={handleEditedTxnChange}
+                    />
+                  ))}
+                  {/* </Accordion> */}
+                  {/* <Accordion name="Posted"> */}
+                  {postedTransactions?.map((txn) => (
+                    <TransactionsTableBody
+                      key={txn.id}
+                      txn={txn}
+                      editMode={editMode}
+                      handleEditedTxnChange={handleEditedTxnChange}
+                    />
+                  ))}
+                  {/* </Accordion> */}
                 </>
               ) : (
                 <TableRow>
