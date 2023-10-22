@@ -18,11 +18,11 @@ import {
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
+import { Accordion } from '../../components/Accordion';
 import { MainButton, SecondaryButton } from '../../components/Buttons';
-import { EditableTableBody } from '../../components/transactions-table/EditableTableBody';
-import { RegularTableBody } from '../../components/transactions-table/RegularTableBody';
 import { themeColors } from '../../utils/theme-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
+import { TransactionsTableBody } from './TransactionsTableBody';
 
 const useStyles = makeStyles({
   root: {
@@ -55,6 +55,9 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
   const [editedTxns, setEditedTxns] = useState<EditedTxnState>([]);
 
   const { data, error, loading } = transactionsQuery;
+
+  const pendingTransactions = data?.getTransactions.filter((txn) => txn.pending);
+  const postedTransactions = data?.getTransactions.filter((txn) => !txn.pending);
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -164,13 +167,28 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
             </TableHead>
             <TableBody>
               {data?.getTransactions.length ? (
-                data?.getTransactions.map((txn) =>
-                  editMode ? (
-                    <EditableTableBody key={txn.id} txn={txn} handleEditedTxnChange={handleEditedTxnChange} />
-                  ) : (
-                    <RegularTableBody key={txn.id} txn={txn} />
-                  )
-                )
+                <>
+                  <Accordion name="Pending">
+                    {pendingTransactions?.map((txn) => (
+                      <TransactionsTableBody
+                        key={txn.id}
+                        txn={txn}
+                        editMode={editMode}
+                        handleEditedTxnChange={handleEditedTxnChange}
+                      />
+                    ))}
+                  </Accordion>
+                  <Accordion name="Posted">
+                    {postedTransactions?.map((txn) => (
+                      <TransactionsTableBody
+                        key={txn.id}
+                        txn={txn}
+                        editMode={editMode}
+                        handleEditedTxnChange={handleEditedTxnChange}
+                      />
+                    ))}
+                  </Accordion>
+                </>
               ) : (
                 <TableRow>
                   <TableCell colSpan={4}>No transactions found</TableCell>
