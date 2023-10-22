@@ -7,6 +7,7 @@ import { PlaidContextProvider } from './contexts/PlaidContext';
 import { Router } from './Router';
 import { theme } from './utils/theme-utils';
 import { SnackbarProvider } from 'notistack';
+import { CategoriesProvider } from './contexts/CategoriesContext';
 
 const responsiveTheme = responsiveFontSizes(theme);
 
@@ -24,7 +25,9 @@ function App() {
           <ThemeProvider theme={responsiveTheme}>
             <PlaidContextProvider>
               <NavigationProvider>
-                <Router />
+                <CategoriesProvider>
+                  <Router />
+                </CategoriesProvider>
               </NavigationProvider>
             </PlaidContextProvider>
           </ThemeProvider>

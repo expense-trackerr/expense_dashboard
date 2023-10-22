@@ -1,37 +1,13 @@
-import { useQuery } from '@apollo/client';
+import AddIcon from '@mui/icons-material/Add';
 import { Grid, Paper, Skeleton, Stack, Typography } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { MainButton } from '../../../components/Buttons';
 import defaultAxios from '../../../config/axiosConfig';
-import { useAuth } from '../../../contexts/AuthContext';
-import { gql } from '../../../__generated__';
+import { CategoriesContext } from '../../../contexts/CategoriesContext';
 import { AddCategoriesDialog, AddCategoriesDialogProps, CategoryType } from './AddCategoriesDialog';
 import { CategoryListItem } from './CategoryListItem';
 import { DeleteCategoryDialog, DeleteCategoryDialogProps } from './DeleteCategoryDialog';
 import { EditCategoryDialog, EditCategoryDialogProps } from './EditCategoryDialog';
-import AddIcon from '@mui/icons-material/Add';
-
-const GET_CATEGORY_COLORS = gql(`
-query getCategoryColors {
-  getCategoryColors {
-    id
-    name
-    hex_code
-}
-}
-`);
-
-const GET_CATEGORIES = gql(`
-query getCategories($userId: String!) {
-    getCategories(userId: $userId) {
-        id
-        name
-        budget
-        category_type
-        category_color
-    }
-}
-`);
 
 const categoryDialogDetailsUndefined = {
   id: '',
@@ -42,21 +18,15 @@ const categoryDialogDetailsUndefined = {
 };
 
 export const CategoriesTab = () => {
-  const { currentUser } = useAuth();
   const [addCategoriesDialogOpen, setAddCategoriesDialogOpen] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
 
-  const categoryColorsGqlResponse = useQuery(GET_CATEGORY_COLORS);
-  const {
-    data: categoriesData,
-    error: categoriesError,
-    loading: categoriesLoading,
-    refetch: categoriesRefetch,
-  } = useQuery(GET_CATEGORIES, { variables: { userId: currentUser?.uid ?? '' } });
+  const { categoryColorsGqlResponse, categories } = useContext(CategoriesContext);
+  console.log('categories:', categories);
 
-  const categoriesList = categoriesData?.getCategories ?? [];
+  const categoriesList = categories.data ?? [];
   const incomeCategories = useMemo(
     () => categoriesList.filter((category) => category.category_type === CategoryType.INCOME),
     [categoriesList]
@@ -86,7 +56,7 @@ export const CategoriesTab = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        categoriesRefetch();
+        categories.refetch();
       }
     }
   };
@@ -105,7 +75,7 @@ export const CategoriesTab = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        categoriesRefetch();
+        categories.refetch();
       }
     }
   };
@@ -128,15 +98,15 @@ export const CategoriesTab = () => {
       } catch (err) {
         console.error(err);
       } finally {
-        categoriesRefetch();
+        categories.refetch();
       }
     }
   };
 
-  if (categoriesLoading) return <Skeleton variant="rounded" width="400px" height="300px" />;
-  if (categoriesError) {
-    console.error(categoriesError);
-    return <div>Error: {categoriesError.message}</div>;
+  if (categories.loading) return <Skeleton variant="rounded" width="400px" height="300px" />;
+  if (categories.error) {
+    console.error(categories.error);
+    return <div>Error: {categories.error.message}</div>;
   }
 
   return (

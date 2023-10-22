@@ -88,7 +88,10 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
   };
 
   if (loading) return <Skeleton variant="rectangular" height={500} sx={{ marginTop: 3 }} />;
-  if (error) return <Typography>Error loading transactions</Typography>;
+  if (error) {
+    console.error(error);
+    return <Typography>Error loading transactions</Typography>;
+  }
 
   return (
     <>
