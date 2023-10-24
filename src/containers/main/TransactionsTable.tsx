@@ -18,7 +18,6 @@ import {
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
-import { Accordion } from '../../components/Accordion';
 import { MainButton, SecondaryButton } from '../../components/Buttons';
 import { themeColors } from '../../utils/theme-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
