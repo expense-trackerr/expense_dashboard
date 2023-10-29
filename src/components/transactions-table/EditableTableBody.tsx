@@ -3,11 +3,11 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker as DatePicketMUI } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useContext, useMemo } from 'react';
+import { EditedTxnFields, EditedTxnState, HandleEditedTxnChangeFn } from '../../containers/main/TransactionsTable';
 import { CategoriesContext } from '../../contexts/CategoriesContext';
-import { formatDisplayPrice } from '../../utils/function-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
 import { CTextField } from '../TextField';
-import { EditedTxnFields, EditedTxnState, HandleEditedTxnChangeFn } from '../../containers/main/TransactionsTable';
+import { formatDisplayPrice } from '../../utils/function-utils';
 
 const DatePicker = ({
   defaultValue,
@@ -118,7 +118,7 @@ export const EditableTableBody = ({
         <TableCell>
           <CTextField
             size="small"
-            defaultValue={formatDisplayPrice(txn.amount)}
+            defaultValue={formatDisplayPrice(txn.amount, false)}
             onChange={(e) => handleEditedTxnChange(txn.id, EditedTxnFields.AMOUNT, e.target.value)}
             sx={{
               '& input': {

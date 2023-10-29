@@ -59,12 +59,17 @@ export type HandleEditedTxnChangeFn = (txnId: string, field: EditedTxnFields, va
 const getEditedTxnErrors = (editedTxns: EditedTxnState) => {
   const errors: EditedTxnState = [];
 
-  const isError = (value: string | undefined) => value === undefined || value === '';
+  const isError = (key: EditedTxnFields, value: string | undefined) => {
+    if (key === EditedTxnFields.AMOUNT) {
+      return value === undefined || value === '' || isNaN(Number(value));
+    }
+    return value === undefined || value === '';
+  };
 
   editedTxns.forEach((txn) => {
     Object.entries(txn).forEach(([key, value]) => {
       // No error for category, since it can be undefined
-      if (key !== EditedTxnFields.CATEGORY && isError(value)) {
+      if (key !== EditedTxnFields.CATEGORY && isError(key as EditedTxnFields, value)) {
         const errorFieldIdx = errors.findIndex((error) => error.id === txn.id);
         const upperCaseKey = key[0].toUpperCase() + key.slice(1);
 
@@ -91,7 +96,8 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
   const pendingTransactions = data?.getTransactions.filter((txn) => txn.pending);
   const postedTransactions = data?.getTransactions.filter((txn) => !txn.pending);
 
-  const editedTxnErrors = useMemo(() => getEditedTxnErrors(editedTxns), [editedTxns]);
+  const editedTxnErrors = useMemo(() => (editMode ? getEditedTxnErrors(editedTxns) : []), [editedTxns, editMode]);
+  console.log('editedTxnErrors:', editedTxnErrors, editedTxns);
 
   const handleEditClick = () => {
     setEditMode(true);
@@ -117,6 +123,7 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
 
   const handleDiscardEdits = () => {
     setEditMode(false);
+    setEditedTxns([]);
   };
 
   const handleAddRowClick = () => {

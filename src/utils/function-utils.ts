@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import Decimal from 'decimal.js-light';
+import { Decimal } from 'decimal.js-light';
 import { themeColors } from './theme-utils';
 
 export const isValidDate = (date: Date | string | undefined) => {
@@ -19,16 +19,20 @@ export const formatDate = (date?: Date | string, showTime = true) => {
   return format(dateFormat, "dd MMM ''yy");
 };
 
-export const formatDisplayPrice = (price: string) => {
+export const formatDisplayPrice = (price: string, showDollarSign = true) => {
   const decimalPrice = new Decimal(price);
+  const dollarSign = showDollarSign ? '$' : '';
   // Plaid returns a negative price for a credit transaction
   if (decimalPrice.isNegative()) {
-    return `+ $${decimalPrice
+    return `+ ${dollarSign}${decimalPrice
       .abs()
       .toNumber()
       .toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   }
-  return `$${decimalPrice.toNumber().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+  return `${dollarSign}${decimalPrice
+    .toNumber()
+    .toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
 export const getDisplayPriceColor = (price: string) => {
