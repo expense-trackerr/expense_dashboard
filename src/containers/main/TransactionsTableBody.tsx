@@ -1,6 +1,7 @@
 import { EditableTableBody } from '../../components/transactions-table/EditableTableBody';
 import { RegularTableBody } from '../../components/transactions-table/RegularTableBody';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
+import { HandleEditedTxnChangeFn } from './TransactionsTable';
 
 export const TransactionsTableBody = ({
   txn,
@@ -9,7 +10,7 @@ export const TransactionsTableBody = ({
 }: {
   txn: GetTransactionsQuery['getTransactions'][0];
   editMode: boolean;
-  handleEditedTxnChange: (txnId: string, field: string, value: string) => void;
+  handleEditedTxnChange: HandleEditedTxnChangeFn;
 }) => {
   return editMode ? (
     <EditableTableBody txn={txn} handleEditedTxnChange={handleEditedTxnChange} />

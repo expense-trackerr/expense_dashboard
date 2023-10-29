@@ -43,8 +43,17 @@ type TransactionsTableProps = {
 
 type EditedTxnState = {
   id: string;
-  [key: string]: string;
+  [key: string]: string | undefined;
 }[];
+
+export enum EditedTxnFields {
+  NAME = 'name',
+  AMOUNT = 'amount',
+  DATE = 'date',
+  CATEGORY = 'category',
+}
+
+export type HandleEditedTxnChangeFn = (txnId: string, field: EditedTxnFields, value: string | undefined) => void;
 
 export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps) => {
   const classes = useStyles();
@@ -52,6 +61,7 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
 
   const [editMode, setEditMode] = useState(false);
   const [editedTxns, setEditedTxns] = useState<EditedTxnState>([]);
+  console.log('editedTxns:', editedTxns);
 
   const { data, error, loading } = transactionsQuery;
 
@@ -62,9 +72,13 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
     setEditMode(true);
   };
 
-  const handleEditedTxnChange = (txnId: string, field: string, value: string) => {
+  const handleEditedTxnChange = (txnId: string, field: EditedTxnFields, value: string | undefined) => {
     const updatedTxns = [...editedTxns];
     const txnIndex = updatedTxns.findIndex((txn) => txn.id === txnId);
+
+    // Only category field can have undefined value
+    if ((value === undefined || value === '') && field !== EditedTxnFields.CATEGORY) return;
+
     if (txnIndex === -1) {
       updatedTxns.push({ id: txnId, [field]: value });
     } else {

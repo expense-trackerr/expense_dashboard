@@ -1,11 +1,13 @@
-import { TableCell, TableRow } from '@mui/material';
+import { Autocomplete, Chip, TableCell, TableRow } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker as DatePicketMUI } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { useContext, useMemo } from 'react';
+import { CategoriesContext } from '../../contexts/CategoriesContext';
 import { formatDisplayPrice } from '../../utils/function-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
 import { CTextField } from '../TextField';
-import { CategoryChip } from './CategoryChip';
+import { EditedTxnFields, HandleEditedTxnChangeFn } from '../../containers/main/TransactionsTable';
 
 const DatePicker = ({
   defaultValue,
@@ -32,12 +34,56 @@ const DatePicker = ({
   );
 };
 
+const EditableCategoryChip = ({
+  txn,
+  handleEditedTxnChange,
+}: {
+  txn: GetTransactionsQuery['getTransactions'][0];
+  handleEditedTxnChange: HandleEditedTxnChangeFn;
+}) => {
+  const {
+    categories: { data },
+  } = useContext(CategoriesContext);
+
+  const categoryName = txn.category?.name;
+
+  const categoriesList = useMemo(() => {
+    if (data) {
+      return data.map((category) => category.name);
+    } else {
+      return [];
+    }
+  }, [data]);
+
+  const handleOnChange = (e: React.SyntheticEvent<Element, Event>, newValue: string | null) => {
+    handleEditedTxnChange(txn.id, EditedTxnFields.CATEGORY, newValue ?? undefined);
+  };
+
+  return (
+    <Autocomplete
+      defaultValue={categoryName}
+      onChange={handleOnChange}
+      options={categoriesList}
+      renderOption={(props, option) => (
+        <li {...props}>
+          <Chip
+            label={option}
+            variant="outlined"
+            sx={{ color: data?.find((category) => category.name === option)?.category_color }}
+          />
+        </li>
+      )}
+      renderInput={(params) => <CTextField {...params} size="small" value={categoryName} />}
+    />
+  );
+};
+
 export const EditableTableBody = ({
   txn,
   handleEditedTxnChange,
 }: {
   txn: GetTransactionsQuery['getTransactions'][0];
-  handleEditedTxnChange: (txnId: string, field: string, value: string) => void;
+  handleEditedTxnChange: HandleEditedTxnChangeFn;
 }) => {
   return (
     <>
@@ -45,14 +91,14 @@ export const EditableTableBody = ({
         <TableCell>
           <DatePicker
             defaultValue={new Date(txn.date)}
-            onChange={(newValue) => handleEditedTxnChange(txn.id, 'date', newValue?.toISOString() ?? '')}
+            onChange={(newValue) => handleEditedTxnChange(txn.id, EditedTxnFields.DATE, newValue?.toISOString() ?? '')}
           />
         </TableCell>
         <TableCell>
           <CTextField
             size="small"
             defaultValue={txn.name}
-            onChange={(e) => handleEditedTxnChange(txn.id, 'name', e.target.value)}
+            onChange={(e) => handleEditedTxnChange(txn.id, EditedTxnFields.NAME, e.target.value)}
             sx={{
               '& input': {
                 fontSize: '15px',
@@ -61,13 +107,13 @@ export const EditableTableBody = ({
           />
         </TableCell>
         <TableCell>
-          <CategoryChip category={txn.category} />
+          <EditableCategoryChip txn={txn} handleEditedTxnChange={handleEditedTxnChange} />
         </TableCell>
         <TableCell>
           <CTextField
             size="small"
             defaultValue={formatDisplayPrice(txn.amount)}
-            onChange={(e) => handleEditedTxnChange(txn.id, 'amount', e.target.value)}
+            onChange={(e) => handleEditedTxnChange(txn.id, EditedTxnFields.AMOUNT, e.target.value)}
             sx={{
               '& input': {
                 fontSize: '15px',
