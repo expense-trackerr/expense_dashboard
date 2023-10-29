@@ -7,7 +7,7 @@ import { CategoriesContext } from '../../contexts/CategoriesContext';
 import { formatDisplayPrice } from '../../utils/function-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
 import { CTextField } from '../TextField';
-import { EditedTxnFields, HandleEditedTxnChangeFn } from '../../containers/main/TransactionsTable';
+import { EditedTxnFields, EditedTxnState, HandleEditedTxnChangeFn } from '../../containers/main/TransactionsTable';
 
 const DatePicker = ({
   defaultValue,
@@ -81,10 +81,14 @@ const EditableCategoryChip = ({
 export const EditableTableBody = ({
   txn,
   handleEditedTxnChange,
+  errorTxns,
 }: {
   txn: GetTransactionsQuery['getTransactions'][0];
   handleEditedTxnChange: HandleEditedTxnChangeFn;
+  errorTxns: EditedTxnState;
 }) => {
+  const txnError = errorTxns.find((errorTxn) => errorTxn.id === txn.id);
+
   return (
     <>
       <TableRow>
@@ -104,6 +108,8 @@ export const EditableTableBody = ({
                 fontSize: '15px',
               },
             }}
+            error={Boolean(txnError?.name)}
+            helperText={txnError?.name}
           />
         </TableCell>
         <TableCell>
@@ -119,6 +125,8 @@ export const EditableTableBody = ({
                 fontSize: '15px',
               },
             }}
+            error={Boolean(txnError?.amount)}
+            helperText={txnError?.amount}
           />
         </TableCell>
       </TableRow>

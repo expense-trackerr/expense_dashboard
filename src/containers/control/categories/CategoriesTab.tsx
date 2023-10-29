@@ -24,7 +24,6 @@ export const CategoriesTab = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | undefined>(undefined);
 
   const { categoryColorsGqlResponse, categories } = useContext(CategoriesContext);
-  console.log('categories:', categories);
 
   const categoriesList = categories.data ?? [];
   const incomeCategories = useMemo(

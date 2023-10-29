@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { MainButton, SecondaryButton } from '../../components/Buttons';
 import { themeColors } from '../../utils/theme-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
@@ -41,11 +41,6 @@ type TransactionsTableProps = {
   >;
 };
 
-type EditedTxnState = {
-  id: string;
-  [key: string]: string | undefined;
-}[];
-
 export enum EditedTxnFields {
   NAME = 'name',
   AMOUNT = 'amount',
@@ -53,7 +48,36 @@ export enum EditedTxnFields {
   CATEGORY = 'category',
 }
 
+export type EditedTxnState = {
+  id: string;
+  [key: string]: string | undefined;
+}[];
+
 export type HandleEditedTxnChangeFn = (txnId: string, field: EditedTxnFields, value: string | undefined) => void;
+
+// Returns a list of transactions that have errors
+const getEditedTxnErrors = (editedTxns: EditedTxnState) => {
+  const errors: EditedTxnState = [];
+
+  const isError = (value: string | undefined) => value === undefined || value === '';
+
+  editedTxns.forEach((txn) => {
+    Object.entries(txn).forEach(([key, value]) => {
+      // No error for category, since it can be undefined
+      if (key !== EditedTxnFields.CATEGORY && isError(value)) {
+        const errorFieldIdx = errors.findIndex((error) => error.id === txn.id);
+        const upperCaseKey = key[0].toUpperCase() + key.slice(1);
+
+        if (errorFieldIdx === -1) {
+          errors.push({ id: txn.id, [key]: `${upperCaseKey} is required` });
+        } else {
+          errors[errorFieldIdx][key] = `${upperCaseKey} is required`;
+        }
+      }
+    });
+  });
+  return errors;
+};
 
 export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps) => {
   const classes = useStyles();
@@ -61,23 +85,22 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
 
   const [editMode, setEditMode] = useState(false);
   const [editedTxns, setEditedTxns] = useState<EditedTxnState>([]);
-  console.log('editedTxns:', editedTxns);
 
   const { data, error, loading } = transactionsQuery;
 
   const pendingTransactions = data?.getTransactions.filter((txn) => txn.pending);
   const postedTransactions = data?.getTransactions.filter((txn) => !txn.pending);
 
+  const editedTxnErrors = useMemo(() => getEditedTxnErrors(editedTxns), [editedTxns]);
+
   const handleEditClick = () => {
     setEditMode(true);
   };
 
+  // Gets the list of edited transactions and their updated values
   const handleEditedTxnChange = (txnId: string, field: EditedTxnFields, value: string | undefined) => {
     const updatedTxns = [...editedTxns];
     const txnIndex = updatedTxns.findIndex((txn) => txn.id === txnId);
-
-    // Only category field can have undefined value
-    if ((value === undefined || value === '') && field !== EditedTxnFields.CATEGORY) return;
 
     if (txnIndex === -1) {
       updatedTxns.push({ id: txnId, [field]: value });
@@ -130,7 +153,9 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
           {editMode ? (
             <>
               <Grid item>
-                <MainButton onClick={handleSaveEditsClick}>Save Edits</MainButton>
+                <MainButton onClick={handleSaveEditsClick} disabled={Boolean(editedTxnErrors.length)}>
+                  Save Edits
+                </MainButton>
               </Grid>
               <Grid item>
                 <SecondaryButton onClick={handleDiscardEdits}>Discard</SecondaryButton>
@@ -191,6 +216,7 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
                       txn={txn}
                       editMode={editMode}
                       handleEditedTxnChange={handleEditedTxnChange}
+                      errorTxns={editedTxnErrors}
                     />
                   ))}
                   {/* </Accordion> */}
@@ -201,6 +227,7 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
                       txn={txn}
                       editMode={editMode}
                       handleEditedTxnChange={handleEditedTxnChange}
+                      errorTxns={editedTxnErrors}
                     />
                   ))}
                   {/* </Accordion> */}
