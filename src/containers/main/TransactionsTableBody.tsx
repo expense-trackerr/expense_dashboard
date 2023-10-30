@@ -1,3 +1,4 @@
+import { TableRow } from '@mui/material';
 import { EditableTableBody } from '../../components/transactions-table/EditableTableBody';
 import { RegularTableBody } from '../../components/transactions-table/RegularTableBody';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
@@ -17,6 +18,8 @@ export const TransactionsTableBody = ({
   return editMode ? (
     <EditableTableBody txn={txn} handleEditedTxnChange={handleEditedTxnChange} errorTxns={errorTxns} />
   ) : (
-    <RegularTableBody txn={txn} />
+    <TableRow>
+      <RegularTableBody txn={txn} />
+    </TableRow>
   );
 };
