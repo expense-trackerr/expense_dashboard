@@ -1,10 +1,9 @@
-import { Box, TableCell, TableRow } from '@mui/material';
+import { TableCell, TableRow } from '@mui/material';
 import { useState } from 'react';
 import { EditedTxnFields, EditedTxnState, HandleEditedTxnChangeFn } from '../../containers/main/TransactionsTable';
-import { formatDate, formatDisplayPrice } from '../../utils/function-utils';
+import { formatDisplayPrice } from '../../utils/function-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
 import { CTextField } from '../TextField';
-import { CategoryChip } from './CategoryChip';
 import { EditableCategoryChip } from './EditableCategoryChip';
 import { EditableDatePicker } from './EditableDatePicker';
 import { RegularTableBody } from './RegularTableBody';
