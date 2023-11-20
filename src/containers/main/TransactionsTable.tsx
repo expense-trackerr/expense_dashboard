@@ -97,7 +97,6 @@ export const TransactionsTable = ({ transactionsQuery }: TransactionsTableProps)
   const postedTransactions = data?.getTransactions.filter((txn) => !txn.pending);
 
   const editedTxnErrors = useMemo(() => (editMode ? getEditedTxnErrors(editedTxns) : []), [editedTxns, editMode]);
-  console.log('editedTxnErrors:', editedTxnErrors, editedTxns);
 
   const handleEditClick = () => {
     setEditMode(true);

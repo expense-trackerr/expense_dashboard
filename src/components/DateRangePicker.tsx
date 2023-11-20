@@ -3,7 +3,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import { Button, Typography } from '@mui/material';
 import { addDays } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
-import { DateRangePicker as DRP, Range, RangeKeyDict } from 'react-date-range';
+import { DateRange as DRP, Range, RangeKeyDict } from 'react-date-range';
 import { formatDate } from '../utils/function-utils';
 import { themeColors } from '../utils/theme-utils';
 
@@ -70,18 +70,11 @@ export const DateRangePicker = () => {
           style={{
             position: 'absolute',
             top: '100%',
-            right: '-80%',
             zIndex: 1000,
             border: `1px solid ${themeColors.greyText}`,
           }}
         >
-          <DRP
-            onChange={handleDateRangeChange}
-            moveRangeOnFirstSelection={false}
-            months={2}
-            ranges={dateRange}
-            direction="horizontal"
-          />
+          <DRP onChange={handleDateRangeChange} moveRangeOnFirstSelection={false} ranges={dateRange} />
         </div>
       )}
     </>
