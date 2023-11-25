@@ -1,5 +1,5 @@
 import { TableCell, Typography } from '@mui/material';
-import { formatDate, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
+import { formatDateNumberToDisplay, formatDisplayPrice, getDisplayPriceColor } from '../../utils/function-utils';
 import { themeColors } from '../../utils/theme-utils';
 import { GetTransactionsQuery } from '../../__generated__/graphql';
 import { CategoryChip } from './CategoryChip';
@@ -7,7 +7,7 @@ import { CategoryChip } from './CategoryChip';
 export const RegularTableBody = ({ txn }: { txn: GetTransactionsQuery['getTransactions'][0] }) => {
   return (
     <>
-      <TableCell>{formatDate(txn.date, false)}</TableCell>
+      <TableCell>{formatDateNumberToDisplay(txn.date)}</TableCell>
       <TableCell>
         {txn.name}
         <Typography variant="subtitle1" sx={{ color: themeColors.greyText, marginTop: '0px' }}>

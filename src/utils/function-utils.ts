@@ -19,6 +19,16 @@ export const formatDate = (date?: Date | string, showTime = true) => {
   return format(dateFormat, "dd MMM ''yy");
 };
 
+export const formatDateNumberToDisplay = (date: number) => {
+  const dateString = date.toString();
+
+  const year = Number(dateString.slice(0, 4));
+  const month = Number(dateString.slice(4, 6)) - 1; // month is 0-indexed
+  const day = Number(dateString.slice(6, 8));
+
+  return formatDate(new Date(year, month, day), false);
+};
+
 export const formatDisplayPrice = (price: string, showDollarSign = true) => {
   const decimalPrice = new Decimal(price);
   const dollarSign = showDollarSign ? '$' : '';

@@ -78,7 +78,7 @@ export type Transaction = {
   amount: Scalars['Decimal']['output'];
   category?: Maybe<Category>;
   currency: Scalars['String']['output'];
-  date: Scalars['String']['output'];
+  date: Scalars['Int']['output'];
   id: Scalars['String']['output'];
   linked_sub_account: LinkedSubAccount;
   name: Scalars['String']['output'];
@@ -109,7 +109,7 @@ export type GetTransactionsQueryVariables = Exact<{
 }>;
 
 
-export type GetTransactionsQuery = { __typename?: 'Query', getTransactions: Array<{ __typename?: 'Transaction', amount: string, currency: string, date: string, id: string, name: string, pending: boolean, category?: { __typename?: 'Category', id: string, name: string, category_type: string, category_color: string } | null, linked_sub_account: { __typename?: 'LinkedSubAccount', account_id: string, name: string, alias_name?: string | null } }> };
+export type GetTransactionsQuery = { __typename?: 'Query', getTransactions: Array<{ __typename?: 'Transaction', amount: string, currency: string, date: number, id: string, name: string, pending: boolean, category?: { __typename?: 'Category', id: string, name: string, category_type: string, category_color: string } | null, linked_sub_account: { __typename?: 'LinkedSubAccount', account_id: string, name: string, alias_name?: string | null } }> };
 
 
 export const GetCategoryColorsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getCategoryColors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getCategoryColors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"hex_code"}}]}}]}}]} as unknown as DocumentNode<GetCategoryColorsQuery, GetCategoryColorsQueryVariables>;
